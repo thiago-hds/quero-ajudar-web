@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateVacancyTable extends Migration
+class CreateVacanciesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateVacancyTable extends Migration
      */
     public function up()
     {
-        Schema::create('vacancy', function (Blueprint $table) {
+        Schema::create('vacancies', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('organization_id')->unsigned();
             $table->string('name');
@@ -27,7 +27,7 @@ class CreateVacancyTable extends Migration
             $table->string('image');
             $table->enum('status', ['active','inactive']);
             $table->timestamps();
-            $table->foreign('organization_id')->references('id')->on('organization')->onDelete('restrict');
+            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('restrict');
         });
     }
 
@@ -38,6 +38,6 @@ class CreateVacancyTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vacancy');
+        Schema::dropIfExists('vacancies');
     }
 }

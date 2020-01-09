@@ -17,8 +17,8 @@ class CreateOrganizationPhoneTable extends Migration
             $table->bigInteger('organization_id')->unsigned();
             $table->bigInteger('phone_id')->unsigned();
             $table->primary('organization_id', 'phone_id');
-            $table->foreign('organization_id')->references('id')->on('organization')->onDelete('cascade');
-            $table->foreign('phone_id')->references('id')->on('phone')->onDelete('cascade');
+            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
+            $table->foreign('phone_id')->references('id')->on('phones')->onDelete('cascade');
             $table->timestamps();
         });
     }

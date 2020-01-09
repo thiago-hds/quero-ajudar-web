@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateVoluntaryTable extends Migration
+class CreateCitiesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateVoluntaryTable extends Migration
      */
     public function up()
     {
-        Schema::create('voluntary', function (Blueprint $table) {
-            $table->bigInteger('user_id')->unsigned();
-            $table->primary('user_id');
-            $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
+        Schema::create('cities', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->bigInteger('state_id')->unsigned();
+            $table->foreign('state_id')->references('id')->on('states')->onDelete('restrict');
+            $table->string('name',100);
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateVoluntaryTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('voluntary');
+        Schema::dropIfExists('cities');
     }
 }
