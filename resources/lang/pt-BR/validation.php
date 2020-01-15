@@ -147,10 +147,11 @@ return [
     */
 
     'attributes' => [
-        'birth_date'    => 'data de nascimento',    
-        'email'         => 'e-mail',
-        'name'          => 'nome',
-        'password'      => 'senha'
+        'birth_date'        => 'data de nascimento',    
+        'email'             => 'e-mail',
+        'name'              => 'nome',
+        'password'          => 'senha',
+        'password_confirm'  => 'confirmação de senha'
 
     ],
 

@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\User;
+use App\Organization;
+
 
 class UserController extends Controller
 {
@@ -27,7 +31,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.create');
+        $organizations = Organization::all();
+
+        return view('users.create', compact('organizations'));
     }
 
     /**
@@ -38,16 +44,16 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        return $request;
         $request->validate([
-            'name'          => 'required',
-            'birth_date'    => 'required',
-            'profile'       => 'required',
-            'email'         => 'required',
-            'password'      => 'required'
+            'name'              => 'required',
+            'birth_date'        => 'required',
+            'profile'           => 'required',
+            'organization'      => 'required_if:profile,organization|exists:organizations,id',
+            'email'             => 'required|email',
+            'password'          => 'required',
+            'password_confirm'  => 'required|same:password'
         ]);
 
-        
 
         $user = new User([
             'name'          => $request->get('name'),
