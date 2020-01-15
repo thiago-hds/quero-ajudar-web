@@ -59,8 +59,8 @@
                         </div>
 
                         <div id="organization_div" class="form-group">
-                            <label for="email">Organização</label>
-                            <select class="form-control select2  @error('organization') is-invalid @enderror" style="width: 100%;">
+                            <label for="organization">Organização</label>
+                            <select class="form-control select2  @error('organization') is-invalid @enderror" style="width: 100%;" name="organization">
                                 <option></option>
                                 @foreach($organizations as $organization)
                                     <option value="{{ $organization->id }}">{{ $organization->name }}</option>

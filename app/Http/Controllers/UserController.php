@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\User;
 use App\Organization;
 
+use Illuminate\Support\Facades\Hash;
+
 
 class UserController extends Controller
 {
@@ -56,11 +58,12 @@ class UserController extends Controller
 
 
         $user = new User([
-            'name'          => $request->get('name'),
-            'birth'         => $request->get('birth_date'),
-            'profile'       => $request->get('profile'),
-            'email'         => $request->get('last_name'),
-            'password'      => $request->get('password'),
+            'name'              => $request->get('name'),
+            'birth'             => $request->get('birth_date'),
+            'profile'           => $request->get('profile'),
+            'organization_id'   => $request->get('organization'),
+            'email'             => $request->get('email'),
+            'password'          => Hash::make($request->get('password')),
         ]);
         $user->save();
         return redirect('/users')->with('success', 'Usuário Salvo!');

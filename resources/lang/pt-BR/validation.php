@@ -150,9 +150,10 @@ return [
         'birth_date'        => 'data de nascimento',    
         'email'             => 'e-mail',
         'name'              => 'nome',
+        'organization'      => 'organização',
+        'password_confirm'  => 'confirmação de senha',
         'password'          => 'senha',
-        'password_confirm'  => 'confirmação de senha'
-
+        'profile'           => 'perfil'
     ],
 
 ];
