@@ -150,7 +150,7 @@ return [
         'birth_date'        => 'data de nascimento',    
         'email'             => 'e-mail',
         'name'              => 'nome',
-        'organization'      => 'organização',
+        'organization'      => 'instituição',
         'password_confirm'  => 'confirmação de senha',
         'password'          => 'senha',
         'profile'           => 'perfil'

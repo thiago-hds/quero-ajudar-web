@@ -1,6 +1,6 @@
 $(document).ready(function() {
     $('.select2').select2();
-    $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' });
+    $('.date-input').inputmask('99/99/9999');
 
     $('input[name=profile]').change(function(){
         console.log( $(this).val());

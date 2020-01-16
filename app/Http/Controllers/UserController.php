@@ -35,7 +35,7 @@ class UserController extends Controller
     {
         $organizations = Organization::all();
 
-        return view('users.create', compact('organizations'));
+        return view('users.edit', compact('organizations'));
     }
 
     /**
@@ -46,22 +46,22 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        
         $request->validate([
             'name'              => 'required',
             'birth_date'        => 'required',
-            'profile'           => 'required',
+            'profile'           => 'required|in:admin,organization',
             'organization'      => 'required_if:profile,organization|exists:organizations,id',
             'email'             => 'required|email',
             'password'          => 'required',
             'password_confirm'  => 'required|same:password'
         ]);
-
-
+        return $request;
         $user = new User([
             'name'              => $request->get('name'),
             'birth'             => $request->get('birth_date'),
             'profile'           => $request->get('profile'),
-            'organization_id'   => $request->get('organization'),
+            'organization_id'   => $request->get('profile') == User::Admin? null : $request->get('organization'),
             'email'             => $request->get('email'),
             'password'          => Hash::make($request->get('password')),
         ]);
@@ -88,7 +88,10 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        $user = User::find($id);
+        $organizations = Organization::all();
+
+        return view('users.edit', compact('user','organizations'));   
     }
 
     /**
