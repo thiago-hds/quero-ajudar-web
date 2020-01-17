@@ -19,9 +19,9 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email');
             $table->string('password');
-            $table->enum('profile',['admin','organization','volunteer']);
-            $table->date('birth');
-            $table->enum('status',['active,inactive']);
+            $table->enum('profile',['admin','organization','volunteer'])->default('admin');
+            $table->date('date_of_birth');
+            $table->enum('status',['active','inactive'])->default('active');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('restrict');
             $table->timestamps();
         });

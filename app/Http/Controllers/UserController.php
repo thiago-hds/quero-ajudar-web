@@ -49,21 +49,23 @@ class UserController extends Controller
         
         $request->validate([
             'name'              => 'required',
-            'birth_date'        => 'required',
+            'date_of_birth'     => 'required',
             'profile'           => 'required|in:admin,organization',
-            'organization'      => 'required_if:profile,organization|exists:organizations,id',
+            'organization'      => 'required_if:profile,organization',
             'email'             => 'required|email',
             'password'          => 'required',
-            'password_confirm'  => 'required|same:password'
+            'password_confirm'  => 'required|same:password',
+            'status'            => 'required|in:active,inactive'
         ]);
-        return $request;
+
         $user = new User([
             'name'              => $request->get('name'),
-            'birth'             => $request->get('birth_date'),
+            'date_of_birth'     => $request->get('date_of_birth'),
             'profile'           => $request->get('profile'),
-            'organization_id'   => $request->get('profile') == User::Admin? null : $request->get('organization'),
+            'organization_id'   => $request->get('profile') == User::ADMIN? null : $request->get('organization'),
             'email'             => $request->get('email'),
             'password'          => Hash::make($request->get('password')),
+            'status'            => $request->get('status')
         ]);
         $user->save();
         return redirect('/users')->with('success', 'Usuário Salvo!');
@@ -103,7 +105,32 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name'              => 'required',
+            'date_of_birth'     => 'required',
+            'profile'           => 'required|in:admin,organization',
+            'organization'      => 'required_if:profile,organization',
+            'email'             => 'required|email',
+            'password'          => 'required',
+            'password_confirm'  => 'required|same:password',
+            'status'            => 'required:in:active,inactive'
+        ]);
+
+        $user = User::find($id);
+        $user->name             = $request->get('name');
+        $user->date_of_birth    = $request->get('date_of_birth');
+        $user->profile          = $request->get('profile');
+        $user->organization_id  = $request->get('profile') == User::ADMIN? null : $request->get('organization');
+        $user->email            = $request->get('email');
+        $user->status           = $request->get('status');
+        
+        if($request->get('password') != $user->password){
+            $user->password = Hash::make($request->get('password'));
+        }
+            
+        $user->save();
+
+        return redirect('/users')->with('success', 'Usuário atualizado!');
     }
 
     /**

@@ -147,7 +147,7 @@ return [
     */
 
     'attributes' => [
-        'birth_date'        => 'data de nascimento',    
+        'date_of_birth'     => 'data de nascimento',    
         'email'             => 'e-mail',
         'name'              => 'nome',
         'organization'      => 'instituição',

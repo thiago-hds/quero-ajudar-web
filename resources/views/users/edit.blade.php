@@ -7,13 +7,25 @@
 @stop
 
 @section('content')
-
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+    
     <div class="row">
         <div class="col-12">
         
             <div class="card">
                 <!-- form start -->
-                <form role="form" method="post" action="{{ route('users.store') }}">
+                <form role="form" method="post" action="{{ isset($user->id)? route('users.update', $user->id) : route('users.store') }}">
+                    @if(isset($user))
+                        @method('PATCH') 
+                    @endif
                     @csrf
                     <div class="card-body">
 
@@ -29,13 +41,13 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="birth_date">Data de Nascimento</label>
+                                    <label for="date_of_birth">Data de Nascimento</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                                         </div>
-                                        <input type="text" class="form-control date-input @error('birth_date') is-invalid @enderror"  name="birth_date" value="{{ old('birth_date', isset($user->birth) ? $user->birth : null) }}">
-                                        @error('birth_date')
+                                        <input type="text" class="form-control date-input @error('date_of_birth') is-invalid @enderror"  name="date_of_birth" value="{{ old('date_of_birth', isset($user->date_of_birth) ? $user->date_of_birth : null) }}">
+                                        @error('date_of_birth')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
@@ -64,7 +76,7 @@
                         </div>
                         
 
-                        <div id="organization_div" class="form-group">
+                        <div id="organization_div" class="form-group" style="display:{{ isset($user->profile) && $user->profile == 'organization' ? 'block' : 'none' }}">
                             <label for="organization">Instituição</label>
                             <select class="form-control select2  @error('organization') is-invalid @enderror" data-placeholder="Selecione uma instituição" style="width: 100%;" name="organization">
                                 <option></option>
@@ -91,7 +103,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="password">Senha</label>
-                                    <input type="password" class="form-control @error('password') is-invalid @enderror" name="password">
+                                    <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" value="{{ old('password', isset($user->password) ? $user->password : null) }}">
                                     @error('password')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -100,12 +112,33 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="password_confirm">Confirmação de Senha</label>
-                                    <input type="password" class="form-control @error('password_confirm') is-invalid @enderror" name="password_confirm">
+                                    <input type="password" class="form-control @error('password_confirm') is-invalid @enderror" name="password_confirm" value="{{ old('password_confirm', isset($user->password) ? $user->password : null) }}">
                                     @error('password_confirm')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="status">Status</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio"
+                                    name="status" value="active" {{ old('status', isset($user->status)? $user->status : null) == 'inactive'? '' : 'checked' }}>
+                                <label class="form-check-label">Ativo</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio"
+                                    name="status" value="inactive" {{ old('status', isset($user->status)? $user->status : null) == 'inactive'? 'checked' : '' }}>
+                                <label class="form-check-label">Inativo</label>
+                            </div>
+                            
+
+                            @error('status')
+                                {{ $message }} 
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <!-- /.card-body -->

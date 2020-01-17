@@ -3,15 +3,11 @@ $(document).ready(function() {
     $('.date-input').inputmask('99/99/9999');
 
     $('input[name=profile]').change(function(){
-        console.log( $(this).val());
-        if( $(this).val() == 'organization' )
-        { 
-            $('#organization_div').fadeIn('slow');
+        if( $(this).val() == 'organization' ){ 
+            $('#organization_div').show(400);
         }
-        else
-        { 
-            $('#organization_div').fadeOut('slow');
-            
+        else{ 
+            $('#organization_div').hide(400);
         }
     });
 });

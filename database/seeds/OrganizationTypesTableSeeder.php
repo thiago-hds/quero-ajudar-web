@@ -11,10 +11,10 @@ class OrganizationTypesTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('organization_types')->insert(
-            ['name'      => 'Asilo'],
-            ['name'      => 'Hospital'],
-            ['name'      => 'ONG']
-        );
+        DB::table('organization_types')->insert([
+            ['id' => '1', 'name' => 'Asilo'],
+            ['id' => '2', 'name' => 'Hospital'],
+            ['id' => '3', 'name' => 'ONG']
+        ]);
     }
 }
