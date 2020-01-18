@@ -66,7 +66,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
                                     name="profile" value="organization" {{ old('profile', isset($user->profile)? $user->profile : null) == 'organization'? 'checked' : '' }}>
-                                <label class="form-check-label">Representante de Instituição</label>
+                                <label class="form-check-label">Instituição</label>
                             </div>
                             
 
@@ -146,6 +146,7 @@
                     <div class="card-footer">
                     <button type="submit" class="btn btn-success float-right">Salvar</button>
                     <button type="submit" class="btn btn-danger ">Cancelar</button>
+                    </div>
                 </form>
 
             </div>

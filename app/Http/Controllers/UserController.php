@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Organization;
@@ -17,13 +18,27 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //$contacts = Contact::all();
+        $inputs = $request->all();
 
-        //return view('contacts.index', compact('contacts'));
+        // definir clausulas where
+        $whereClauses = [];
+        foreach($inputs as $key => $input){
+            if($input){
+                if(in_array($key,['profile','organization','status'])){
+                    $whereClauses[] = [$key, '=', $input];
+                }
+                else{
+                    $whereClauses[] = [$key, 'like', $input];
+                }
+            }
+        }
 
-        return view('users.index');
+        $organizations = Organization::all();
+        $users = DB::table('users')->where($whereClauses)->get();
+        $inputs = (object) $inputs;
+        return view('users.index', compact('inputs', 'users', 'organizations'));
     }
 
     /**
@@ -59,13 +74,13 @@ class UserController extends Controller
         ]);
 
         $user = new User([
-            'name'              => $request->get('name'),
-            'date_of_birth'     => $request->get('date_of_birth'),
-            'profile'           => $request->get('profile'),
-            'organization_id'   => $request->get('profile') == User::ADMIN? null : $request->get('organization'),
-            'email'             => $request->get('email'),
-            'password'          => Hash::make($request->get('password')),
-            'status'            => $request->get('status')
+            'name'              => $request->input('name'),
+            'date_of_birth'     => $request->input('date_of_birth'),
+            'profile'           => $request->input('profile'),
+            'organization_id'   => $request->input('profile') == User::ADMIN? null : $request->get('organization'),
+            'email'             => $request->input('email'),
+            'password'          => Hash::make($request->input('password')),
+            'status'            => $request->input('status')
         ]);
         $user->save();
         return redirect('/users')->with('success', 'Usuário Salvo!');
@@ -117,15 +132,15 @@ class UserController extends Controller
         ]);
 
         $user = User::find($id);
-        $user->name             = $request->get('name');
-        $user->date_of_birth    = $request->get('date_of_birth');
-        $user->profile          = $request->get('profile');
-        $user->organization_id  = $request->get('profile') == User::ADMIN? null : $request->get('organization');
-        $user->email            = $request->get('email');
-        $user->status           = $request->get('status');
+        $user->name             = $request->input('name');
+        $user->date_of_birth    = $request->input('date_of_birth');
+        $user->profile          = $request->input('profile');
+        $user->organization_id  = $request->input('profile') == User::ADMIN? null : $request->input('organization');
+        $user->email            = $request->input('email');
+        $user->status           = $request->input('status');
         
-        if($request->get('password') != $user->password){
-            $user->password = Hash::make($request->get('password'));
+        if($request->input('password') != $user->password){
+            $user->password = Hash::make($request->input('password'));
         }
             
         $user->save();
