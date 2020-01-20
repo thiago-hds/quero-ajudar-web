@@ -20,24 +20,31 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        // separacao dos campos de filtragem por tipo de comparacao
+        $equalFields    =   ['profile', 'organization_id', 'status']; 
+        $likeFields     =   ['name', 'email'];
+        
         $inputs = $request->all();
 
         // definir clausulas where
-        $whereClauses = [];
+        $whereClauses = [['profile','!=', 'volunteer']];
+
         foreach($inputs as $key => $input){
-            if($input){
-                if(in_array($key,['profile','organization','status'])){
+            if($input && in_array($key, array_merge($equalFields, $likeFields))){
+                if(in_array($key,['profile','organization_id','status'])){
                     $whereClauses[] = [$key, '=', $input];
                 }
                 else{
-                    $whereClauses[] = [$key, 'like', $input];
+                    $whereClauses[] = [$key, 'like', '%'.$input.'%'];
                 }
             }
         }
 
-        $organizations = Organization::all();
-        $users = DB::table('users')->where($whereClauses)->get();
+        // retornar view com dados
         $inputs = (object) $inputs;
+        $users = User::where($whereClauses)->paginate(20);
+        $organizations = Organization::all();
+        
         return view('users.index', compact('inputs', 'users', 'organizations'));
     }
 
@@ -107,6 +114,10 @@ class UserController extends Controller
     {
         $user = User::find($id);
         $organizations = Organization::all();
+
+        if($user->profile == User::VOLUNTEER){
+            redirect(route('volunteers.index'));
+        }
 
         return view('users.edit', compact('user','organizations'));   
     }

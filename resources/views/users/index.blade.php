@@ -8,6 +8,14 @@
 
 @section('content')
 
+    <div class="col-sm-12">
+        @if(session()->get('success'))
+            <div class="alert alert-success">
+            {{ session()->get('success') }}  
+            </div>
+        @endif
+    </div>
+
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -78,60 +86,72 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-
-
-                    <table id="example2" class="table table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>E-mail</th>
-                                <th>Perfil</th>
-                                <th>Instituição</th>
-                                <th>Status</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        @foreach($users as $user)
-                            <tbody>
+                    <div class="row">
+                        {{ $users->links() }}
+                    </div>
+                    <div class="row">
+                        <table id="example2" class="table table-bordered table-hover">
+                            <thead>
                                 <tr>
-                                    <td> {{ $user->name }} </td>
-                                    <td> {{ $user->email }} </td>
-                                    <td> 
-                                        <span class="badge badge-{{$user->profile == 'organization'? 'info' : 'warning'}}">
-                                            {{ $user->profile == 'organization'? 'organização' : 'administrador'}}
-                                        </span>
-                                    </td>
-                                    <td> 
-                                        {{ $user->profile == 'organization'? $user->organization->name : 'N/A'}}
-                                    </td>
-                                    <td> 
-                                        <span class="badge badge-{{$user->status == 'active'? 'success' : 'danger'}}">
-                                            {{ $user->status == 'active'? 'ativo' : 'inativo'}}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <a class="btn btn-info btn-sm" href="#">
-                                            <i class="fas fa-pencil-alt"></i>  Editar
-                                        </a>
-                                        <a class="btn btn-danger btn-sm" href="#">
-                                            <i class="fas fa-trash"></i>  Excluir
-                                        </a>
-                                    </td>
+                                    <th>Nome</th>
+                                    <th>E-mail</th>
+                                    <th>Perfil</th>
+                                    <th>Instituição</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
                                 </tr>
-                            </tbody>
-                        @endforeach
-                              
-                        <tfoot>
-                            <tr>
-                                <th>Nome</th>
-                                <th>E-mail</th>
-                                <th>Perfil</th>
-                                <th>Instituição</th>
-                                <th>Status</th>
-                                <th>Ações</th>
-                            </tr>
-                        </tfoot>
-                    </table>
+                            </thead>
+                            @foreach($users as $user)
+                                <tbody>
+                                    <tr>
+                                        <td> {{ $user->name }} </td>
+                                        <td> {{ $user->email }} </td>
+                                        <td> 
+                                            <span class="badge badge-{{$user->profile == 'organization'? 'info' : 'warning'}}">
+                                                {{ $user->profile == 'organization'? 'organização' : 'administrador'}}
+                                            </span>
+                                        </td>
+                                        <td> 
+                                            {{ $user->profile == 'organization'? $user->organization->name : 'N/A'}}
+                                        </td>
+                                        <td> 
+                                            <span class="badge badge-{{$user->status == 'active'? 'success' : 'danger'}}">
+                                                {{ $user->status == 'active'? 'ativo' : 'inativo'}}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <form action="{{ route('users.destroy', $user->id)}}" method="post">
+                                            @csrf
+                                            @method('DELETE')
+                                            <a class="btn btn-info btn-sm" href="{{ route('users.edit',$user->id)}}">
+                                                <i class="fas fa-pencil-alt"></i>  Editar
+                                            </a>
+                                            @if($user->id != 1)
+                                            <button class="btn btn-danger btn-sm" type="submit">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                            @endif
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            @endforeach
+                                
+                            <tfoot>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>E-mail</th>
+                                    <th>Perfil</th>
+                                    <th>Instituição</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="row">
+                        {{ $users->links() }}
+                    </div>
                 </div>
             </div>
         </div>

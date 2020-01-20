@@ -14,6 +14,7 @@ class User extends Authenticatable
 
     public const ADMIN           = 'admin';
     public const ORGANIZATION    = 'organization';
+    public const VOLUNTEER       = 'volunteer';
 
     /**
      * The attributes that are mass assignable.
@@ -51,5 +52,13 @@ class User extends Authenticatable
     public function setDateOfBirthAttribute($value)
     {
         $this->attributes['date_of_birth'] = Carbon::createFromFormat('d/m/Y', $value)->toDateString();
+    }
+
+    /**
+     * Get the organization of the user.
+     */
+    public function organization()
+    {
+        return $this->belongsTo('App\Organization');
     }
 }

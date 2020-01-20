@@ -46,7 +46,7 @@
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                                         </div>
-                                        <input type="text" class="form-control date-input @error('date_of_birth') is-invalid @enderror"  name="date_of_birth" value="{{ old('date_of_birth', isset($user->date_of_birth) ? $user->date_of_birth : null) }}">
+                                        <input type="text" class="form-control date-input @error('date_of_birth') is-invalid @enderror" placeholder="dd/mm/aaaa" name="date_of_birth" value="{{ old('date_of_birth', isset($user->date_of_birth) ? $user->date_of_birth : null) }}">
                                         @error('date_of_birth')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -59,17 +59,16 @@
                             <label for="profile">Perfil</label>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
-                                    name="profile" value="admin" {{ old('profile', isset($user->profile)? $user->profile : null) == 'admin'? 'checked' : '' }}>
+                                    name="profile" value="admin" {{ old('profile', isset($user->profile)? $user->profile : null) == 'organization'? '' : 'checked' }}>
                                 <label class="form-check-label">Administrador</label>
-                            </div>
+                            </div>  
 
-                            <div class="form-check">
+                            <div class="form-check form-check-inline">          
                                 <input class="form-check-input" type="radio"
                                     name="profile" value="organization" {{ old('profile', isset($user->profile)? $user->profile : null) == 'organization'? 'checked' : '' }}>
                                 <label class="form-check-label">Instituição</label>
                             </div>
                             
-
                             @error('profile')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -144,8 +143,12 @@
                     <!-- /.card-body -->
 
                     <div class="card-footer">
-                    <button type="submit" class="btn btn-success float-right">Salvar</button>
-                    <button type="submit" class="btn btn-danger ">Cancelar</button>
+                    <button type="submit" class="btn btn-success float-right">
+                        <i class="fas fa-save"></i>  Salvar
+                    </button>
+                    <a class="btn btn-danger" href="{{ route('users.index')}}">
+                        <i class="fas fa-arrow-left"></i>  Cancelar
+                    </a>    
                     </div>
                 </form>
 
