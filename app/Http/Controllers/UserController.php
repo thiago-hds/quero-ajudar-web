@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRequest;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -63,24 +65,11 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\UserRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        
-        $request->validate([
-            'name'              => 'required',
-            'date_of_birth'     => 'required|date_format:d/m/Y|before:today',
-            'profile'           => 'required|in:admin,organization',
-            'organization_id'   => 'required_if:profile,organization',
-            'email'             => 'required|email',
-            'password'          => 'required',
-            'password_confirm'  => 'required|same:password',
-            'status'            => 'required|in:active,inactive'
-        ]);
-
-
         $user = new User([
             'name'              => $request->input('name'),
             'date_of_birth'     => $request->input('date_of_birth'),
@@ -131,23 +120,12 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\UserRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, $id)
     {
-        $request->validate([
-            'name'              => 'required',
-            'date_of_birth'     => 'required|date_format:d/m/Y|before:today',
-            'profile'           => 'required|in:admin,organization',
-            'organization_id'   => 'required_if:profile,organization',
-            'email'             => 'required|email',
-            'password'          => 'required',
-            'password_confirm'  => 'required|same:password',
-            'status'            => 'required:in:active,inactive'
-        ]);
-
         $user = User::find($id);
         $user->name             = $request->input('name');
         $user->date_of_birth    = $request->input('date_of_birth');
