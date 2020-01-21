@@ -6,17 +6,7 @@
     <h1 class="m-0 text-dark">{{ (isset($user)? 'Editar' : 'Novo') . ' Usuário' }}</h1>
 @stop
 
-@section('content')
-    @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-    @endif
-    
+@section('content')    
     <div class="row">
         <div class="col-12">
         
@@ -77,10 +67,10 @@
 
                         <div id="organization_div" class="form-group" style="display:{{ isset($user->profile) && $user->profile == 'organization' ? 'block' : 'none' }}">
                             <label for="organization">Instituição</label>
-                            <select class="form-control select2  @error('organization') is-invalid @enderror" data-placeholder="Selecione uma instituição" style="width: 100%;" name="organization">
+                            <select class="form-control select2  @error('organization') is-invalid @enderror" data-placeholder="Selecione uma instituição" style="width: 100%;" name="organization_id">
                                 <option></option>
                                 @foreach($organizations as $organization)
-                                    <option value="{{ $organization->id }}" {{ (old('organization', isset($user->organization_id)? $user->organization_id : null) == $organization->id)? 'selected' : '' }}>
+                                    <option value="{{ $organization->id }}" {{ (old('organization_id', isset($user->organization_id)? $user->organization_id : null) == $organization->id)? 'selected' : '' }}>
                                         {{ $organization->name }}
                                     </option>
                                 @endforeach

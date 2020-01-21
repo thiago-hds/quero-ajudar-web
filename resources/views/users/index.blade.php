@@ -3,11 +3,6 @@
 @section('title', 'Usuários')
 
 @section('content_header')
-    <h1 class="m-0 text-dark">Usuários</h1>
-@stop
-
-@section('content')
-
     <div class="col-sm-12">
         @if(session()->get('success'))
             <div class="alert alert-success">
@@ -15,6 +10,10 @@
             </div>
         @endif
     </div>
+    <h1 class="m-0 text-dark">Usuários</h1>
+@stop
+
+@section('content')
 
     <div class="row">
         <div class="col-12">
@@ -108,11 +107,11 @@
                                         <td> {{ $user->email }} </td>
                                         <td> 
                                             <span class="badge badge-{{$user->profile == 'organization'? 'info' : 'warning'}}">
-                                                {{ $user->profile == 'organization'? 'organização' : 'administrador'}}
+                                                {{ $user->profile == 'organization'? 'instituição' : 'administrador'}}
                                             </span>
                                         </td>
                                         <td> 
-                                            {{ $user->profile == 'organization'? $user->organization->name : 'N/A'}}
+                                            {{ ($user->profile == 'organization' && isset($user->organization))? $user->organization->name : 'N/A'}}
                                         </td>
                                         <td> 
                                             <span class="badge badge-{{$user->status == 'active'? 'success' : 'danger'}}">
@@ -120,18 +119,12 @@
                                             </span>
                                         </td>
                                         <td>
-                                            <form action="{{ route('users.destroy', $user->id)}}" method="post">
-                                            @csrf
-                                            @method('DELETE')
                                             <a class="btn btn-info btn-sm" href="{{ route('users.edit',$user->id)}}">
                                                 <i class="fas fa-pencil-alt"></i>  Editar
                                             </a>
-                                            @if($user->id != 1)
-                                            <button class="btn btn-danger btn-sm" type="submit">
-                                                <i class="fas fa-trash"></i> Delete
+                                            <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal-delete" onclick="deleteData('users',{{$user->id}})" >
+                                                <i class="fas fa-trash"></i> Excluir
                                             </button>
-                                            @endif
-                                            </form>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -156,6 +149,35 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="modal-delete">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Confirmação de Exclusão</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Você tem certeza que deseja excluir o usuário?</p>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <form id="form-delete" action="" method="post">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-danger" type="submit">Excluir</button>
+                    </form>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+
 @stop
 
 @section('css')

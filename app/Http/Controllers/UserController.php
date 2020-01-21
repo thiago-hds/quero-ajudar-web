@@ -42,7 +42,7 @@ class UserController extends Controller
 
         // retornar view com dados
         $inputs = (object) $inputs;
-        $users = User::where($whereClauses)->paginate(20);
+        $users = User::where($whereClauses)->paginate(10);
         $organizations = Organization::all();
         
         return view('users.index', compact('inputs', 'users', 'organizations'));
@@ -71,24 +71,30 @@ class UserController extends Controller
         
         $request->validate([
             'name'              => 'required',
-            'date_of_birth'     => 'required',
+            'date_of_birth'     => 'required|date_format:d/m/Y|before:today',
             'profile'           => 'required|in:admin,organization',
-            'organization'      => 'required_if:profile,organization',
+            'organization_id'   => 'required_if:profile,organization',
             'email'             => 'required|email',
             'password'          => 'required',
             'password_confirm'  => 'required|same:password',
             'status'            => 'required|in:active,inactive'
         ]);
 
+
         $user = new User([
             'name'              => $request->input('name'),
             'date_of_birth'     => $request->input('date_of_birth'),
             'profile'           => $request->input('profile'),
-            'organization_id'   => $request->input('profile') == User::ADMIN? null : $request->get('organization'),
             'email'             => $request->input('email'),
             'password'          => Hash::make($request->input('password')),
             'status'            => $request->input('status')
         ]);
+        
+        if($user->profile == User::ORGANIZATION){
+            $organization = Organization::find($request->input('organization_id'));
+            $user->organization()->associate($organization);
+        }
+
         $user->save();
         return redirect('/users')->with('success', 'Usuário Salvo!');
     }
@@ -133,9 +139,9 @@ class UserController extends Controller
     {
         $request->validate([
             'name'              => 'required',
-            'date_of_birth'     => 'required',
+            'date_of_birth'     => 'required|date_format:d/m/Y|before:today',
             'profile'           => 'required|in:admin,organization',
-            'organization'      => 'required_if:profile,organization',
+            'organization_id'   => 'required_if:profile,organization',
             'email'             => 'required|email',
             'password'          => 'required',
             'password_confirm'  => 'required|same:password',
@@ -146,9 +152,13 @@ class UserController extends Controller
         $user->name             = $request->input('name');
         $user->date_of_birth    = $request->input('date_of_birth');
         $user->profile          = $request->input('profile');
-        $user->organization_id  = $request->input('profile') == User::ADMIN? null : $request->input('organization');
         $user->email            = $request->input('email');
         $user->status           = $request->input('status');
+        
+        if($user->profile == User::ORGANIZATION){
+            $organization = Organization::find($request->input('organization_id'));
+            $user->organization()->associate($organization);
+        }
         
         if($request->input('password') != $user->password){
             $user->password = Hash::make($request->input('password'));
@@ -167,6 +177,9 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::find($id);
+        $user->delete();
+
+        return redirect('/users')->with('success', 'Usuário excluído!');
     }
 }

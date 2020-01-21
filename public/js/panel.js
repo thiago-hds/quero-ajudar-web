@@ -11,3 +11,15 @@ $(document).ready(function() {
         }
     });
 });
+
+function deleteData(resource, id)
+{
+    //var url = '{{ route(":resource.destroy", ":id") }}';
+    var url = '/:resource/:id';
+    
+    url = url.replace(':resource', resource);
+    url = url.replace(':id', id);
+
+    console.log(url);
+    $("#form-delete").attr('action', url);
+}
