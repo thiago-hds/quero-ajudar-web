@@ -44,6 +44,18 @@ class User extends Authenticatable
         'date_of_birth'     => 'date'
     ];
 
+    public function isAdmin(){
+        return $this->attributes['profile'] === self::ADMIN;
+    }
+
+    /**
+     * Get the organization of the user.
+     */
+    public function organization()
+    {
+        return $this->belongsTo('App\Organization');
+    }
+
     public function getDateOfBirthAttribute($value)
     {
         return Carbon::parse($value)->format('d/m/Y');
@@ -54,11 +66,5 @@ class User extends Authenticatable
         $this->attributes['date_of_birth'] = Carbon::createFromFormat('d/m/Y', $value)->toDateString();
     }
 
-    /**
-     * Get the organization of the user.
-     */
-    public function organization()
-    {
-        return $this->belongsTo('App\Organization');
-    }
+
 }

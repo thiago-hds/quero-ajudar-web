@@ -47,15 +47,18 @@
 
                         <div class="form-group">
                             <label for="profile">Perfil</label>
+                            
+                            @if(Auth::user()->isAdmin())
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
                                     name="profile" value="admin" {{ old('profile', isset($user->profile)? $user->profile : null) == 'organization'? '' : 'checked' }}>
                                 <label class="form-check-label">Administrador</label>
                             </div>  
+                            @endif
 
-                            <div class="form-check form-check-inline">          
+                            <div class="form-check">          
                                 <input class="form-check-input" type="radio"
-                                    name="profile" value="organization" {{ old('profile', isset($user->profile)? $user->profile : null) == 'organization'? 'checked' : '' }}>
+                                    name="profile" value="organization" {{ (!Auth::user()->isAdmin() || old('profile', isset($user->profile)? $user->profile : null) == 'organization')? 'checked' : '' }}>
                                 <label class="form-check-label">Instituição</label>
                             </div>
                             
@@ -64,8 +67,8 @@
                             @enderror
                         </div>
                         
-
-                        <div id="organization_div" class="form-group" style="display:{{ isset($user->profile) && $user->profile == 'organization' ? 'block' : 'none' }}">
+                        @if(Auth::user()->isAdmin())
+                        <div id="organization_div" class="form-group" style="display:{{ (isset($user->profile) && $user->profile == 'organization') ? 'block' : 'none' }}">
                             <label for="organization">Instituição</label>
                             <select class="form-control select2  @error('organization') is-invalid @enderror" data-placeholder="Selecione uma instituição" style="width: 100%;" name="organization_id">
                                 <option></option>
@@ -80,6 +83,15 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+
+                        @else
+                        <div id="organization_div" class="form-group">
+                            <label for="organization">Instituição</label>
+                            <select class="form-control select2  @error('organization') is-invalid @enderror" data-placeholder="Selecione uma instituição" style="width: 100%;" name="organization_id" disabled>
+                                <option>{{ Auth::user()->organization->name }}</option>
+                            </select>
+                        </div>
+                        @endif
 
                         <div class="form-group">
                             <label for="email">E-mail</label>

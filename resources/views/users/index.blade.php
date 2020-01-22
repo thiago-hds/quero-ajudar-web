@@ -48,7 +48,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="organization_id">Instituição</label>
-                                    <select class="form-control" data-placeholder="Selecione uma instituição" style="width: 100%;" name="organization_id">
+                                    <select class="form-control" data-placeholder="Selecione uma instituição" style="width: 100%;" name="organization_id" @if(!Auth::user()->isAdmin()) disabled @endif >
                                         <option></option>
                                         @foreach($organizations as $organization)
                                             <option value="{{ $organization->id }}" {{ (isset($inputs->organization_id) && $inputs->organization_id == $organization->id)? 'selected' : '' }}>
@@ -119,12 +119,16 @@
                                             </span>
                                         </td>
                                         <td>
+                                            @can('update', $user)
                                             <a class="btn btn-info btn-sm" href="{{ route('users.edit',$user->id)}}">
                                                 <i class="fas fa-pencil-alt"></i>  Editar
                                             </a>
+                                            @endcan
+                                            @can('delete', $user)
                                             <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal-delete" onclick="deleteData('users',{{$user->id}})" >
                                                 <i class="fas fa-trash"></i> Excluir
                                             </button>
+                                            @endcan
                                         </td>
                                     </tr>
                                 </tbody>

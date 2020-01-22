@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UserRequest extends FormRequest
 {
@@ -23,15 +24,23 @@ class UserRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        
+        $rules = [
             'name'              => 'required',
             'date_of_birth'     => 'required|date_format:d/m/Y|before:today',
-            'profile'           => 'required|in:admin,organization',
-            'organization_id'   => 'required_if:profile,organization',
             'email'             => 'required|email',
             'password'          => 'required',
             'password_confirm'  => 'required|same:password',
             'status'            => 'required:in:active,inactive'
         ];
+
+        if(Auth::user()->isAdmin()){
+            $rules [] = [[
+                'profile'           => 'required|in:admin,organization',
+                'organization_id'   => 'required_if:profile,organization',
+            ]];
+        }
+        
+        return $rules;
     }
 }

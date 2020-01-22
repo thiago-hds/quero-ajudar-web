@@ -2,19 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
+use App\Organization;
 use App\Http\Requests\UserRequest;
+use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
-use App\User;
-use App\Organization;
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-
 
 class UserController extends Controller
 {
+
+    public function __construct()
+    {   
+        $this->middleware('auth');
+        $this->authorizeResource(\App\User::class);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -31,6 +37,10 @@ class UserController extends Controller
         // definir clausulas where
         $whereClauses = [['profile','!=', 'volunteer']];
 
+        if(Auth::user()->profile == User::ORGANIZATION){
+            $inputs['organization_id'] = Auth::user()->organization_id;
+        }
+
         foreach($inputs as $key => $input){
             if($input && in_array($key, array_merge($equalFields, $likeFields))){
                 if(in_array($key,['profile','organization_id','status'])){
@@ -44,7 +54,7 @@ class UserController extends Controller
 
         // retornar view com dados
         $inputs = (object) $inputs;
-        $users = User::where($whereClauses)->paginate(10);
+        $users = User::where($whereClauses)->orderBy('name', 'asc')->paginate(10);
         $organizations = Organization::all();
         
         return view('users.index', compact('inputs', 'users', 'organizations'));
@@ -58,7 +68,6 @@ class UserController extends Controller
     public function create()
     {
         $organizations = Organization::all();
-
         return view('users.edit', compact('organizations'));
     }
 
@@ -73,14 +82,20 @@ class UserController extends Controller
         $user = new User([
             'name'              => $request->input('name'),
             'date_of_birth'     => $request->input('date_of_birth'),
-            'profile'           => $request->input('profile'),
+            'profile'           => Auth::user()->isAdmin()? $request->input('profile') : User::ORGANIZATION,
             'email'             => $request->input('email'),
             'password'          => Hash::make($request->input('password')),
             'status'            => $request->input('status')
         ]);
         
-        if($user->profile == User::ORGANIZATION){
+        if(!Auth::user()->isAdmin()){
+            $organization = Organization::find(Auth::user()->organization_id);
+        }
+        elseif($user->profile == User::ORGANIZATION){
             $organization = Organization::find($request->input('organization_id'));
+        }
+
+        if(isset($organization)){
             $user->organization()->associate($organization);
         }
 
@@ -102,18 +117,12 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(User $user)
     {
-        $user = User::find($id);
         $organizations = Organization::all();
-
-        if($user->profile == User::VOLUNTEER){
-            redirect(route('volunteers.index'));
-        }
-
         return view('users.edit', compact('user','organizations'));   
     }
 
@@ -121,27 +130,33 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UserRequest  $request
-     * @param  int  $id
+     * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(UserRequest $request, $id)
-    {
-        $user = User::find($id);
-        $user->name             = $request->input('name');
-        $user->date_of_birth    = $request->input('date_of_birth');
-        $user->profile          = $request->input('profile');
-        $user->email            = $request->input('email');
-        $user->status           = $request->input('status');
+    public function update(UserRequest $request, User $user)
+    {   
+        $user->update([
+            'name'              => $request->input('name'),
+            'date_of_birth'     => $request->input('date_of_birth'),
+            'profile'           => Auth::user()->isAdmin()? $request->input('profile') : User::ORGANIZATION,
+            'email'             => $request->input('email'),
+            'status'            => $request->input('status')
+        ]);
         
-        if($user->profile == User::ORGANIZATION){
+        if(!Auth::user()->isAdmin()){
+            $organization = Organization::find(Auth::user()->organization_id);
+        }
+        elseif($user->profile == User::ORGANIZATION){
             $organization = Organization::find($request->input('organization_id'));
+        }
+
+        if(isset($organization)){
             $user->organization()->associate($organization);
         }
         
         if($request->input('password') != $user->password){
             $user->password = Hash::make($request->input('password'));
         }
-            
         $user->save();
 
         return redirect('/users')->with('success', 'Usuário atualizado!');
@@ -150,14 +165,12 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        $user = User::find($id);
         $user->delete();
-
         return redirect('/users')->with('success', 'Usuário excluído!');
     }
 }
