@@ -77,7 +77,7 @@ class UserPolicy
      */
     public function restore(User $user, User $model)
     {
-        return false;
+        return ($model->id !== 1) && ($user->isAdmin() || $user->organization_id === $model->organization_id);
     }
 
     /**
@@ -89,6 +89,6 @@ class UserPolicy
      */
     public function forceDelete(User $user, User $model)
     {
-        return false;
+        return ($model->id !== 1) && ($user->isAdmin() || $user->organization_id === $model->organization_id);
     }
 }

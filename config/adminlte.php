@@ -189,12 +189,31 @@ return [
             'icon' => 'fas fa-fw fa-user',
             'submenu' => [
                 [
-                    'text' => 'Listar',
-                    'url'  => 'users',
+                    'text' => 'Novo',
+                    'icon' => 'fas fa-fw fa-plus-circle',
+                    'url'  => 'users/create',
                 ],
                 [
-                    'text' => 'Adicionar',
-                    'url'  => 'users/create',
+                    'text' => 'Listar',
+                    'icon' => 'fas fa-fw fa-list',
+                    'url'  => 'users',
+                ]
+            ]
+        ],
+        [
+            'text' => 'Instituições',
+            'url'  => '#',
+            'icon' => 'fas fa-fw fa-building',
+            'submenu' => [
+                [
+                    'text' => 'Nova',
+                    'icon' => 'fas fa-fw fa-plus-circle',
+                    'url'  => 'organizations/create',
+                ],
+                [
+                    'text' => 'Listar',
+                    'icon' => 'fas fa-fw fa-list',
+                    'url'  => 'organizations',
                 ]
             ]
         ],

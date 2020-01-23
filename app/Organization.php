@@ -14,5 +14,13 @@ class Organization extends Model
     {
         return $this->hasMany('App\User');
     }
+
+    /**
+     * Get the .
+     */
+    public function organizationType()
+    {
+        return $this->belongsTo('App\OrganizationType');
+    }
     
 }
