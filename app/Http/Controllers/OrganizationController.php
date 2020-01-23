@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Organization;
 use App\OrganizationType;
+use App\Cause;
 use Illuminate\Http\Request;
 
 class OrganizationController extends Controller
@@ -63,7 +64,8 @@ class OrganizationController extends Controller
     public function create()
     {
         $organizationTypes = OrganizationType::orderBy('name', 'asc')->get();
-        return view('organizations.edit', compact('organizationTypes'));
+        $causes = Cause::orderBy('name', 'asc')->get();
+        return view('organizations.edit', compact('organizationTypes','causes'));
     }
 
     /**

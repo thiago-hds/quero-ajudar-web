@@ -18,34 +18,72 @@
                     @endif
                     @csrf
                     <div class="card-body">
-                        <!-- name -->
-                        <div class="form-group">
-                            <label for="name">Nome</label>
-                            <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name', isset($organization->name) ? $organization->name : null) }}">
-                            @error('name')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+
+                        <div class="row">
+                            <!-- name -->
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="name">Nome</label>
+                                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name', isset($organization->name) ? $organization->name : null) }}">
+                                    @error('name')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <!-- logo -->
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="logo">Logo</label>
+                                    <input type="text" class="form-control @error('logo') is-invalid @enderror" name="logo" value="{{ old('logo', isset($organization->logo) ? $organization->logo : null) }}">
+                                    @error('logo')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>  
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <!-- organzation_type_id -->
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="organization_type_id">Tipo de Instituição</label>
+                                    <select class="form-control select2  @error('organization_type_id') is-invalid @enderror" data-placeholder="Selecione um tipo de instituição" style="width: 100%;" name="organization_type_id">
+                                        <option></option>
+                                        @foreach($organizationTypes as $organizationType)
+                                            <option value="{{ $organizationType->id }}" {{ (old('organization_type_id', isset($organization->organization_type_id)? $organization->organization_type_id : null) == $organizationType->id)? 'selected' : '' }}>
+                                                {{ $organizationType->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+
+                                    @error('organization_type_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <!-- causes --->
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="causes">Causas</label>
+                                    <select class="form-control select2  @error('causes') is-invalid @enderror" data-placeholder="Selecione uma ou mais causas" style="width: 100%;" name="causes">
+                                        <option></option>
+                                        @foreach($causes as $causes)
+                                            <option value="{{ $cause->id }}" >
+                                                {{ $cause->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+
+                                    @error('organization_type_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- organization_type -->
-                        <div class="form-group">
-                            <label for="organization_type_id">Tipo de Instituição</label>
-                            <select class="form-control select2  @error('organization_type_id') is-invalid @enderror" data-placeholder="Selecione um tipo de instituição" style="width: 100%;" name="organization_type_id">
-                                <option></option>
-                                @foreach($organizationTypes as $organizationType)
-                                    <option value="{{ $organizationType->id }}" {{ (old('organization_type_id', isset($organization->organization_type_id)? $organization->organization_type_id : null) == $organizationType->id)? 'selected' : '' }}>
-                                        {{ $organizationType->name }}
-                                    </option>
-                                @endforeach
-                            </select>
 
-                            @error('organization_type_id')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="form-group">
-                        </div>
                         
                         <!-- description -->
                         <div class="form-group">
@@ -56,16 +94,19 @@
                             @enderror
                         </div>
 
+                        
                         <div class="row">
-                            <!-- logo -->
+                            <!-- email -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="logo">Logo</label>
-                                    <input type="text" class="form-control @error('logo') is-invalid @enderror" name="logo" value="{{ old('logo', isset($organization->logo) ? $organization->logo : null) }}">
-                                    @error('logo')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>  
+                                    <label for="email">E-mail</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', isset($organization->email) ? $organization->email : null) }}">
+                                        @error('email')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div> 
                             </div>
 
                             <!-- website -->
