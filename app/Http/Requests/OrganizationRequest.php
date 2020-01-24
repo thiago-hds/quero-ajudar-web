@@ -13,7 +13,7 @@ class OrganizationRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,11 +24,14 @@ class OrganizationRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'                  => 'required|unique:organization',
+            'name'                  => 'required|unique:organizations',
+            'logo'                  => '',
             'organization_type_id'  => 'required',
+            'causes'                => 'required|min:1',
             'description'           => 'required',
-            'logo'                  => 'required',
-            'website'               => 'required',
+            'email'                 => 'required',
+            'website'               => '',
+            'phones'                => '',
             'status'                => 'required:in:active,inactive'
         ];
     }

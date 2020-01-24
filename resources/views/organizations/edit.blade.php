@@ -35,14 +35,22 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="logo">Logo</label>
-                                    <input type="text" class="form-control @error('logo') is-invalid @enderror" name="logo" value="{{ old('logo', isset($organization->logo) ? $organization->logo : null) }}">
+                                    <div class="input-group">
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input @error('logo') is-invalid @enderror" id="exampleInputFile">
+                                            <label class="custom-file-label" for="exampleInputFile">Selecione um arquivo</label>
+                                        </div>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" id="">Upload</span>
+                                        </div>
+                                    </div>
                                     @error('logo')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>  
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <!-- organzation_type_id -->
                             <div class="col-sm-6">
@@ -67,23 +75,21 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="causes">Causas</label>
-                                    <select class="form-control select2  @error('causes') is-invalid @enderror" data-placeholder="Selecione uma ou mais causas" style="width: 100%;" name="causes">
+                                    <select class="form-control select2  @error('causes') is-invalid @enderror" multiple="multiple" data-placeholder="Selecione uma ou mais causas" style="width: 100%;" name="causes[]">
                                         <option></option>
-                                        @foreach($causes as $causes)
+                                        @foreach($causes as $cause)
                                             <option value="{{ $cause->id }}" >
                                                 {{ $cause->name }}
                                             </option>
                                         @endforeach
                                     </select>
 
-                                    @error('organization_type_id')
+                                    @error('causes')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
                         </div>
-
-
                         
                         <!-- description -->
                         <div class="form-group">
@@ -93,7 +99,6 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-
                         
                         <div class="row">
                             <!-- email -->
@@ -114,12 +119,27 @@
                                 <div class="form-group">
                                     <label for="website">Website</label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control @error('date_of_birth') is-invalid @enderror" name="website" value="{{ old('website', isset($organization->website) ? $organization->website : null) }}">
+                                        <input type="text" class="form-control @error('website') is-invalid @enderror" name="website" value="{{ old('website', isset($organization->website) ? $organization->website : null) }}">
                                         @error('website')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div> 
+                            </div>
+                        </div>
+
+                        <!-- phones -->
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="phone">Telefones</label>
+                                    <div class="phone-list">
+                                        <div class="input-group phone-input-group">
+                                            <input type="text" name="phone[1]" class="form-control phone-input" placeholder="(99) 999999999" />
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-success btn-sm float-right btn-add-phone"><i class="fas fa-plus"></i>  Adicionar Telefone </button>
+                                </div>
                             </div>
                         </div>
 

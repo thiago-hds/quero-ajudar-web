@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Organization;
 use App\OrganizationType;
 use App\Cause;
+use App\Http\Requests\OrganizationRequest;
 use Illuminate\Http\Request;
 
 class OrganizationController extends Controller
@@ -71,12 +72,27 @@ class OrganizationController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\OrganizationRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(OrganizationRequest $request)
     {
-        //
+        $organization = new Organization([
+            'name'              => $request->input('name'),
+            'website'           => $request->input('website')? $request->input('website') : '',
+            'description'       => $request->input('description'),
+            'logo'              => '',
+            'email'             => $request->input('email'),
+            'status'            => $request->input('status')
+        ]);
+
+
+        $organization->save();
+
+        $organization->causes()->attach($request->input('causes'));
+
+        return redirect('/organizations')->with('success', 'Instituição Salva!');
+
     }
 
     /**

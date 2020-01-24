@@ -17,7 +17,7 @@ class CreateOrganizationsTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('organization_type_id')->unsigned();
             $table->string('name');
-            $table->string('website');
+            $table->string('website')->nullable();
             $table->string('description');
             $table->string('logo');
             $table->enum('status', ['active','inactive']);

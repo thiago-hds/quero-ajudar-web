@@ -147,13 +147,17 @@ return [
     */
 
     'attributes' => [
-        'date_of_birth'     => 'data de nascimento',    
-        'email'             => 'e-mail',
-        'name'              => 'nome',
-        'organization'      => 'instituição',
-        'password_confirm'  => 'confirmação de senha',
-        'password'          => 'senha',
-        'profile'           => 'perfil'
+        'causes'                => 'causas',
+        'date_of_birth'         => 'data de nascimento', 
+        'description'           => 'descrição',   
+        'email'                 => 'e-mail',
+        'name'                  => 'nome',
+        'organization'          => 'instituição',
+        'organization_type_id'  => 'tipo de instituição',
+        'password_confirm'      => 'confirmação de senha',
+        'password'              => 'senha',
+        'phones'                => 'telefones',
+        'profile'               => 'perfil'
     ],
 
 ];
