@@ -40,7 +40,7 @@ function addNewPhoneInput(){
     var index = $('.phone-input-group').length + 1;
     $('.phone-list').append(''+
             '<div class="input-group phone-input-group">'+
-                '<input type="text" id="phone-'+ index +'" name="phone['+index+']" class="form-control" placeholder="(99) 999999999" />'+
+                '<input type="text" id="phone-'+ index +'" name="phones['+index+']" class="form-control" placeholder="(99) 999999999" />'+
                 '<div class="input-group-prepend">'+
                     '<button class="btn btn-danger btn-remove-phone" type="button"><i class="fas fa-times"></i></button>'+
                 '</div>'+

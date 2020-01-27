@@ -21,38 +21,28 @@
                 <form action="" method="GET">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="name">Nome</label>
                                     <input type="text" class="form-control" name="name" value="{{ isset($inputs->name)? $inputs->name : '' }}">
                                 </div>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="email">E-mail</label>
                                     <input type="text" class="form-control" name="email" value="{{ isset($inputs->email)? $inputs->email : '' }}">
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group" >
-                                    <label for="profile">Perfil</label>
-                                    <select class="form-control" name="profile">
-                                        <option></option>
-                                        <option value="admin" {{ (isset($inputs->profile) && $inputs->profile == 'admin')? 'selected' : '' }}>Administrador</option>
-                                        <option value="organization" {{ (isset($inputs->profile) && $inputs->profile == 'organization')? 'selected' : '' }}>Instituição</option>
-                                    </select>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="organization_id">Instituição</label>
-                                    <select class="form-control" data-placeholder="Selecione uma instituição" style="width: 100%;" name="organization_id" @if(!Auth::user()->isAdmin()) disabled @endif >
+                                    <label for="organization_id">Causa</label>
+                                    <select class="form-control select2" data-placeholder="Selecione uma causa" style="width: 100%;" name="cause_id" >
                                         <option></option>
-                                        @foreach($organizations as $organization)
-                                            <option value="{{ $organization->id }}" {{ (isset($inputs->organization_id) && $inputs->organization_id == $organization->id)? 'selected' : '' }}>
-                                                {{ $organization->name }}
+                                        @foreach($causes as $cause)
+                                            <option value="{{ $cause->id }}" {{ (isset($inputs->cause_id) && $inputs->cause_id == $cause->id)? 'selected' : '' }}>
+                                                {{ $cause->name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -94,41 +84,51 @@
                                 <tr>
                                     <th>Nome</th>
                                     <th>E-mail</th>
-                                    <th>Perfil</th>
-                                    <th>Instituição</th>
+                                    <th>Telefones</th>
+                                    <th>Causas</th>
                                     <th>Status</th>
                                     <th>Ações</th>
                                 </tr>
                             </thead>
-                            @foreach($users as $user)
+                            @foreach($organizations as $organization)
                                 <tbody>
                                     <tr>
-                                        <td> {{ $user->name }} </td>
-                                        <td> {{ $user->email }} </td>
+                                        <!-- name -->
+                                        <td> {{ $organization->name }} </td>
+
+                                        <!-- email -->
+                                        <td> {{ $organization->email }} </td>
+
+                                        <!-- phones -->
                                         <td> 
-                                            <span class="badge badge-{{$user->profile == 'organization'? 'info' : 'warning'}}">
-                                                {{ $user->profile == 'organization'? 'instituição' : 'administrador'}}
+                                            @foreach($organization->phones as $phone)
+                                            {{ $phone->number }}<br/>
+                                            @endforeach   
+                                        </td>
+
+                                        <!-- causes -->
+                                        <td> 
+                                            @foreach($organization->causes as $cause)
+                                            {{ $cause->name }}
+                                            @endforeach     
+                                        </td>
+
+                                        <!-- status -->
+                                        <td> 
+                                            <span class="badge badge-{{$organization->status == 'active'? 'success' : 'danger'}}">
+                                                {{ $organization->status == 'active'? 'ativo' : 'inativo'}}
                                             </span>
                                         </td>
-                                        <td> 
-                                            {{ ($user->profile == 'organization' && isset($user->organization))? $user->organization->name : 'N/A'}}
-                                        </td>
-                                        <td> 
-                                            <span class="badge badge-{{$user->status == 'active'? 'success' : 'danger'}}">
-                                                {{ $user->status == 'active'? 'ativo' : 'inativo'}}
-                                            </span>
-                                        </td>
+
+                                        <!-- actions -->
                                         <td>
-                                            @can('update', $user)
-                                            <a class="btn btn-info btn-sm" href="{{ route('users.edit',$user->id)}}">
+                                            <a class="btn btn-info btn-sm" href="{{ route('organizations.edit',$organization->id)}}">
                                                 <i class="fas fa-pencil-alt"></i>  Editar
                                             </a>
-                                            @endcan
-                                            @can('delete', $user)
-                                            <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal-delete" onclick="deleteData('users',{{$user->id}})" >
+
+                                            <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal-delete" onclick="deleteData('organizations',{{$organization->id}})" >
                                                 <i class="fas fa-trash"></i> Excluir
                                             </button>
-                                            @endcan
                                         </td>
                                     </tr>
                                 </tbody>
@@ -138,8 +138,8 @@
                                 <tr>
                                     <th>Nome</th>
                                     <th>E-mail</th>
-                                    <th>Perfil</th>
-                                    <th>Instituição</th>
+                                    <th>Telefones</th>
+                                    <th>Causas</th>
                                     <th>Status</th>
                                     <th>Ações</th>
                                 </tr>
@@ -147,7 +147,7 @@
                         </table>
                     </div>
                     <div class="row">
-                        {{ $users->links() }}
+                        {{ $organizations->links() }}
                     </div>
                 </div>
             </div>
@@ -164,7 +164,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Você tem certeza que deseja excluir o usuário?</p>
+                    <p>Você tem certeza que deseja excluir a instituição?</p>
                     </div>
                     <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>

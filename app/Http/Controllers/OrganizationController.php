@@ -32,7 +32,7 @@ class OrganizationController extends Controller
         $inputs = $request->all();
 
         // definir clausulas where
-        $whereClauses = [['profile','!=', 'volunteer']];
+        $whereClauses = [];
 
         //if(Auth::user()->profile == User::ORGANIZATION){
         //    $inputs['organization_id'] = Auth::user()->organization_id;
@@ -51,10 +51,10 @@ class OrganizationController extends Controller
 
         // retornar view com dados
         $inputs = (object) $inputs;
-        //$users = User::where($whereClauses)->orderBy('name', 'asc')->paginate(10);
-        $organizations = Organization::all();
+        $organizations = Organization::where($whereClauses)->orderBy('name', 'asc')->paginate(10);
+        $causes = Cause::orderBy('name', 'asc')->get();
 
-        return view('organizations.index', compact('inputs', 'organizations'));
+        return view('organizations.index', compact('inputs', 'organizations', 'causes'));
     }
 
     /**
@@ -86,13 +86,18 @@ class OrganizationController extends Controller
             'status'            => $request->input('status')
         ]);
 
-
+        $organization->organizationType()->associate($request->input('organization_type_id'));
         $organization->save();
 
         $organization->causes()->attach($request->input('causes'));
 
-        return redirect('/organizations')->with('success', 'Instituição Salva!');
+        foreach($request->input('phones') as $number){
+            $organization->phones()->create([
+                'number' => $number
+            ]);
+        }
 
+        return redirect('/organizations')->with('success', 'Instituição Salva!');
     }
 
     /**

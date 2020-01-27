@@ -48,7 +48,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="organization_id">Instituição</label>
-                                    <select class="form-control" data-placeholder="Selecione uma instituição" style="width: 100%;" name="organization_id" @if(!Auth::user()->isAdmin()) disabled @endif >
+                                    <select class="form-control select2" data-placeholder="Selecione uma instituição" style="width: 100%;" name="organization_id" @if(!Auth::user()->isAdmin()) disabled @endif >
                                         <option></option>
                                         @foreach($organizations as $organization)
                                             <option value="{{ $organization->id }}" {{ (isset($inputs->organization_id) && $inputs->organization_id == $organization->id)? 'selected' : '' }}>

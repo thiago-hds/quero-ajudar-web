@@ -55,7 +55,7 @@ class UserController extends Controller
         // retornar view com dados
         $inputs = (object) $inputs;
         $users = User::where($whereClauses)->orderBy('name', 'asc')->paginate(10);
-        $organizations = Organization::all();
+        $organizations = Organization::orderBy('name', 'asc')->get();
         
         return view('users.index', compact('inputs', 'users', 'organizations'));
     }

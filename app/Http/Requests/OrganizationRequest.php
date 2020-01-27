@@ -24,14 +24,14 @@ class OrganizationRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'                  => 'required|unique:organizations',
+            'name'                  => 'required',
             'logo'                  => '',
             'organization_type_id'  => 'required',
             'causes'                => 'required|min:1',
             'description'           => 'required',
             'email'                 => 'required',
             'website'               => '',
-            'phones'                => '',
+            'phones'                => 'required|min:1',
             'status'                => 'required:in:active,inactive'
         ];
     }

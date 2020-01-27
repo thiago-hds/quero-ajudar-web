@@ -3,6 +3,15 @@
 @section('title', (isset($organization)? 'Editar' : 'Nova') . ' Instituição')
 
 @section('content_header')
+    @if ($errors->any())
+      <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+              <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+      </div><br />
+    @endif
     <h1 class="m-0 text-dark">{{ (isset($organization)? 'Editar' : 'Nova') . ' Instituição' }}</h1>
 @stop
 
@@ -135,11 +144,17 @@
                                     <label for="phone">Telefones</label>
                                     <div class="phone-list">
                                         <div class="input-group phone-input-group">
-                                            <input type="text" name="phone[1]" class="form-control phone-input" placeholder="(99) 999999999" />
+                                            <input type="text" name="phones[1]" class="form-control phone-input @error('phones') is-invalid @enderror" placeholder="(99) 999999999" />
                                         </div>
+                                        @error('phones')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                     <button type="button" class="btn btn-success btn-sm float-right btn-add-phone"><i class="fas fa-plus"></i>  Adicionar Telefone </button>
                                 </div>
+                            </div>
+                            <div class="col-sm-6">
+
                             </div>
                         </div>
 
@@ -159,7 +174,6 @@
                             </div>
                             
                             @error('status')
-                                {{ $message }} 
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
