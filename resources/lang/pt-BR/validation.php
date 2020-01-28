@@ -157,6 +157,7 @@ return [
         'password_confirm'      => 'confirmação de senha',
         'password'              => 'senha',
         'phones'                => 'telefones',
+        'phones.*'              => 'telefone',
         'profile'               => 'perfil'
     ],
 

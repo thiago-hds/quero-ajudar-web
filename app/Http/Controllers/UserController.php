@@ -43,7 +43,7 @@ class UserController extends Controller
 
         foreach($inputs as $key => $input){
             if($input && in_array($key, array_merge($equalFields, $likeFields))){
-                if(in_array($key,['profile','organization_id','status'])){
+                if(in_array($key,$equalFields)){
                     $whereClauses[] = [$key, '=', $input];
                 }
                 else{

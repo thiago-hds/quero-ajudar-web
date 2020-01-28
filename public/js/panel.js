@@ -2,6 +2,7 @@ $(document).ready(function() {
     $('.select2').select2();
     $('.date-input').inputmask('99/99/9999');
     $('.phone-input').inputmask('(99) 999999999');
+    $('.image-dropzone').dropzone();
 
     // controle de exibição select de instituições no cadastro de usuários
     $('input[name=profile]').change(function(){

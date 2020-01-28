@@ -26,21 +26,17 @@ class OrganizationController extends Controller
     public function index(Request $request)
     {
         // separacao dos campos de filtragem por tipo de comparacao
-        $equalFields    =   ['profile', 'organization_id', 'status']; 
+        $equalFields    =   ['status']; 
         $likeFields     =   ['name', 'email'];
 
         $inputs = $request->all();
 
         // definir clausulas where
-        $whereClauses = [];
-
-        //if(Auth::user()->profile == User::ORGANIZATION){
-        //    $inputs['organization_id'] = Auth::user()->organization_id;
-        //}
+        $whereClauses = []; 
 
         foreach($inputs as $key => $input){
             if($input && in_array($key, array_merge($equalFields, $likeFields))){
-                if(in_array($key,['profile','organization_id','status'])){
+                if(in_array($key,$equalFields)){
                     $whereClauses[] = [$key, '=', $input];
                 }
                 else{
@@ -77,14 +73,30 @@ class OrganizationController extends Controller
      */
     public function store(OrganizationRequest $request)
     {
+        return $request;
         $organization = new Organization([
             'name'              => $request->input('name'),
-            'website'           => $request->input('website')? $request->input('website') : '',
+            'website'           => $request->input('website'),
             'description'       => $request->input('description'),
-            'logo'              => '',
             'email'             => $request->input('email'),
             'status'            => $request->input('status')
         ]);
+        
+        if($request->hasFile('logo') && $request->file('logo')->isValid()){
+
+            $name = uniqid(date('HisYmd'));
+            $extension = $request->file('logo')->extension();
+            $nameFile = "{$name}.{$extension}";
+
+            $upload = $request->file('logo')->storeAs('logo', $nameFile);
+            
+            if($upload){
+                $organization->logo = $upload;
+            }
+            else{
+
+            }
+        }
 
         $organization->organizationType()->associate($request->input('organization_type_id'));
         $organization->save();
@@ -117,9 +129,11 @@ class OrganizationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Organization $organization)
     {
-        //
+        $organizationTypes = OrganizationType::orderBy('name', 'asc')->get();
+        $causes = Cause::orderBy('name', 'asc')->get();
+        return view('users.edit', compact('organizationTypes','causes','organization')); 
     }
 
     /**

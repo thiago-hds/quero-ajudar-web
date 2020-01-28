@@ -18,7 +18,7 @@ class OrganizationPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->profile === User::ADMIN;
+        return $user->isAdmin();
     }
 
     /**
@@ -30,7 +30,7 @@ class OrganizationPolicy
      */
     public function view(User $user, Organization $organization)
     {
-        return $user->profile === User::ADMIN;
+        return $user->isAdmin();
     }
 
     /**
@@ -41,7 +41,7 @@ class OrganizationPolicy
      */
     public function create(User $user)
     {
-        return $user->profile === User::ADMIN;
+        return $user->isAdmin();
     }
 
     /**
@@ -53,7 +53,8 @@ class OrganizationPolicy
      */
     public function update(User $user, Organization $organization)
     {
-        return $user->profile === User::ADMIN;
+        return true;
+        return $user->isAdmin();
     }
 
     /**
@@ -65,7 +66,7 @@ class OrganizationPolicy
      */
     public function delete(User $user, Organization $organization)
     {
-        return $user->profile === User::ADMIN;
+        return $user->isAdmin();
     }
 
     /**
@@ -77,7 +78,7 @@ class OrganizationPolicy
      */
     public function restore(User $user, Organization $organization)
     {
-        return $user->profile === User::ADMIN;
+        return $user->isAdmin();
     }
 
     /**
@@ -89,6 +90,6 @@ class OrganizationPolicy
      */
     public function forceDelete(User $user, Organization $organization)
     {
-        return $user->profile === User::ADMIN;
+        return $user->isAdmin();
     }
 }

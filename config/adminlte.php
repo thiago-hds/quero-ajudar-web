@@ -407,5 +407,21 @@ return [
                 ]
             ],
         ],
+        [
+            'name' => 'Dropzone',
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => '//cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/dropzone.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => false,
+                    'location' => '//cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/dropzone.css',
+                ]
+            ],
+        ],
     ],
 ];

@@ -3,6 +3,7 @@
 @section('title', (isset($organization)? 'Editar' : 'Nova') . ' Instituição')
 
 @section('content_header')
+    <!-- s
     @if ($errors->any())
       <div class="alert alert-danger">
         <ul>
@@ -11,7 +12,7 @@
             @endforeach
         </ul>
       </div><br />
-    @endif
+    @endif -->
     <h1 class="m-0 text-dark">{{ (isset($organization)? 'Editar' : 'Nova') . ' Instituição' }}</h1>
 @stop
 
@@ -21,7 +22,7 @@
         
             <div class="card">
                 <!-- form start -->
-                <form role="form" method="post" action="{{ isset($organization->id)? route('organizations.update', $organization->id) : route('organizations.store') }}">
+                <form role="form" method="post" enctype="multipart/form-data" action="{{ isset($organization->id)? route('organizations.update', $organization->id) : route('organizations.store') }}">
                     @if(isset($organization))
                         @method('PATCH') 
                     @endif
@@ -44,20 +45,14 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="logo">Logo</label>
-                                    <div class="input-group">
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input @error('logo') is-invalid @enderror" id="exampleInputFile">
-                                            <label class="custom-file-label" for="exampleInputFile">Selecione um arquivo</label>
-                                        </div>
-                                        <div class="input-group-append">
-                                            <span class="input-group-text" id="">Upload</span>
-                                        </div>
-                                    </div>
+                                    <input type="file" name="logo" accept=".jpg,.gif,.png" class="form-control-file @error('logo') is-invalid @enderror" id="logo">
+                                    <!-- <div class="dropzone"> </div> -->
                                     @error('logo')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
+                                    
                                 </div>  
-                            </div>
+                            </div> 
                         </div>
 
                         <div class="row">
@@ -87,7 +82,7 @@
                                     <select class="form-control select2  @error('causes') is-invalid @enderror" multiple="multiple" data-placeholder="Selecione uma ou mais causas" style="width: 100%;" name="causes[]">
                                         <option></option>
                                         @foreach($causes as $cause)
-                                            <option value="{{ $cause->id }}" >
+                                            <option value="{{ $cause->id }}" {{ (in_array($cause->id, old('causes', isset($organization->causes)? $organization->causes : array())))? 'selected' : '' }} >
                                                 {{ $cause->name }}
                                             </option>
                                         @endforeach
@@ -103,7 +98,7 @@
                         <!-- description -->
                         <div class="form-group">
                             <label for="description">Descrição</label>
-                            <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="3" value="{{ old('description', isset($organization->description) ? $organization->description : null) }}"></textarea>
+                            <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="3">{{ old('description', isset($organization->description) ? $organization->description : null) }}</textarea>
                             @error('description')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -143,12 +138,14 @@
                                 <div class="form-group">
                                     <label for="phone">Telefones</label>
                                     <div class="phone-list">
+                                        
                                         <div class="input-group phone-input-group">
-                                            <input type="text" name="phones[1]" class="form-control phone-input @error('phones') is-invalid @enderror" placeholder="(99) 999999999" />
+                                            <input type="text" name="phones[1]" class="form-control phone-input @error('phones.1') is-invalid @enderror" placeholder="(99) 999999999" />
                                         </div>
-                                        @error('phones')
-                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @error('phones.1')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
                                         @enderror
+
                                     </div>
                                     <button type="button" class="btn btn-success btn-sm float-right btn-add-phone"><i class="fas fa-plus"></i>  Adicionar Telefone </button>
                                 </div>

@@ -25,13 +25,14 @@ class OrganizationRequest extends FormRequest
     {
         return [
             'name'                  => 'required',
-            'logo'                  => '',
+            'logo'                  => 'file|image',
             'organization_type_id'  => 'required',
             'causes'                => 'required|min:1',
             'description'           => 'required',
-            'email'                 => 'required',
+            'email'                 => 'required|email',
             'website'               => '',
             'phones'                => 'required|min:1',
+            'phones.*'              => 'required',
             'status'                => 'required:in:active,inactive'
         ];
     }
