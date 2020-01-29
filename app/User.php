@@ -56,6 +56,11 @@ class User extends Authenticatable
         return $this->belongsTo('App\Organization');
     }
 
+    public function phones()
+    {
+        return $this->morphMany('App\Phone', 'owner');
+    }
+
     public function getDateOfBirthAttribute($value)
     {
         return Carbon::parse($value)->format('d/m/Y');

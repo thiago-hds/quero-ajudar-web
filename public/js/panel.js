@@ -17,11 +17,20 @@ $(document).ready(function() {
     // controle de multiplos telefones
 	$(document.body).on('click', '.btn-remove-phone' ,function(){
         $(this).closest('.phone-input-group').remove();
+        if($('.phone-input-group').length <= 4){
+            $('.btn-add-phone').prop('disabled', false);
+        }
     });
-
+    
     $('.btn-add-phone').click(function(){
         addNewPhoneInput();
     });
+
+    console.log('oi');
+    console.log($('.phone-input-group').length);
+    if($('.phone-input-group').length > 4){
+        $('.btn-add-phone').prop('disabled', true);
+    }
 });
 
 // inclui a rota correta de remoção no modal de confirmação
@@ -38,7 +47,8 @@ function deleteData(resource, id)
 
 // adiciona um novo input de telefone no form
 function addNewPhoneInput(){
-    var index = $('.phone-input-group').length + 1;
+    var index = $('.phone-input-group').length;
+    console.log(index);
     $('.phone-list').append(''+
             '<div class="input-group phone-input-group">'+
                 '<input type="text" id="phone-'+ index +'" name="phones['+index+']" class="form-control" placeholder="(99) 999999999" />'+
@@ -48,4 +58,8 @@ function addNewPhoneInput(){
             '</div>'
     );
     $('#phone-' + index).inputmask('(99) 999999999');
+
+    if(index >= 4){
+        $('.btn-add-phone').prop('disabled', true);
+    }
 }

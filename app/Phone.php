@@ -15,8 +15,8 @@ class Phone extends Model
         'number'
     ];
 
-    public function organizations()
+    public function owner()
     {
-        return $this->belongsToMany('App\Organization');
+        return $this->morphTo();
     }
 }

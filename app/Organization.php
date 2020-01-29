@@ -35,7 +35,7 @@ class Organization extends Model
     
     public function phones()
     {
-        return $this->belongsToMany('App\Phone');
+        return $this->morphMany('App\Phone', 'owner');
     }
 
     public function causes()

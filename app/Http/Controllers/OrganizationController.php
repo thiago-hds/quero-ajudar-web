@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Organization;
 use App\OrganizationType;
 use App\Cause;
+use App\Phone;
 use App\Http\Requests\OrganizationRequest;
 use Illuminate\Http\Request;
 
@@ -73,7 +74,6 @@ class OrganizationController extends Controller
      */
     public function store(OrganizationRequest $request)
     {
-        return $request;
         $organization = new Organization([
             'name'              => $request->input('name'),
             'website'           => $request->input('website'),
@@ -101,12 +101,11 @@ class OrganizationController extends Controller
         $organization->organizationType()->associate($request->input('organization_type_id'));
         $organization->save();
 
-        $organization->causes()->attach($request->input('causes'));
+        $organization->causes()->sync($request->input('causes'));
 
         foreach($request->input('phones') as $number){
-            $organization->phones()->create([
-                'number' => $number
-            ]);
+            $number = preg_replace('/[() ]/', '', $number);
+            $organization->phones()->save(new Phone(['number' => $number]));
         }
 
         return redirect('/organizations')->with('success', 'Instituição Salva!');
@@ -126,26 +125,46 @@ class OrganizationController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Organization  $organization
      * @return \Illuminate\Http\Response
      */
     public function edit(Organization $organization)
     {
         $organizationTypes = OrganizationType::orderBy('name', 'asc')->get();
         $causes = Cause::orderBy('name', 'asc')->get();
-        return view('users.edit', compact('organizationTypes','causes','organization')); 
+        return view('organizations.edit', compact('organizationTypes','causes','organization')); 
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Http\Requests\OrganizationRequest  $request
+     * @param  \App\Organization $organization
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(OrganizationRequest $request, Organization $organization)
     {
-        //
+        $organization->update([
+            'name'              => $request->input('name'),
+            'website'           => $request->input('website'),
+            'description'       => $request->input('description'),
+            'email'             => $request->input('email'),
+            'status'            => $request->input('status')
+        ]);
+
+        $organization->organizationType()->associate($request->input('organization_type_id'));
+        $organization->causes()->sync($request->input('causes'));
+        
+        $organization->phones()->delete();
+        foreach($request->input('phones') as $number){
+            $number = preg_replace('/[() ]/', '', $number);
+            $organization->phones()->create([
+                'number' => $number
+            ]);
+        }
+
+        return redirect('/organizations')->with('success', 'Instituição atualizada!');
+
     }
 
     /**
