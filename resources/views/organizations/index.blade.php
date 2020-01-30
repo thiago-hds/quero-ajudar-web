@@ -109,7 +109,7 @@
                                         <!-- causes -->
                                         <td> 
                                             @foreach($organization->causes as $cause)
-                                            {{ $cause->name }}
+                                            {{ $cause->name }} <br/>
                                             @endforeach     
                                         </td>
 

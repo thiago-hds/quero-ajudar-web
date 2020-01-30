@@ -8,6 +8,6 @@ class Cause extends Model
 {
     public function organizations()
     {
-        return $this->belongsToMany('App\Organization');
+        return $this->morphedByMany('App\Organization', 'causeable');
     }
 }

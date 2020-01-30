@@ -40,6 +40,6 @@ class Organization extends Model
 
     public function causes()
     {
-        return $this->belongsToMany('App\Cause');
+        return $this->morphToMany('App\Cause', 'causeable');
     }
 }

@@ -217,6 +217,23 @@ return [
                 ]
             ]
         ],
+        [
+            'text' => 'Vagas',
+            'url'  => '#',
+            'icon' => 'fas fa-fw fa-suitcase',
+            'submenu' => [
+                [
+                    'text' => 'Nova',
+                    'icon' => 'fas fa-fw fa-plus-circle',
+                    'url'  => 'vacancies/create',
+                ],
+                [
+                    'text' => 'Listar',
+                    'icon' => 'fas fa-fw fa-list',
+                    'url'  => 'vacancies',
+                ]
+            ]
+        ],
         ['header' => 'account_settings'],
         [
             'text' => 'profile',

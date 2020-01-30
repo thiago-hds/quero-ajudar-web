@@ -8,6 +8,7 @@ use App\Cause;
 use App\Phone;
 use App\Http\Requests\OrganizationRequest;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
 
 class OrganizationController extends Controller
 {
@@ -46,9 +47,18 @@ class OrganizationController extends Controller
             }
         }
 
+        $organizations = Organization::where($whereClauses);
+
+        $cause_id = $request->input('cause_id');
+        if(isset($cause_id) && $cause_id !== ''){
+            $organizations = $organizations->whereHas('causes', function (Builder $query) use ($cause_id) {
+                $query->where('id', '=', $cause_id);
+            });
+        }
+
         // retornar view com dados
         $inputs = (object) $inputs;
-        $organizations = Organization::where($whereClauses)->orderBy('name', 'asc')->paginate(10);
+        $organizations = $organizations->orderBy('name', 'asc')->paginate(10);
         $causes = Cause::orderBy('name', 'asc')->get();
 
         return view('organizations.index', compact('inputs', 'organizations', 'causes'));

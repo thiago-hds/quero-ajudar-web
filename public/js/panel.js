@@ -1,7 +1,7 @@
 $(document).ready(function() {
-    $('.select2').select2();
+    $('.select2').select2({allowClear: true});
     $('.date-input').inputmask('99/99/9999');
-    $('.phone-input').inputmask('(99) 999999999');
+    $('.phone-input').inputmask('(99) 99999999[9]');
     $('.image-dropzone').dropzone();
 
     // controle de exibição select de instituições no cadastro de usuários
@@ -57,7 +57,7 @@ function addNewPhoneInput(){
                 '</div>'+
             '</div>'
     );
-    $('#phone-' + index).inputmask('(99) 999999999');
+    $('#phone-' + index).inputmask('(99) 99999999[9]');
 
     if(index >= 4){
         $('.btn-add-phone').prop('disabled', true);
