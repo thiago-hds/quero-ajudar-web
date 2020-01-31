@@ -26,11 +26,29 @@ $(document).ready(function() {
         addNewPhoneInput();
     });
 
-    console.log('oi');
-    console.log($('.phone-input-group').length);
     if($('.phone-input-group').length > 4){
         $('.btn-add-phone').prop('disabled', true);
     }
+
+    // constrole de select dinamico de cidades
+    $('select[name=address_state]').on('change', function () {
+        var selected = $(this).find(":selected").attr('value');
+        console.log(selected);
+        $.ajax({
+                    url: '/state/'+selected+'/cities/',
+                    type: 'GET',
+                    dataType: 'json',
+
+        }).done(function (data) {
+                var select = $('select[name=address_city]');
+                select.empty();
+                select.append('<option value="0" >Por favor selecione uma cidade</option>');
+                $.each(data,function(key, value) {
+                    select.append('<option value=' + value.id + '>' + value.name + '</option>');
+                });
+                console.log("success");
+        })
+    });
 });
 
 // inclui a rota correta de remoção no modal de confirmação

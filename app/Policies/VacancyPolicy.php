@@ -18,7 +18,7 @@ class VacancyPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return true;
     }
 
     /**
@@ -30,7 +30,7 @@ class VacancyPolicy
      */
     public function view(User $user, Vacancy $vacancy)
     {
-        //
+        return $user->isAdmin() || $user->organization_id === $vacancy->organization_id;
     }
 
     /**
@@ -41,7 +41,7 @@ class VacancyPolicy
      */
     public function create(User $user)
     {
-        //
+        return true;
     }
 
     /**
@@ -53,7 +53,7 @@ class VacancyPolicy
      */
     public function update(User $user, Vacancy $vacancy)
     {
-        //
+        return $user->isAdmin() || $user->organization_id === $vacancy->organization_id;
     }
 
     /**
@@ -65,7 +65,7 @@ class VacancyPolicy
      */
     public function delete(User $user, Vacancy $vacancy)
     {
-        //
+        return $user->isAdmin() || $user->organization_id === $vacancy->organization_id;
     }
 
     /**
@@ -77,7 +77,7 @@ class VacancyPolicy
      */
     public function restore(User $user, Vacancy $vacancy)
     {
-        //
+        return $user->isAdmin() || $user->organization_id === $vacancy->organization_id;
     }
 
     /**
@@ -89,6 +89,6 @@ class VacancyPolicy
      */
     public function forceDelete(User $user, Vacancy $vacancy)
     {
-        //
+        return $user->isAdmin() || $user->organization_id === $vacancy->organization_id;
     }
 }

@@ -2,7 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Cause;
+use App\Vacancy;
+use App\Organization;
+use App\Skill;
+use App\State;
+use App\City;
 use Illuminate\Http\Request;
+use App\Http\Requests\VacancyRequest;
 
 class VacancyController extends Controller
 {
@@ -13,7 +20,7 @@ class VacancyController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
     /**
@@ -23,16 +30,22 @@ class VacancyController extends Controller
      */
     public function create()
     {
-        //
+        $organizations = Organization::orderBy('name', 'asc')->get();
+        $causes = Cause::orderBy('name', 'asc')->get();
+        $skills = Skill::orderBy('name', 'asc')->get();
+
+        $states = State::orderBy('name', 'asc')->get();
+
+        return view('vacancies.edit', compact('organizations', 'causes', 'skills', 'states'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\VacancyRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(VacancyRequest $request)
     {
         //
     }
@@ -62,11 +75,11 @@ class VacancyController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Http\Requests\VacancyRequest  $request
+     * @param  \App\Vacancy  $vacancy
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(VacancyRequest $request, Vacancy $vacancy)
     {
         //
     }
@@ -74,10 +87,10 @@ class VacancyController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Vacancy  $vacancy
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($vacancy)
     {
         //
     }

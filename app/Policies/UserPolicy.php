@@ -18,7 +18,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->profile !== User::VOLUNTEER;
+        return true;
     }
 
     /**
@@ -41,7 +41,7 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        return $user->profile !== User::VOLUNTEER;
+        return true;
     }
 
     /**

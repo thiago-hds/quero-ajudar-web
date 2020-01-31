@@ -13,4 +13,14 @@ class Vacancy extends Model
      */
     protected $table = 'vacancies';
 
+    public function causes()
+    {
+        return $this->morphToMany('App\Cause', 'causeable');
+    }
+
+    public function skills()
+    {
+        return $this->morphToMany('App\Skill', 'skillable');
+    }
+
 }

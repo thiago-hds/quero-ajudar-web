@@ -48,6 +48,10 @@ class User extends Authenticatable
         return $this->attributes['profile'] === self::ADMIN;
     }
 
+    public function isVolunteer(){
+        return $this->attributes['profile'] === self::VOLUNTEER;
+    }
+
     /**
      * Get the organization of the user.
      */

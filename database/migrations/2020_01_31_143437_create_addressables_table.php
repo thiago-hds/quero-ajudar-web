@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStatesTable extends Migration
+class CreateAddressablesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class CreateStatesTable extends Migration
      */
     public function up()
     {
-        Schema::create('states', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name',100);
-            $table->timestamps();
+        Schema::create('addressables', function (Blueprint $table) {
+            $table->bigInteger('address_id');    
+            $table->morphs('addressable');
         });
     }
 
@@ -27,6 +26,6 @@ class CreateStatesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('states');
+        Schema::dropIfExists('addressables');
     }
 }
