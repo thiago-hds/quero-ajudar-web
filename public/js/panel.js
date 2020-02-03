@@ -1,8 +1,11 @@
+var cityId = null;
+
 $(document).ready(function() {
     $('.select2').select2({allowClear: true});
     $('.date-input').inputmask('99/99/9999');
     $('.phone-input').inputmask('(99) 99999999[9]');
     $('.image-dropzone').dropzone();
+
 
     // controle de exibição select de instituições no cadastro de usuários
     $('input[name=profile]').change(function(){
@@ -30,10 +33,11 @@ $(document).ready(function() {
         $('.btn-add-phone').prop('disabled', true);
     }
 
-    // constrole de select dinamico de cidades
-    $('select[name=address_state]').on('change', function () {
+    // controle de select dinamico de cidades
+    $('select[name=address_state]').on('change', function (event) {
         var selected = $(this).find(":selected").attr('value');
         console.log(selected);
+        $(".loading").css('display','block');
         $.ajax({
                     url: '/state/'+selected+'/cities/',
                     type: 'GET',
@@ -44,11 +48,47 @@ $(document).ready(function() {
                 select.empty();
                 select.append('<option value="0" >Por favor selecione uma cidade</option>');
                 $.each(data,function(key, value) {
-                    select.append('<option value=' + value.id + '>' + value.name + '</option>');
+                    if(cityId != null && cityId == value.id){
+                        select.append('<option value=' + value.id + ' selected>' + value.name + '</option>');
+                    }
+                    else{
+                        select.append('<option value=' + value.id + '>' + value.name + '</option>');
+                    }
                 });
-                console.log("success");
+                console.log("success_cities");
+                $(".loading").css('display','none');
         })
     });
+
+    $('input[name=address_zipcode]').on('change', function () {
+        var selected = $(this).val();
+        console.log(selected);
+        $(".loading").css('display','block');
+        $.ajax({
+                    url: 'http://viacep.com.br/ws/'+selected+'/json/',
+                    type: 'GET',
+                    dataType: 'json',
+
+        }).done(function (data) {
+                cityId = data.ibge;
+
+                $('input[name=address_street]').val(data.logradouro);
+                $('input[name=address_neighborhood]').val(data.bairro);
+                $('input[name=address_neighborhood]').val(data.bairro);
+
+                $('select[name=address_state]').val(data.uf).change();
+
+        })
+        .fail(function (jqXHR, textStatus, errorThrown) {
+            // Request failed. Show error message to user. 
+            // errorThrown has error message.
+            cityId = null;
+            console.log("erro");
+            console.log(errorThrown);
+            $(".loading").css('display','none');
+        })
+    });
+
 });
 
 // inclui a rota correta de remoção no modal de confirmação

@@ -6,11 +6,14 @@ use App\State;
 
 class AddressController extends Controller
 {
-    public function getCitiesByStateId($stateId){
+    public function getCitiesByStateAbbr($stateAbbr){
         $cities = [];
-        if(State::find($stateId) !== null){
-            $cities = State::find($stateId)->cities()->select('id', 'name')->get()->toArray();
+        $state = State::where('abbr', $stateAbbr)->first();
+        if($state !== null){
+            $cities = $state->cities()->select('id', 'name')->get()->toArray();
         }
         return response()->json($cities);
     }
+
+
 }

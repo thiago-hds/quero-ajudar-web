@@ -1,5 +1,11 @@
 @extends('adminlte::page')
 
+<div class="loading"> 
+    <div class="spinner-border text-light" role="status">
+    <span class="sr-only">Loading...</span>
+    </div>
+</div>
+
 @section('title', (isset($vacancy)? 'Editar' : 'Nova') . ' Vaga')
 
 @section('content_header')
@@ -144,6 +150,20 @@
                                 {{ $message }} 
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
+                        </div>
+
+
+                        <div class="row">
+                            <!-- name -->
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="name">Nome</label>
+                                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name', isset($vacancy->name) ? $vacancy->name : null) }}">
+                                    @error('name')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
 
                         @include('address')
