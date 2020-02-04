@@ -4,7 +4,9 @@ $(document).ready(function() {
     $('.select2').select2({allowClear: true});
     $('.date-input').inputmask('99/99/9999');
     $('.phone-input').inputmask('(99) 99999999[9]');
+    $('.hour-input').inputmask('99:99');
     $('.image-dropzone').dropzone();
+    $('[data-toggle="tooltip"]').tooltip();
 
 
     // controle de exibição select de instituições no cadastro de usuários
@@ -74,8 +76,6 @@ $(document).ready(function() {
 
                 $('input[name=address_street]').val(data.logradouro);
                 $('input[name=address_neighborhood]').val(data.bairro);
-                $('input[name=address_neighborhood]').val(data.bairro);
-
                 $('select[name=address_state]').val(data.uf).change();
 
         })

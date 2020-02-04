@@ -13,7 +13,7 @@ class VacancyRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,26 @@ class VacancyRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'organization'          => 'required',
+            'name'                  => 'required',
+            'image'                 => 'file|image',
+            'causes'                => 'required|min:1',
+            'skills'                 => 'required|min:1',
+            'description'           => 'required',
+            'tasks'                 => 'required',
+            'type'                  => 'required:in:recurrent,unique_event',
+            'date'                  => '',
+            'hour'                  => '',
+            'promotion_start_date'  => '',
+            'promotion_end_date'    => '',
+            'enrollment_limit'      => '',
+            'status'                => 'required:in:active,inactive',
+            'address_zipcode'       => 'required',
+            'address_street'        => 'required',
+            'address_number'        => 'required',
+            'address_neighborhood'  => 'required',
+            'address_state'         => '',
+            'address_city'          => '',
         ];
     }
 }

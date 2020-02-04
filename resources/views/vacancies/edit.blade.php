@@ -2,13 +2,24 @@
 
 <div class="loading"> 
     <div class="spinner-border text-light" role="status">
-    <span class="sr-only">Loading...</span>
+    <span class="sr-only"></span>
     </div>
 </div>
 
 @section('title', (isset($vacancy)? 'Editar' : 'Nova') . ' Vaga')
 
 @section('content_header')
+    <!-- 
+    @if ($errors->any())
+      <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+              <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+      </div><br />
+    @endif
+    --> 
     <h1 class="m-0 text-dark">{{ (isset($vacancy)? 'Editar' : 'Nova') . ' Vaga' }}</h1>
 @stop
 
@@ -23,9 +34,8 @@
                     @endif
                     @csrf
                     <div class="card-body">
-                        
                         <!-- organization -->
-                        <div class="form-group" style="display:{{ (isset($user->profile) && $user->profile == 'organization') ? 'block' : 'none' }}">
+                        <div class="form-group">
                             <label for="organization">Instituição</label>
                             
                             @if(Auth::user()->isAdmin())
@@ -60,6 +70,7 @@
                                     @enderror
                                 </div>
                             </div>
+                            
                             <!-- image -->
                             <div class="col-sm-6">
                                 <div class="form-group">
@@ -113,20 +124,50 @@
                             </div>
                         </div>
 
-                        <!-- description -->
-                        <div class="form-group">
-                            <label for="description">Descrição</label>
-                            <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="3">{{ old('description', isset($vacancy->description) ? $vacancy->description : null) }}</textarea>
-                            @error('description')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+
+                        <div class="row">
+                            
+                            <div class="col-sm-6">
+                                <!-- description -->
+                                <div class="form-group">
+                                    <label for="description">Descrição</label>
+                                    <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="3">{{ old('description', isset($vacancy->description) ? $vacancy->description : null) }}</textarea>
+                                    @error('description')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+
+                                <!-- tasks -->
+                                <div class="form-group">
+                                    <label for="tasks">Tarefas</label>
+                                    <textarea class="form-control @error('tasks') is-invalid @enderror" data-toggle="tooltip" data-placement="bottom" title="Insira detalhes das atividades que o voluntário realizará" name="tasks" rows="3">{{ old('tasks', isset($vacancy->tasks) ? $vacancy->tasks : null) }}</textarea>
+                                    @error('tasks')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- tasks -->
+                        <!-- status -->
                         <div class="form-group">
-                            <label for="tasks">Tarefas</label>
-                            <textarea class="form-control @error('tasks') is-invalid @enderror" name="tasks" rows="3">{{ old('tasks', isset($vacancy->tasks) ? $vacancy->tasks : null) }}</textarea>
-                            @error('tasks')
+                            <label for="status">Status</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio"
+                                    name="status" value="active" {{ old('status', isset($vacancy->status)? $vacancy->status : null) == 'inactive'? '' : 'checked' }}>
+                                <label class="form-check-label">Ativo</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio"
+                                    name="status" value="inactive" {{ old('status', isset($vacancy->status)? $vacancy->status : null) == 'inactive'? 'checked' : '' }}>
+                                <label class="form-check-label">Inativo</label>
+                            </div>
+                            
+
+                            @error('status')
+                                {{ $message }} 
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -154,23 +195,56 @@
 
 
                         <div class="row">
-                            <!-- name -->
+                            <!-- date -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="name">Nome</label>
-                                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name', isset($vacancy->name) ? $vacancy->name : null) }}">
-                                    @error('name')
+                                    <label for="date">Data</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control date-input @error('date') is-invalid @enderror" placeholder="dd/mm/aaaa" name="date" value="{{ old('date', isset($vacancy->hour) ? $vacancy->hour : null) }}">
+                                        @error('date')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- hour -->
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="hour">Hora</label>
+                                
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="far fa-clock"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control hour-input @error('hour') is-invalid @enderror" placeholder="hh:mm" name="hout" value="{{ old('hour', isset($vacancy->hour) ? $vacancy->hour : null) }}">
+                                        @error('date')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    
+                                    @error('hour')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
                         </div>
 
+                        <hr>
                         @include('address')
-                        
+                        <hr>
+                        <div class="callout callout-info">
+                            Os campos abaixo não são obrigatórios.</br> Eles podem ser usados para definir
+                            o período em que a vaga será exibida no aplicativo e quantos voluntários podem se inscrever nela.
+                        </div>
+                        <h5>Divulgação</h5> <br/>
                         <div class="row">
                             <!-- promotion_start_date -->
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <div class="form-group">
                                     <label for="promotion_start_date">Data de Início de Divulgação</label>
                                     <div class="input-group">
@@ -185,7 +259,7 @@
                                 </div> 
                             </div>
                             <!-- promotion_end_date -->
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <div class="form-group">
                                     <label for="promotion_end_date">Data de Fim de Divulgação</label>
                                     <div class="input-group">
@@ -199,38 +273,19 @@
                                     </div>
                                 </div> 
                             </div>
+
+                            <!-- enrollment_limit -->
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="name">Número máximo de inscrições</label>
+                                    <input type="text" class="form-control @error('enrollment_limit') is-invalid @enderror" name="enrollment_limit" value="{{ old('enrollment_limit', isset($vacancy->enrollment_limit) ? $vacancy->enrollment_limit : null) }}">
+                                    @error('enrollment_limit')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>  
+                            </div>
                         </div>
 
-                        <!-- enrollment_limit -->
-                        <div class="form-group">
-                            <label for="name">Número máximo de inscrições</label>
-                            <input type="text" class="form-control @error('enrollment_limit') is-invalid @enderror" name="enrollment_limit" value="{{ old('enrollment_limit', isset($vacancy->enrollment_limit) ? $vacancy->enrollment_limit : null) }}">
-                            @error('enrollment_limit')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>  
-
-                        <!-- status -->
-                        <div class="form-group">
-                            <label for="status">Status</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio"
-                                    name="status" value="active" {{ old('status', isset($vacancy->status)? $vacancy->status : null) == 'inactive'? '' : 'checked' }}>
-                                <label class="form-check-label">Ativo</label>
-                            </div>
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio"
-                                    name="status" value="inactive" {{ old('status', isset($vacancy->status)? $vacancy->status : null) == 'inactive'? 'checked' : '' }}>
-                                <label class="form-check-label">Inativo</label>
-                            </div>
-                            
-
-                            @error('status')
-                                {{ $message }} 
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
                     </div>
                     <!-- /.card-body -->
 

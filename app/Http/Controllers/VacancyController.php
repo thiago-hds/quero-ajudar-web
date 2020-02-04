@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\City;
 use App\Cause;
-use App\Vacancy;
-use App\Organization;
 use App\Skill;
 use App\State;
-use App\City;
+use App\Address;
+use App\Vacancy;
+use App\Organization;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\VacancyRequest;
 
 class VacancyController extends Controller
@@ -47,7 +49,45 @@ class VacancyController extends Controller
      */
     public function store(VacancyRequest $request)
     {
-        //
+        $vacancy = new Vacancy([
+            'name'                  => $request->input('name'),
+            'description'           => $request->input('description'),
+            'tasks'                 => $request->input('tasks'),
+            'status'                => $request->input('status'),
+            'type'                  => $request->input('type'),
+            'promotion_start_date'  => $request->input('promotion_start_date'),
+            'promotion_end_date'    => $request->input('promotion_end_date'),
+            'enrollment_limit'      => $request->input('enrollment_limit'),
+        ]);
+        $vacancy->save();
+
+        $address = new Address([
+            'zipcode'           => $request->input('zipcode'),
+            'street'            => $request->input('street'),
+            'number'            => $request->input('number'),
+            'neighborhood'      => $request->input('neighborhood'),
+            'state'             => $request->input('state'),
+            'city'              => $request->input('city'),
+        ]);
+        $address->save();
+
+        $vacancy->address()->associate($address);
+        $vacancy->causes()->sync($request->input('causes'));
+        $vacancy->skills()->sync($request->input('skills'));
+        
+
+        if(!Auth::user()->isAdmin()){
+            $organization = Organization::find(Auth::user()->organization_id);
+        }
+        else{
+            $organization = Organization::find($request->input('organization_id'));
+        }
+
+        if(isset($organization)){
+            $vacancy->organization()->associate($organization);
+        }
+
+        
     }
 
     /**
