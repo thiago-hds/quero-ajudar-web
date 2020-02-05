@@ -54,7 +54,7 @@
             <select class="form-control select2  @error('address_state') is-invalid @enderror" data-placeholder="Selecione um estado" style="width: 100%;" name="address_state">
                 <option></option>
                 @foreach($states as $state)
-                    <option value="{{ $state->abbr }}"  >
+                    <option value="{{ $state->abbr }}" {{ (old('address_state', isset($address->city)? $address->city->state->abbr : null) == $state->abbr)? 'selected' : '' }}>
                         {{ $state->name }}
                     </option>
                 @endforeach
@@ -71,6 +71,23 @@
         <div class="form-group">
             <label for="address_city">Cidade</label>
             <select class="form-control select2  @error('address_city') is-invalid @enderror" data-placeholder="Selecione uma cidade" style="width: 100%;" name="address_city">
+
+            @php
+            $stateAbbr = old('address_state', isset($address->city)? $address->city->state->abbr : null)
+            @endphp
+
+            @if($stateAbbr !== null)
+                @php
+                $state = App\State::where('abbr', $stateAbbr)->first()
+                @endphp
+                @foreach($state->cities as $city) 
+                <option value="{{ $city->id }}" {{ (old('address_city', isset($address->city)? $address->city_id : null) == $city->id)? 'selected' : '' }}>
+                    {{ $city->name }}
+                </option>
+
+                @endforeach
+            @endif
+
             </select>
 
             @error('address_city')

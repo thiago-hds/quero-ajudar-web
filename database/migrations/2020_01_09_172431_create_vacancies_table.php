@@ -19,12 +19,12 @@ class CreateVacanciesTable extends Migration
             $table->string('name');
             $table->string('description');
             $table->enum('type',['recurrent','unique_event']);
-            $table->string('tasks');
-            $table->dateTime('time');
+            $table->string('tasks')->nullable();
+            $table->dateTime('time')->nullable();
             $table->date('promotion_start_date')->nullable();
             $table->date('promotion_end_date')->nullable();
             $table->integer('enrollment_limit')->nullable();
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->enum('status', ['active','inactive']);
             $table->timestamps();
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('restrict');

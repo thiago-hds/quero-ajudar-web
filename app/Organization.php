@@ -25,6 +25,19 @@ class Organization extends Model
         return $this->hasMany('App\User');
     }
 
+    public function address()
+    {
+        return $this->morphOne('App\Address', 'addressable');
+    }
+
+    /**
+     * Get the users for the organization.
+     */
+    public function vacancies()
+    {
+        return $this->hasMany('App\Vacancy');
+    }
+
     /**
      * Get the .
      */

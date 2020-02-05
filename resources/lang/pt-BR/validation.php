@@ -147,11 +147,11 @@ return [
     */
 
     'attributes' => [
-        'address_city'          => 'Cidade',
-        'address_neighborhood'  => 'Bairro',
-        'address_number'        => 'Número',
-        'address_state'         => 'Estado',
-        'address_street'        => 'Rua',
+        'address_city'          => 'cidade',
+        'address_neighborhood'  => 'bairro',
+        'address_number'        => 'número',
+        'address_state'         => 'estado',
+        'address_street'        => 'rua',
         'address_zipcode'       => 'CEP',
         'causes'                => 'causas',
         'date_of_birth'         => 'data de nascimento', 
@@ -166,8 +166,11 @@ return [
         'phones'                => 'telefones',
         'phones.*'              => 'telefone',
         'profile'               => 'perfil',
+        'promotion_start_date'  => 'data de início de divulgação',
+        'promotion_end_date'    => 'data de fim de divulgação',
         'skills'                => 'habilidades',
-        'tasks'                 => 'tarefas'
+        'tasks'                 => 'tarefas',
+        'today'                 => 'hoje'
     ],
 
 ];

@@ -21,6 +21,7 @@ class CreateAddressesTable extends Migration
             $table->string('zipcode');
             $table->bigInteger('city_id')->unsigned();
             $table->foreign('city_id')->references('id')->on('cities')->onDelete('restrict');
+            $table->morphs('addressable');
             $table->timestamps();
         });
     }

@@ -103,9 +103,6 @@ class OrganizationController extends Controller
             if($upload){
                 $organization->logo = $upload;
             }
-            else{
-
-            }
         }
 
         $organization->organizationType()->associate($request->input('organization_type_id'));
