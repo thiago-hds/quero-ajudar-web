@@ -62,10 +62,13 @@ class VacancyController extends Controller
 
         // retornar view com dados
         $inputs = (object) $inputs;
-        $vacancies = $vacancies->orderBy('name', 'asc')->paginate(10);
-        $causes = Cause::orderBy('name', 'asc')->get();
+        $vacancies      = $vacancies->orderBy('name', 'asc')->paginate(10);
+        $organizations  = Organization::orderBy('name', 'asc')->get();
+        $causes         = Cause::orderBy('name', 'asc')->get();
+        $skills         = Skill::orderBy('name', 'asc')->get();
+        $states         = State::orderBy('name', 'asc')->get();
 
-        return view('vacancies.index', compact('inputs', 'vacancies', 'causes'));
+        return view('vacancies.index', compact('inputs', 'vacancies', 'organizations', 'causes', 'skills', 'states'));
     }
 
     /**

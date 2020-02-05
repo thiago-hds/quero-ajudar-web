@@ -20,24 +20,36 @@
             <div class="card">
                 <form action="" method="GET">
                     <div class="card-body">
+
                         <div class="row">
+                            <!-- name -->
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="name">Nome</label>
                                     <input type="text" class="form-control" name="name" value="{{ isset($inputs->name)? $inputs->name : '' }}">
                                 </div>
                             </div>
+
+                            <!-- organization_id -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="email">E-mail</label>
-                                    <input type="text" class="form-control" name="email" value="{{ isset($inputs->email)? $inputs->email : '' }}">
+                                    <label for="organization_id">Instituição</label>
+                                    <select class="form-control select2" data-placeholder="Selecione uma instituição" style="width: 100%;" name="organization_id" @if(!Auth::user()->isAdmin()) disabled @endif >
+                                        <option></option>
+                                        @foreach($organizations as $organization)
+                                            <option value="{{ $organization->id }}" {{ (isset($inputs->organization_id) && $inputs->organization_id == $organization->id)? 'selected' : '' }}>
+                                                {{ $organization->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
+                            <!-- cause_id -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="organization_id">Causa</label>
+                                    <label for="cause_id">Causa</label>
                                     <select class="form-control select2" data-placeholder="Selecione uma causa" style="width: 100%;" name="cause_id" >
                                         <option></option>
                                         @foreach($causes as $cause)
@@ -48,17 +60,58 @@
                                     </select>
                                 </div>
                             </div>
+
+                            <!-- skill_id -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="status">Status</label>
-                                    <select class="form-control" name="status">
+                                    <label for="skill_id">Habilidade</label>
+                                    <select class="form-control select2" data-placeholder="Selecione uma habilidade" style="width: 100%;" name="skill_id" >
                                         <option></option>
-                                        <option value="active" {{ (isset($inputs->status) && $inputs->status == 'active')? 'selected' : '' }}>Ativo</option>
-                                        <option value="inactive" {{ (isset($inputs->status) && $inputs->status == 'inactive')? 'selected' : '' }}>Inativo</option>
+                                        @foreach($skills as $skill)
+                                            <option value="{{ $skill->id }}" {{ (isset($inputs->skill_id) && $inputs->skill_id == $skill->id)? 'selected' : '' }}>
+                                                {{ $skill->name }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <!-- state -->
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="address_state">Estado</label>
+                                    <select class="form-control select2  @error('address_state') is-invalid @enderror" data-placeholder="Selecione um estado" style="width: 100%;" name="state_id">
+                                        <option></option>
+                                        @foreach($states as $state)
+                                            <option value="{{ $state->abbr }}" {{ (old('state_id', isset($address->city)? $address->city->state->abbr : null) == $state->abbr)? 'selected' : '' }}>
+                                                {{ $state->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- city -->
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="address_city">Cidade</label>
+                                    <select class="form-control select2  @error('address_city') is-invalid @enderror" data-placeholder="Selecione uma cidade" style="width: 100%;" name="address_city">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- status -->
+                        <div class="form-group">
+                            <label for="status">Status</label>
+                            <select class="form-control" name="status">
+                                <option></option>
+                                <option value="active" {{ (isset($inputs->status) && $inputs->status == 'active')? 'selected' : '' }}>Ativo</option>
+                                <option value="inactive" {{ (isset($inputs->status) && $inputs->status == 'inactive')? 'selected' : '' }}>Inativo</option>
+                            </select>
+                        </div>
+
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary float-right">

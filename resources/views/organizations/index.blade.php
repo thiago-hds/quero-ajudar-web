@@ -37,7 +37,7 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="organization_id">Causa</label>
+                                    <label for="cause_id">Causa</label>
                                     <select class="form-control select2" data-placeholder="Selecione uma causa" style="width: 100%;" name="cause_id" >
                                         <option></option>
                                         @foreach($causes as $cause)
