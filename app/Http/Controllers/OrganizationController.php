@@ -177,11 +177,12 @@ class OrganizationController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Organization $organization
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Organization $organization)
     {
-        //
+        $organization->delete();
+        return redirect('/organization')->with('success', 'Instituição excluída!');
     }
 }

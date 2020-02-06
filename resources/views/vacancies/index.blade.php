@@ -78,13 +78,13 @@
                         </div>
                         <div class="row">
                             <!-- state -->
-                            <div class="col-sm-6">
+                            <div class="col-sm-3">
                                 <div class="form-group">
                                     <label for="address_state">Estado</label>
-                                    <select class="form-control select2  @error('address_state') is-invalid @enderror" data-placeholder="Selecione um estado" style="width: 100%;" name="state_id">
+                                    <select class="form-control select2" data-placeholder="Selecione um estado" style="width: 100%;" name="address_state">
                                         <option></option>
                                         @foreach($states as $state)
-                                            <option value="{{ $state->abbr }}" {{ (old('state_id', isset($address->city)? $address->city->state->abbr : null) == $state->abbr)? 'selected' : '' }}>
+                                            <option value="{{ $state->abbr }}" {{ (isset($inputs->address_state) && $inputs->address_state == $state->abbr)? 'selected' : '' }}>
                                                 {{ $state->name }}
                                             </option>
                                         @endforeach
@@ -93,25 +93,50 @@
                             </div>
 
                             <!-- city -->
-                            <div class="col-sm-6">
+                            <div class="col-sm-5">
                                 <div class="form-group">
                                     <label for="address_city">Cidade</label>
-                                    <select class="form-control select2  @error('address_city') is-invalid @enderror" data-placeholder="Selecione uma cidade" style="width: 100%;" name="address_city">
+                                    <select class="form-control select2" data-placeholder="Selecione uma cidade" style="width: 100%;" name="address_city">
+                                        <option></option>
+                                        @if(isset($inputs->address_state) && $inputs->address_state !== null)
+                                            @php
+                                            $state = App\State::where('abbr', $inputs->address_state)->first()
+                                            @endphp
+                                            @foreach($state->cities as $city) 
+                                            <option value="{{ $city->id }}" {{ (isset($inputs->address_city) && $inputs->address_city == $city->id)? 'selected' : '' }}>
+                                                {{ $city->name }}
+                                            </option>
+
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- type -->
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <label for="status">Tipo</label>
+                                    <select class="form-control" name="type">
+                                        <option></option>
+                                        <option value="recurrent" {{ (isset($inputs->type) && $inputs->type == 'recurrent')? 'selected' : '' }}>Recorrente</option>
+                                        <option value="unique_event" {{ (isset($inputs->type) && $inputs->type == 'unique_event')? 'selected' : '' }}>Evento Único</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- status -->
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <label for="status">Status</label>
+                                    <select class="form-control" name="status">
+                                        <option></option>
+                                        <option value="active" {{ (isset($inputs->status) && $inputs->status == 'active')? 'selected' : '' }}>Ativo</option>
+                                        <option value="inactive" {{ (isset($inputs->status) && $inputs->status == 'inactive')? 'selected' : '' }}>Inativo</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- status -->
-                        <div class="form-group">
-                            <label for="status">Status</label>
-                            <select class="form-control" name="status">
-                                <option></option>
-                                <option value="active" {{ (isset($inputs->status) && $inputs->status == 'active')? 'selected' : '' }}>Ativo</option>
-                                <option value="inactive" {{ (isset($inputs->status) && $inputs->status == 'inactive')? 'selected' : '' }}>Inativo</option>
-                            </select>
-                        </div>
-
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary float-right">
@@ -136,8 +161,11 @@
                             <thead>
                                 <tr>
                                     <th>Nome</th>
+                                    <th>Instituição</th>
                                     <th>Causas</th>
                                     <th>Habilidades</th>
+                                    <th>Estado</th>
+                                    <th>Cidade</th>
                                     <th>Tipo</th>
                                     <th>Status</th>
                                     <th>Ações</th>
@@ -149,6 +177,9 @@
                                         <!-- name -->
                                         <td> {{ $vacancy->name }} </td>
 
+                                        <!-- organization -->
+                                        <td> {{$vacancy->organization->name}} </td>
+
                                         <!-- causes -->
                                         <td> 
                                             @foreach($vacancy->causes as $cause)
@@ -156,14 +187,26 @@
                                             @endforeach     
                                         </td>
 
-                                        <!--  -->
+                                        <!-- skills -->
                                         <td> 
-       
+                                            @foreach($vacancy->skills as $skill)
+                                            {{ $skill->name }} <br/>
+                                            @endforeach     
                                         </td>
 
-                                        <!--  -->
+                                        <!-- state -->
                                         <td> 
+                                            {{ $vacancy->address->city->state->abbr}}
+                                        </td>
 
+                                        <!-- city -->
+                                        <td> 
+                                            {{ $vacancy->address->city->name}}
+                                        </td>
+
+                                        <!-- type -->
+                                        <td> 
+                                            {{ $vacancy->type == \App\Vacancy::RECURRENT? 'Recorrente' : 'Evento Único' }}
                                         </td>
 
                                         <!-- status -->
@@ -190,8 +233,11 @@
                             <tfoot>
                                 <tr>
                                     <th>Nome</th>
+                                    <th>Instituição</th>
                                     <th>Causas</th>
                                     <th>Habilidades</th>
+                                    <th>Estado</th>
+                                    <th>Cidade</th>
                                     <th>Tipo</th>
                                     <th>Status</th>
                                     <th>Ações</th>
@@ -217,7 +263,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Você tem certeza que deseja excluir a instituição?</p>
+                    <p>Você tem certeza que deseja excluir a vaga?</p>
                     </div>
                     <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>

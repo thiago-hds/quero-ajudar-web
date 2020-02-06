@@ -10,9 +10,12 @@ use App\Address;
 use App\Vacancy;
 use Carbon\Carbon;
 use App\Organization;
+use App\Http\Requests\VacancyRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\VacancyRequest;
+use Illuminate\Database\Eloquent\Builder;
+
+
 
 class VacancyController extends Controller
 {
@@ -30,15 +33,14 @@ class VacancyController extends Controller
     public function index(Request $request)
     {
         // separacao dos campos de filtragem por tipo de comparacao
-        $equalFields    =   ['status']; 
-        $likeFields     =   ['name', 'email'];
+        $equalFields    =   ['status','type']; 
+        $likeFields     =   ['name'];
 
         $inputs = $request->all();
         
         // definir clausulas where
         $whereClauses = []; 
-
-        /*
+        
         foreach($inputs as $key => $input){
             if($input && in_array($key, array_merge($equalFields, $likeFields))){
                 if(in_array($key,$equalFields)){
@@ -48,17 +50,40 @@ class VacancyController extends Controller
                     $whereClauses[] = [$key, 'like', '%'.$input.'%'];
                 }
             }
-        }*/
+        }
 
         $vacancies = Vacancy::where($whereClauses);
 
-        /*
+        
         $cause_id = $request->input('cause_id');
         if(isset($cause_id) && $cause_id !== ''){
-            $organizations = $organizations->whereHas('causes', function (Builder $query) use ($cause_id) {
+            $vacancies = $vacancies->whereHas('causes', function (Builder $query) use ($cause_id) {
                 $query->where('id', '=', $cause_id);
             });
-        }*/
+        }
+
+        $skill_id = $request->input('skill_id');
+        if(isset($skill_id) && $skill_id !== ''){
+            $vacancies = $vacancies->whereHas('skills', function (Builder $query) use ($skill_id) {
+                $query->where('id', '=', $skill_id);
+            });
+        }
+        
+        
+        $state_abbr = $request->input('address_state');
+        if(isset($state_abbr) && $state_abbr !== ''){
+            $vacancies = $vacancies->whereHas('address.city.state', function (Builder $query) use ($state_abbr) {
+                $query->where('abbr', '=', $state_abbr);
+            }); 
+        }
+        
+        $city_id = $request->input('address_city');
+        if(isset($city_id) && $city_id !== '0'){
+            $vacancies = $vacancies->whereHas('address.city', function (Builder $query) use ($city_id) {
+                $query->where('id', '=', $city_id);
+            }); 
+        }
+       
 
         // retornar view com dados
         $inputs = (object) $inputs;
@@ -218,8 +243,9 @@ class VacancyController extends Controller
      * @param  \App\Vacancy  $vacancy
      * @return \Illuminate\Http\Response
      */
-    public function destroy($vacancy)
+    public function destroy(Vacancy $vacancy)
     {
-        //
+        $vacancy->delete();
+        return redirect('/vacancies')->with('success', 'Vaga excluída!');
     }
 }
