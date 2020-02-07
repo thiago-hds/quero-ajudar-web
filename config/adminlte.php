@@ -234,6 +234,40 @@ return [
                 ]
             ]
         ],
+        [
+            'text' => 'Voluntários',
+            'url'  => '#',
+            'icon' => 'fas fa-fw fa-hands-helping',
+            'submenu' => [
+                [
+                    'text' => 'Novo',
+                    'icon' => 'fas fa-fw fa-plus-circle',
+                    'url'  => 'volunteers/create',
+                ],
+                [
+                    'text' => 'Listar',
+                    'icon' => 'fas fa-fw fa-list',
+                    'url'  => 'volunteers',
+                ]
+            ]
+        ],
+        [
+            'text' => 'Inscrições',
+            'url'  => '#',
+            'icon' => 'fas fa-fw fa-edit',
+            'submenu' => [
+                [
+                    'text' => 'Nova',
+                    'icon' => 'fas fa-fw fa-plus-circle',
+                    'url'  => 'enrollments/create',
+                ],
+                [
+                    'text' => 'Listar',
+                    'icon' => 'fas fa-fw fa-list',
+                    'url'  => 'enrollments',
+                ]
+            ]
+        ],
         ['header' => 'account_settings'],
         [
             'text' => 'profile',

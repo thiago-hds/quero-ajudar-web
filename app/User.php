@@ -52,6 +52,11 @@ class User extends Authenticatable
         return $this->attributes['profile'] === self::VOLUNTEER;
     }
 
+    public function volunteer()
+    {
+        return $this->hasOne('App\Volunteer', 'user_id');
+    }
+
     /**
      * Get the organization of the user.
      */

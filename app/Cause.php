@@ -15,4 +15,9 @@ class Cause extends Model
     {
         return $this->morphedByMany('App\Vacancy', 'causeable');
     }
+
+    public function volunteers()
+    {
+        return $this->morphedByMany('App\Volunteer', 'causeable');
+    }
 }

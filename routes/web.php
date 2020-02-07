@@ -23,3 +23,4 @@ Route::get('state/{abbr}/cities', 'AddressController@getCitiesByStateAbbr');
 Route::resource('users', 'UserController');
 Route::resource('organizations', 'OrganizationController');
 Route::resource('vacancies', 'VacancyController');
+Route::resource('volunteers', 'VolunteerController');
