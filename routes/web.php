@@ -20,7 +20,12 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('state/{abbr}/cities', 'AddressController@getCitiesByStateAbbr');
 
-Route::resource('users', 'UserController');
-Route::resource('organizations', 'OrganizationController');
-Route::resource('vacancies', 'VacancyController');
-Route::resource('volunteers', 'VolunteerController');
+Route::resources([
+    'users'         => 'UserController',
+    'organizations' => 'OrganizationController',
+    'vacancies'     => 'VacancyController',
+    'volunteers'    => 'VolunteerController',
+    'enrollments'   => 'EnrollmentController'
+]);
+
+Route::resource('enrollments', 'EnrollmentController')->except(['show', 'edit', 'update']);

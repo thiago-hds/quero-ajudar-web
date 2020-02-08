@@ -52,6 +52,11 @@ class Vacancy extends Model
         return $this->morphToMany('App\Skill', 'skillable');
     }
 
+    public function enrollments()
+    {
+        return $this->hasMany('App\Enrollment');
+    }
+
     public function getPromotionStartDateAttribute($value)
     {
         if($value !== null){

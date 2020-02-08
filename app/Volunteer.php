@@ -28,5 +28,10 @@ class Volunteer extends Model
     {
         return $this->morphToMany('App\Skill', 'skillable', null, null, null, 'user_id');
     }
+
+    public function enrollments()
+    {
+        return $this->hasMany('App\Enrollment');
+    }
     
 }
