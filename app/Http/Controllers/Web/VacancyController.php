@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
 
 use App\City;
 use App\Cause;
@@ -14,7 +14,7 @@ use App\Http\Requests\VacancyRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
-
+use App\Http\Controllers\Controller;
 
 
 class VacancyController extends Controller

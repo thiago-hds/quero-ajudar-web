@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Instituições')
+@section('title', 'Inscrições')
 
 @section('content_header')
     <div class="col-sm-12">
@@ -10,7 +10,7 @@
             </div>
         @endif
     </div>
-    <h1 class="m-0 text-dark">Instituições</h1>
+    <h1 class="m-0 text-dark">Inscrições</h1>
 @stop
 
 @section('content')
@@ -23,26 +23,12 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="name">Nome</label>
-                                    <input type="text" class="form-control" name="name" value="{{ isset($inputs->name)? $inputs->name : '' }}">
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="email">E-mail</label>
-                                    <input type="text" class="form-control" name="email" value="{{ isset($inputs->email)? $inputs->email : '' }}">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="cause_id">Causa</label>
-                                    <select class="form-control select2" data-placeholder="Selecione uma causa" style="width: 100%;" name="cause_id" >
+                                    <label for="cause_id">Vaga</label>
+                                    <select class="form-control select2" data-placeholder="Selecione uma vaga" style="width: 100%;" name="vacancy_id" >
                                         <option></option>
-                                        @foreach($causes as $cause)
-                                            <option value="{{ $cause->id }}" {{ (isset($inputs->cause_id) && $inputs->cause_id == $cause->id)? 'selected' : '' }}>
-                                                {{ $cause->name }}
+                                        @foreach($vacancies as $vacancy)
+                                            <option value="{{ $vacancy->id }}" {{ (isset($inputs->vacancy_id) && $inputs->vacancy_id == $vacancy->id)? 'selected' : '' }}>
+                                                {{ $vacancy->name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -50,11 +36,14 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="status">Status</label>
-                                    <select class="form-control" name="status">
+                                    <label for="cause_id">Voluntário</label>
+                                    <select class="form-control select2" data-placeholder="Selecione um voluntário" style="width: 100%;" name="volunteer_user_id" >
                                         <option></option>
-                                        <option value="active" {{ (isset($inputs->status) && $inputs->status == 'active')? 'selected' : '' }}>Ativo</option>
-                                        <option value="inactive" {{ (isset($inputs->status) && $inputs->status == 'inactive')? 'selected' : '' }}>Inativo</option>
+                                        @foreach($volunteers as $volunteer)
+                                            <option value="{{ $volunteer->user_id }}" {{ (isset($inputs->volunteer_user_id) && $inputs->volunteer_user_id == $volunteer->user_id)? 'selected' : '' }}>
+                                                {{ $volunteer->user->name }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -76,57 +65,29 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        {{ $organizations->links() }}
+                        {{ $enrollments->links() }}
                     </div>
                     <div class="row">
                         <table id="example2" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th>Nome</th>
-                                    <th>E-mail</th>
-                                    <th>Telefones</th>
-                                    <th>Causas</th>
-                                    <th>Status</th>
+                                    <th>Vaga</th>
+                                    <th>Voluntário</th>
                                     <th>Ações</th>
                                 </tr>
                             </thead>
-                            @foreach($organizations as $organization)
+                            @foreach($enrollments as $enrollment)
                                 <tbody>
                                     <tr>
-                                        <!-- name -->
-                                        <td> {{ $organization->name }} </td>
+                                        <!-- vacancy_name -->
+                                        <td> {{ $enrollment->vacancy->name }} </td>
 
-                                        <!-- email -->
-                                        <td> {{ $organization->email }} </td>
-
-                                        <!-- phones -->
-                                        <td> 
-                                            @foreach($organization->phones as $phone)
-                                            {{ $phone->number }}<br/>
-                                            @endforeach   
-                                        </td>
-
-                                        <!-- causes -->
-                                        <td> 
-                                            @foreach($organization->causes as $cause)
-                                            {{ $cause->name }} <br/>
-                                            @endforeach     
-                                        </td>
-
-                                        <!-- status -->
-                                        <td> 
-                                            <span class="badge badge-{{$organization->status == 'active'? 'success' : 'danger'}}">
-                                                {{ $organization->status == 'active'? 'ativo' : 'inativo'}}
-                                            </span>
-                                        </td>
+                                        <!-- volunteer_name -->
+                                        <td> {{ $enrollment->volunteer->user->name }} </td>
 
                                         <!-- actions -->
                                         <td>
-                                            <a class="btn btn-info btn-sm" href="{{ route('organizations.edit',$organization->id)}}">
-                                                <i class="fas fa-pencil-alt"></i>  Editar
-                                            </a>
-
-                                            <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal-delete" onclick="deleteData('organizations',{{$organization->id}})" >
+                                            <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal-delete" onclick="deleteData('enrollments',{{$enrollment->id}})" >
                                                 <i class="fas fa-trash"></i> Excluir
                                             </button>
                                         </td>
@@ -136,18 +97,15 @@
                                 
                             <tfoot>
                                 <tr>
-                                    <th>Nome</th>
-                                    <th>E-mail</th>
-                                    <th>Telefones</th>
-                                    <th>Causas</th>
-                                    <th>Status</th>
+                                    <th>Vaga</th>
+                                    <th>Voluntário</th>
                                     <th>Ações</th>
                                 </tr>
                             </tfoot>
                         </table>
                     </div>
                     <div class="row">
-                        {{ $organizations->links() }}
+                        {{ $enrollments->links() }}
                     </div>
                 </div>
             </div>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
 
 use App\Cause;
 use App\Skill;
@@ -10,6 +10,7 @@ use App\Http\Requests\VolunteerRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Builder;
+use App\Http\Controllers\Controller;
 
 class VolunteerController extends Controller
 {

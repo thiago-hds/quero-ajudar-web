@@ -17,15 +17,15 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-Route::get('state/{abbr}/cities', 'AddressController@getCitiesByStateAbbr');
+Route::get('/home', 'Web\HomeController@index')->name('home');
+Route::get('state/{abbr}/cities', 'Web\AddressController@getCitiesByStateAbbr');
 
 Route::resources([
-    'users'         => 'UserController',
-    'organizations' => 'OrganizationController',
-    'vacancies'     => 'VacancyController',
-    'volunteers'    => 'VolunteerController',
-    'enrollments'   => 'EnrollmentController'
+    'users'         => 'Web\UserController',
+    'organizations' => 'Web\OrganizationController',
+    'vacancies'     => 'Web\VacancyController',
+    'volunteers'    => 'Web\VolunteerController',
+    'enrollments'   => 'Web\EnrollmentController'
 ]);
 
-Route::resource('enrollments', 'EnrollmentController')->except(['show', 'edit', 'update']);
+Route::resource('enrollments', 'Web\EnrollmentController')->except(['show', 'edit', 'update']);

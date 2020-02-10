@@ -170,7 +170,9 @@ return [
         'promotion_end_date'    => 'data de fim de divulgação',
         'skills'                => 'habilidades',
         'tasks'                 => 'tarefas',
-        'today'                 => 'hoje'
+        'today'                 => 'hoje',
+        'vacancy_id'            => 'vaga',
+        'volunteer_user_id'     => 'voluntário'
     ],
 
 ];

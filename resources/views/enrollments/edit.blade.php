@@ -46,19 +46,19 @@
                             @enderror
                         </div>
 
-                        <!-- volunteer_id -->
+                        <!-- volunteer_user_id -->
                         <div  class="form-group">
                             <label for="volunteer">Voluntário</label>
-                            <select class="form-control select2  @error('volunteer_id') is-invalid @enderror" data-placeholder="Selecione um voluntário" style="width: 100%;" name="volunteer_id">
+                            <select class="form-control select2  @error('volunteer_user_id') is-invalid @enderror" data-placeholder="Selecione um voluntário" style="width: 100%;" name="volunteer_user_id">
                                 <option></option>
                                 @foreach($volunteers as $volunteer)
-                                    <option value="{{ $volunteer->id }}" {{ (old('volunteer_id', isset($enrollment->volunteer_id)? $enrollment->vacancy_id : null) == $volunteer->id)? 'selected' : '' }}>
-                                        {{ $volunteer->name}}
+                                    <option value="{{ $volunteer->user_id }}" {{ (old('volunteer_user_id', isset($enrollment->volunteer_user_id)? $enrollment->volunteer_user_id : null) == $volunteer->user_id)? 'selected' : '' }}>
+                                        {{ $volunteer->user->name}}
                                     </option>
                                 @endforeach
                             </select>
 
-                            @error('vacancy_id')
+                            @error('volunteer_user_id')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>

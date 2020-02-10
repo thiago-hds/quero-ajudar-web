@@ -24,7 +24,8 @@ class EnrollmentRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'vacancy_id'        => 'required|exists:vacancies,id',
+            'volunteer_user_id' => 'required|exists:volunteers,user_id'
         ];
     }
 }

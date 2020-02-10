@@ -14,10 +14,10 @@ class CreateEnrollmentsTable extends Migration
     public function up()
     {
         Schema::create('enrollments', function (Blueprint $table) {
-            $table->bigInteger('volunteer_id')->unsigned();
+            $table->bigInteger('volunteer_user_id')->unsigned();
             $table->bigInteger('vacancy_id')->unsigned();
-            $table->primary(['volunteer_id','vacancy_id']);
-            $table->foreign('volunteer_id')->references('user_id')->on('volunteers')->onDelete('cascade');
+            $table->primary(['volunteer_user_id','vacancy_id']);
+            $table->foreign('volunteer_user_id')->references('user_id')->on('volunteers')->onDelete('cascade');
             $table->foreign('vacancy_id')->references('id')->on('vacancies')->onDelete('restrict');
             $table->timestamps();
         });

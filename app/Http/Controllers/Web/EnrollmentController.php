@@ -1,13 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
 
 use App\Vacancy;
 use App\Volunteer;
 use App\Enrollment;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\EnrollmentRequest;
+use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
+
 
 class EnrollmentController extends Controller
 {
@@ -31,16 +33,16 @@ class EnrollmentController extends Controller
         // definir clausulas where
         $whereClauses = [];
         foreach($inputs as $key => $input){
-            if($input && in_array($key, ['volunteer_id', 'vacancy_id'])){
+            if($input && in_array($key, ['volunteer_user_id', 'vacancy_id'])){
                 $whereClauses[] = [$key, '=', $input];
             }
         }
 
         // retornar view com dados
         $inputs = (object) $inputs;
-        $enrollments = Enrollment::where($whereClauses)->orderBy('name', 'asc')->paginate(10);
+        $enrollments = Enrollment::where($whereClauses)->paginate(10);
         $vacancies  = Vacancy::orderBy('name')->get();
-        $volunteers = Volunteer::orderBy('name')->get();
+        $volunteers = Volunteer::all();
 
         return view('enrollments.index', compact('inputs', 'enrollments', 'vacancies', 'volunteers'));
     }
@@ -57,6 +59,7 @@ class EnrollmentController extends Controller
             $query->where('status', 'active');
         })->get();
 
+
         return view('enrollments.edit', compact('vacancies', 'volunteers'));
     }
 
@@ -70,8 +73,10 @@ class EnrollmentController extends Controller
     {
         $enrollment = new Enrollment;
         $enrollment->vacancy()->associate(Vacancy::find($request->input('vacancy_id')));
-        $enrollment->volunteer()->associate(Volunteer::find($request->input('volunteer_id')));
+        $enrollment->volunteer()->associate(Volunteer::find($request->input('volunteer_user_id')));
         $enrollment->save();
+
+        return redirect('/enrollments')->with('success', 'Inscrição salva!');
     }
 
     /**
