@@ -10,7 +10,7 @@ use App\Address;
 use App\Vacancy;
 use Carbon\Carbon;
 use App\Organization;
-use App\Http\Requests\VacancyRequest;
+use App\Http\Requests\Web\VacancyRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;

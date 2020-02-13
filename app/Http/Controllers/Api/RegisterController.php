@@ -6,7 +6,7 @@ use App\User;
 use Validator;
 use App\Volunteer;
 use Illuminate\Http\Request;
-use App\Http\Requests\UserRequest;
+use App\Http\Requests\Api\UserRequest;
 use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends BaseController
@@ -16,22 +16,11 @@ class RegisterController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function register(Request $request)
+    public function register(UserRequest $request)
     {
         
-        $validator = Validator::make($request->all(), [
-            'name'              => 'required',
-            'date_of_birth'     =>  'required|date_format:d/m/Y|before:today',
-            'email'             => 'required|email|unique:users,email',
-            'password'          => 'required',
-            'password_confirm'  => 'required|same:password',
-        ]);
    
-        if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
-        }
-   
-        $input = $request->all();
+        $input = $request->validated();
         $input['password'] = bcrypt($input['password']);
         $input['profile'] = User::VOLUNTEER;
         $user = User::create($input);

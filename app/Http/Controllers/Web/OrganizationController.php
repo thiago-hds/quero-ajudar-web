@@ -6,7 +6,7 @@ use App\Organization;
 use App\OrganizationType;
 use App\Cause;
 use App\Phone;
-use App\Http\Requests\OrganizationRequest;
+use App\Http\Requests\Web\OrganizationRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;

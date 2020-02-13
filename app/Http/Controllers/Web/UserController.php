@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\User;
 use App\Organization;
-use App\Http\Requests\UserRequest;
+use App\Http\Requests\Web\UserRequest;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;

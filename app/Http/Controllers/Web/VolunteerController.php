@@ -6,7 +6,7 @@ use App\Cause;
 use App\Skill;
 use App\Volunteer;
 use App\User;
-use App\Http\Requests\VolunteerRequest;
+use App\Http\Requests\Web\VolunteerRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Builder;
