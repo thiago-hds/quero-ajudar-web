@@ -53,4 +53,9 @@ class RegisterController extends BaseController
             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         } 
     }
+
+    public function test(Request $request){
+        return $this->sendResponse(["opa"], "TESTED :D");
+
+    }
 }

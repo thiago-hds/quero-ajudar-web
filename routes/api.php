@@ -19,6 +19,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('register', 'Api\RegisterController@register');
 Route::post('login', 'Api\RegisterController@login');
 
+Route::get('test', "Api\RegisterController@test");
+
 /*
 Route::middleware('auth:api')->group( function () {
     Route::resource('products', 'Api\ProductController');
