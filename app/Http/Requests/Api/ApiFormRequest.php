@@ -23,8 +23,8 @@ class ApiFormRequest extends FormRequest
         $errors = (new ValidationException($validator))->errors();
 
         $response = [
-            'success' => false,
-            'message' => 'Failed validation',
+            'status' => 'fail',
+            'message' => 'Erro de validação',
         ];
 
 

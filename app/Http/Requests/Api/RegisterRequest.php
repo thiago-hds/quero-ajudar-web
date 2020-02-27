@@ -4,7 +4,7 @@ namespace App\Http\Requests\Api;
 
 
 
-class UserRequest extends ApiFormRequest
+class RegisterRequest extends ApiFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

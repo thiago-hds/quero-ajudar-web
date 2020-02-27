@@ -3,20 +3,20 @@
 namespace App\Http\Controllers\Api;
 
 use App\User;
-use Validator;
 use App\Volunteer;
-use Illuminate\Http\Request;
-use App\Http\Requests\Api\UserRequest;
 use Illuminate\Support\Facades\Auth;
 
-class RegisterController extends BaseController
+use App\Http\Requests\Api\LoginRequest;
+use App\Http\Requests\Api\RegisterRequest;
+
+class AuthController extends BaseController
 {
     /**
      * Register api
      *
      * @return \Illuminate\Http\Response
      */
-    public function register(UserRequest $request)
+    public function register(RegisterRequest $request)
     {
         
    
@@ -40,22 +40,20 @@ class RegisterController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
+
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
-            $user = Auth::user(); 
-            $success['token'] =  $user->createToken('MyApp')-> accessToken; 
-            $success['name'] =  $user->name;
+            $user = Auth::user();
+            $user['token'] =  $user->createToken('QueroAjudar')->accessToken;
+
+            $data['user'] = $user;
+
    
-            return $this->sendResponse($success, 'User login successfully.');
+            return $this->sendResponse($data);
         } 
         else{ 
-            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+            return $this->sendFail('E-mail e/ou senha incorretos');
         } 
-    }
-
-    public function test(Request $request){
-        return $this->sendResponse(["opa"], "TESTED :D");
-
     }
 }
