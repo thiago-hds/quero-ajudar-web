@@ -29,7 +29,7 @@ class ApiFormRequest extends FormRequest
 
 
         if(!empty($errors)){
-            $response['data'] = $errors;
+            $response['errors'] = $errors;
         }
 
 

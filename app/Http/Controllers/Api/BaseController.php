@@ -29,15 +29,15 @@ class BaseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function sendFail($message = '', $data = [])
+    public function sendFail($message = '', $errors = [])
     {
     	$response = [
             'status'    => 'fail',
             'message'   => $message
         ];
 
-        if(!empty($data)){
-            $response['data'] = $data;
+        if(!empty($errors)){
+            $response['errors'] = $errors;
         }
 
         return response()->json($response, JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
