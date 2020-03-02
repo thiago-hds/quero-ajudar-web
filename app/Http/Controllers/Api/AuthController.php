@@ -28,11 +28,11 @@ class AuthController extends BaseController
         $volunteer = new Volunteer;
         $volunteer->user()->associate($user);
         $volunteer->save();
-
-        $success['token'] =  $user->createToken('QueroAjudar')->accessToken;
-        $success['name'] =  $user->name;
+    
+        $user['token'] =  $user->createToken('QueroAjudar')->accessToken;
+        $data['user'] = $user;
    
-        return $this->sendResponse($success, 'User register successfully.');
+        return $this->sendResponse($data);
     }
    
     /**

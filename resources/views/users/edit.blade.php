@@ -20,16 +20,25 @@
                     <div class="card-body">
 
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <div class="form-group">
                                     <label for="name">Nome</label>
-                                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name', isset($user->name) ? $user->name : null) }}">
-                                    @error('name')
+                                    <input type="text" class="form-control @error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name', isset($user->first_name) ? $user->first_name : null) }}">
+                                    @error('first_name')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>  
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="name">Sobrenome</label>
+                                    <input type="text" class="form-control @error('last_name') is-invalid @enderror" name="last_name" value="{{ old('last_name', isset($user->last_name) ? $user->last_name : null) }}">
+                                    @error('last_name')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>  
+                            </div>
+                            <div class="col-sm-4">
                                 <div class="form-group">
                                     <label for="date_of_birth">Data de Nascimento</label>
                                     <div class="input-group">

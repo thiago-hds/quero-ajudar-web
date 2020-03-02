@@ -20,19 +20,30 @@
                     <div class="card-body">
 
                         <div class="row">
-                            <!-- name -->
-                            <div class="col-sm-6">
+                            <!-- first_name -->
+                            <div class="col-sm-4">
                                 <div class="form-group">
-                                    <label for="name">Nome</label>
-                                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name', isset($volunteer->user->name) ? $volunteer->user->name : null) }}">
-                                    @error('name')
+                                    <label for="first_name">Nome</label>
+                                    <input type="text" class="form-control @error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name', isset($volunteer->user->first_name) ? $volunteer->user->first_name : null) }}">
+                                    @error('first_name')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>  
+                            </div>
+                            
+                            <!-- last_name -->
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="last_name">Sobrenome</label>
+                                    <input type="text" class="form-control @error('last_name') is-invalid @enderror" name="last_name" value="{{ old('last_name', isset($volunteer->user->last_name) ? $volunteer->user->last_name : null) }}">
+                                    @error('last_name')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>  
                             </div>
 
                             <!-- date_of_birth -->
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <div class="form-group">
                                     <label for="date_of_birth">Data de Nascimento</label>
                                     <div class="input-group">

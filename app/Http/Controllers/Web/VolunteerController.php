@@ -96,7 +96,8 @@ class VolunteerController extends Controller
     public function store(VolunteerRequest $request)
     {
         $user = new User([
-            'name'              => $request->input('name'),
+            'first_name'        => $request->input('first_name'),
+            'last_name'         => $request->input('last_name'),
             'date_of_birth'     => $request->input('date_of_birth'),
             'profile'           => User::VOLUNTEER,
             'email'             => $request->input('email'),
@@ -150,7 +151,8 @@ class VolunteerController extends Controller
     {
         $user = User::find($volunteer->user_id);
         $user->update([
-            'name'              => $request->input('name'),
+            'first_name'        => $request->input('first_name'),
+            'last_name'         => $request->input('last_name'),
             'date_of_birth'     => $request->input('date_of_birth'),
             'email'             => $request->input('email'),
             'status'            => $request->input('status')

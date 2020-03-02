@@ -24,7 +24,8 @@ class VolunteerRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'              => 'required',
+            'first_name'        => 'required',
+            'last_name'         => 'required',
             'date_of_birth'     => 'required|date_format:d/m/Y|before:today',
             'email'             => 'required|email',
             'password'          => 'required',

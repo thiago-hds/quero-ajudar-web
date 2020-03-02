@@ -54,7 +54,7 @@ class UserController extends Controller
 
         // retornar view com dados
         $inputs = (object) $inputs;
-        $users = User::where($whereClauses)->orderBy('name', 'asc')->paginate(10);
+        $users = User::where($whereClauses)->orderBy('first_name', 'asc')->paginate(10);
         $organizations = Organization::orderBy('name', 'asc')->get();
         
         return view('users.index', compact('inputs', 'users', 'organizations'));
@@ -80,7 +80,8 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         $user = new User([
-            'name'              => $request->input('name'),
+            'first_name'        => $request->input('first_name'),
+            'last_name'         => $request->input('last_name'),
             'date_of_birth'     => $request->input('date_of_birth'),
             'profile'           => Auth::user()->isAdmin()? $request->input('profile') : User::ORGANIZATION,
             'email'             => $request->input('email'),
@@ -136,7 +137,8 @@ class UserController extends Controller
     public function update(UserRequest $request, User $user)
     {   
         $user->update([
-            'name'              => $request->input('name'),
+            'first_name'        => $request->input('first_name'),
+            'last_name'         => $request->input('last_name'),
             'date_of_birth'     => $request->input('date_of_birth'),
             'profile'           => Auth::user()->isAdmin()? $request->input('profile') : User::ORGANIZATION,
             'email'             => $request->input('email'),

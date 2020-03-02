@@ -110,7 +110,7 @@
                                 <tbody>
                                     <tr>
                                         <!-- name -->
-                                        <td> {{ $volunteer->user->name }} </td>
+                                        <td> {{ $volunteer->user->first_name}}  {{$volunteer->user->last_name }} </td>
 
                                         <!-- email -->
                                         <td> {{ $volunteer->user->email }} </td>

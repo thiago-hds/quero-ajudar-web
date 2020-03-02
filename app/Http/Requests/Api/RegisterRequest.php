@@ -21,10 +21,11 @@ class RegisterRequest extends ApiFormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules() 
     {
         return [
-            'name'              => 'required',
+            'first_name'        => 'required',
+            'last_name'         => 'required',
             'date_of_birth'     => 'required|date_format:d/m/Y|before:today',
             'email'             => 'required|email|unique:users,email',
             'password'          => 'required',
