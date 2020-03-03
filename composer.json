@@ -13,8 +13,8 @@
         "doctrine/dbal": "^2.10",
         "fideloper/proxy": "^4.0",
         "jeroennoten/laravel-adminlte": "^3.0",
+        "laravel/airlock": "^1.0",
         "laravel/framework": "^6.2",
-        "laravel/passport": "^8.3",
         "laravel/tinker": "^2.0",
         "lucascudo/laravel-pt-br-localization": "^1.0"
     },
