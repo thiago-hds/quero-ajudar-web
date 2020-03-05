@@ -19,8 +19,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('register', 'Api\AuthController@register');
 Route::post('login', 'Api\AuthController@login');
 
+//Route::apiResource('causes', 'Api\CauseController');
 
+Route::middleware('auth:airlock')->group( function () {
+    Route::apiResource('causes', 'Api\CauseController');
+});
 /*
-Route::middleware('auth:api')->group( function () {
-    Route::resource('products', 'Api\ProductController');
+Route::middleware('auth:airlock')->group( function () {
+    Route::resource('causes', 'Api\CauseController');
 });*/

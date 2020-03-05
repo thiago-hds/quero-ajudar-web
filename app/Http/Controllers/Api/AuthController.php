@@ -29,8 +29,7 @@ class AuthController extends BaseController
         $volunteer->user()->associate($user);
         $volunteer->save();
     
-        $user['token'] =  $user->createToken('android_app')->plainTextToken;
-        $data['user'] = $user;
+        $data = $user->createToken('android_app')->plainTextToken;
    
         return $this->sendResponse($data);
     }
@@ -45,9 +44,7 @@ class AuthController extends BaseController
 
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
             $user = Auth::user();
-            $user['token'] =  $user->createToken('android_app')->plainTextToken;
-
-            $data['user'] = $user;
+            $data = $user->createToken('android_app')->plainTextToken;
 
    
             return $this->sendResponse($data);

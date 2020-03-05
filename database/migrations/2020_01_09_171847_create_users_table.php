@@ -18,10 +18,10 @@ class CreateUsersTable extends Migration
             $table->bigInteger('organization_id')->unsigned()->nullable();
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('email');
+            $table->string('email'); 
             $table->string('password');
             $table->enum('profile',['admin','organization','volunteer'])->default('admin');
-            $table->date('date_of_birth');
+            $table->date('date_of_birth')->nullable();
             $table->enum('status',['active','inactive'])->default('active');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('restrict');
             $table->timestamps();

@@ -26,10 +26,8 @@ class RegisterRequest extends ApiFormRequest
         return [
             'first_name'        => 'required',
             'last_name'         => 'required',
-            'date_of_birth'     => 'required|date_format:d/m/Y|before:today',
             'email'             => 'required|email|unique:users,email',
-            'password'          => 'required',
-            'password_confirm'  => 'required|same:password',
+            'password'          => 'required'
         ];
     }
 }
