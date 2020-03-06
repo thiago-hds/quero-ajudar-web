@@ -21,9 +21,10 @@ Route::post('login', 'Api\AuthController@login');
 
 //Route::apiResource('causes', 'Api\CauseController');
 
-Route::middleware('auth:airlock')->group( function () {
+//Route::middleware('auth:airlock')->group( function () {
     Route::apiResource('causes', 'Api\CauseController');
-});
+    Route::apiResource('vacancies', 'Api\VacancyController');
+//});
 /*
 Route::middleware('auth:airlock')->group( function () {
     Route::resource('causes', 'Api\CauseController');
