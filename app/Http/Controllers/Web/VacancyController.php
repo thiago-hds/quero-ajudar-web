@@ -131,6 +131,22 @@ class VacancyController extends Controller
             'enrollment_limit'      => $request->input('enrollment_limit'),
         ]);
 
+        //return $request;
+
+        if($request->hasFile('image') && $request->file('image')->isValid()){
+            return "opa";
+
+            $name = uniqid(date('HisYmd'));
+            $extension = $request->file('image')->extension();
+            $nameFile = "{$name}.{$extension}";
+
+            $upload = $request->file('image')->storeAs('vacancy_image', $nameFile);
+            
+            if($upload){
+                $vacancy->image = $upload;
+            }
+        }
+
         if($vacancy->type == Vacancy::UNIQUE_EVENT){
             $vacancy->time = sprintf('%s %s', $request->input('date'), $request->input('hour'));
         }

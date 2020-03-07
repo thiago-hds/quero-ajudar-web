@@ -25,4 +25,9 @@ class Address extends Model
     {
         return $this->morphTo();
     }
+
+    public function getLocation()
+    {
+        return sprintf("%s - %s", $this->city->name, $this->city->state->abbr);
+    }
 }
