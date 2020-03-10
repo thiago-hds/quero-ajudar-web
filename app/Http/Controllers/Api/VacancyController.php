@@ -35,7 +35,7 @@ class VacancyController extends BaseController
             });
         }
 
-        $vacancies = $vacancies->orderBy('name', 'asc')->paginate(10);
+        $vacancies = $vacancies->orderBy('name', 'asc')->paginate(6);
 
         return $this->sendResponse(VacancyResource::collection($vacancies));
     }
