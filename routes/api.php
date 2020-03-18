@@ -23,7 +23,9 @@ Route::post('login', 'Api\AuthController@login');
 
 //Route::middleware('auth:airlock')->group( function () {
     Route::apiResource('causes', 'Api\CauseController');
+    Route::apiResource('skills', 'Api\SkillController');
     Route::apiResource('vacancies', 'Api\VacancyController');
+
 //});
 /*
 Route::middleware('auth:airlock')->group( function () {

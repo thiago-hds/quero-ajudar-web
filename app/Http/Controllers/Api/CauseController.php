@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+
+
 use App\Cause;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Http\Resources\CauseResource;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
 
 class CauseController extends BaseController
 {
@@ -27,7 +30,7 @@ class CauseController extends BaseController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  Cause  $cause
      * @return \Illuminate\Http\Response
      */
     public function show(Cause $cause)
