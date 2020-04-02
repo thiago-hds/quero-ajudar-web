@@ -21,21 +21,23 @@ class VacancyController extends BaseController
         $vacancies = Vacancy::orderBy('name');
 
         
-        $cause_id = $request->input('cause_id');
-        if(isset($cause_id) && $cause_id !== ''){
-            $vacancies = $vacancies->whereHas('causes', function (Builder $query) use ($cause_id) {
-                $query->where('id', '=', $cause_id);
+        $causes_id = $request->input('causes_id');
+        if(isset($causes_id) && $causes_id !== ''){
+            $causes_id = explode(',',$causes_id);
+            $vacancies = $vacancies->whereHas('causes', function (Builder $query) use ($causes_id) {
+                $query->whereIn('id', $causes_id);
             });
         }
 
-        $skill_id = $request->input('skill_id');
-        if(isset($skill_id) && $skill_id !== ''){
+        $skills_id = $request->input('skills_id');
+        if(isset($skills_id) && $skills_id !== ''){
+            $skills_id = explode(',',$skills_id);
             $vacancies = $vacancies->whereHas('skills', function (Builder $query) use ($skill_id) {
-                $query->where('id', '=', $skill_id);
+                $query->whereIn('id', $skills_id);
             });
         }
 
-        $vacancies = $vacancies->orderBy('name', 'asc')->paginate(6);
+        $vacancies = $vacancies->orderBy('name', 'asc')->paginate(10);
 
         return $this->sendResponse(VacancyResource::collection($vacancies));
     }

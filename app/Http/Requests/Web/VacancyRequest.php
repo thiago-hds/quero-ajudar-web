@@ -26,7 +26,7 @@ class VacancyRequest extends FormRequest
         return [
             'organization_id'       => 'required|exists:organizations,id',
             'name'                  => 'required',
-            'image'                 => 'required|file|image',
+            'image'                 => '',
             'causes'                => 'nullable',
             'skills'                => 'nullable',
             'description'           => 'required',
