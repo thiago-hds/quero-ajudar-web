@@ -25,6 +25,7 @@ Route::post('login', 'Api\AuthController@login');
     Route::apiResource('causes', 'Api\CauseController');
     Route::apiResource('skills', 'Api\SkillController');
     Route::apiResource('vacancies', 'Api\VacancyController');
+    Route::apiResource('organizations', 'Api\OrganizationController');
 
 //});
 /*

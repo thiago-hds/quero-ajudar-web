@@ -143,7 +143,7 @@ class VolunteerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\VacancyRequest  $request
+     * @param  \App\Http\Requests\VolunteerRequest  $request
      * @param  \App\Volunteer  $volunteer
      * @return \Illuminate\Http\Response
      */

@@ -28,7 +28,7 @@
         <div class="col-12">
             <div class="card">
                 <!-- form start -->
-                <form role="form" method="post" action="{{ isset($vacancy->id)? route('vacancies.update', $vacancy->id) : route('vacancies.store') }}">
+                <form role="form" method="post" enctype="multipart/form-data" action="{{ isset($vacancy->id)? route('vacancies.update', $vacancy->id) : route('vacancies.store') }}">
                     @if(isset($vacancy))
                         @method('PATCH') 
                     @endif
@@ -75,7 +75,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="image">Imagem</label>
-                                    <input type="file" name="image" accept=".jpg,.gif,.png" class="form-control-file @error('image') is-invalid @enderror" id="image">
+                                    <input type="file" name="image" accept=".jpg,.jpeg,.gif,.png" class="form-control-file @error('image') is-invalid @enderror" id="image">
                                     <!-- <div class="dropzone"> </div> -->
                                     @error('image')
                                         <div class="invalid-feedback">{{ $message }}</div>

@@ -3,7 +3,7 @@
 @section('title', (isset($organization)? 'Editar' : 'Nova') . ' Instituição')
 
 @section('content_header')
-    <!-- s
+
     @if ($errors->any())
       <div class="alert alert-danger">
         <ul>
@@ -12,7 +12,7 @@
             @endforeach
         </ul>
       </div><br />
-    @endif -->
+    @endif
     <h1 class="m-0 text-dark">{{ (isset($organization)? 'Editar' : 'Nova') . ' Instituição' }}</h1>
 @stop
 
@@ -45,7 +45,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="logo">Logo</label>
-                                    <input type="file" name="logo" accept=".jpg,.gif,.png" class="form-control-file @error('logo') is-invalid @enderror" id="logo">
+                                    <input type="file" name="logo" accept=".jpg,.jpeg,.gif,.png" class="form-control-file @error('logo') is-invalid @enderror" id="logo">
                                     <!-- <div class="dropzone"> </div> -->
                                     @error('logo')
                                         <div class="invalid-feedback">{{ $message }}</div>

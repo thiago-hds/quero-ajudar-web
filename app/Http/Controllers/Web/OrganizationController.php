@@ -10,6 +10,7 @@ use App\Http\Requests\Web\OrganizationRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\UploadedFile;
 
 class OrganizationController extends Controller
 {
@@ -92,17 +93,11 @@ class OrganizationController extends Controller
             'email'             => $request->input('email'),
             'status'            => $request->input('status')
         ]);
-        
+
         if($request->hasFile('logo') && $request->file('logo')->isValid()){
-
-            $name = uniqid(date('HisYmd'));
-            $extension = $request->file('logo')->extension();
-            $nameFile = "{$name}.{$extension}";
-
-            $upload = $request->file('logo')->storeAs('logo', $nameFile);
-            
-            if($upload){
-                $organization->logo = $upload;
+            $path = $this->saveImage($request->file('logo'));
+            if($path){
+                $organization->logo = $path;
             }
         }
 
@@ -160,6 +155,14 @@ class OrganizationController extends Controller
             'status'            => $request->input('status')
         ]);
 
+        if($request->hasFile('logo') && $request->file('logo')->isValid()){
+            $path = $this->saveImage($request->file('logo'));
+            if($path){
+                $organization->logo = $path;
+                $organization->save();
+            }
+        }
+
         $organization->organizationType()->associate($request->input('organization_type_id'));
         $organization->causes()->sync($request->input('causes'));
         
@@ -185,5 +188,13 @@ class OrganizationController extends Controller
     {
         $organization->delete();
         return redirect('/organization')->with('success', 'Instituição excluída!');
+    }
+
+    private function saveImage(UploadedFile $file){
+        $name = uniqid(date('HisYmd'));
+        $extension = $file->extension();
+        $nameFile = "{$name}.{$extension}";
+
+        return $file->storeAs('vacancy_image', $nameFile);
     }
 }

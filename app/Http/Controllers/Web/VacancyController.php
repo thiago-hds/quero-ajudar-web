@@ -14,7 +14,9 @@ use App\Http\Requests\Web\VacancyRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\UploadedFile;
 use App\Http\Controllers\Controller;
+
 
 
 class VacancyController extends Controller
@@ -131,21 +133,6 @@ class VacancyController extends Controller
             'enrollment_limit'      => $request->input('enrollment_limit'),
         ]);
 
-        //return $request;
-
-        if($request->hasFile('image') && $request->file('image')->isValid()){
-            return "opa";
-
-            $name = uniqid(date('HisYmd'));
-            $extension = $request->file('image')->extension();
-            $nameFile = "{$name}.{$extension}";
-
-            $upload = $request->file('image')->storeAs('vacancy_image', $nameFile);
-            
-            if($upload){
-                $vacancy->image = $upload;
-            }
-        }
 
         if($vacancy->type == Vacancy::UNIQUE_EVENT){
             $vacancy->time = sprintf('%s %s', $request->input('date'), $request->input('hour'));
@@ -161,6 +148,13 @@ class VacancyController extends Controller
         if(isset($organization)){
             $vacancy->organization()->associate($organization);
         }   
+
+        if($request->hasFile('image') && $request->file('image')->isValid()){
+            $path = $this->saveImage($request->file('image'));
+            if($path){
+                $vacancy->image = $path;
+            }
+        }
 
         $vacancy->save();
 
@@ -237,6 +231,13 @@ class VacancyController extends Controller
             $vacancy->organization()->associate($organization);
         }   
 
+        if($request->hasFile('image') && $request->file('image')->isValid()){
+            $path = $this->saveImage($request->file('image'));
+            if($path){
+                $vacancy->image = $path;
+            }
+        }
+
         $vacancy->save();
 
         $vacancy->address()->update([
@@ -249,6 +250,8 @@ class VacancyController extends Controller
 
         $vacancy->causes()->sync($request->input('causes'));
         $vacancy->skills()->sync($request->input('skills'));
+        
+
         
         return redirect('/vacancies')->with('success', 'Vaga atualizada!');
     }
@@ -263,5 +266,13 @@ class VacancyController extends Controller
     {
         $vacancy->delete();
         return redirect('/vacancies')->with('success', 'Vaga excluída!');
+    }
+
+    private function saveImage(UploadedFile $file){
+        $name = uniqid(date('HisYmd'));
+        $extension = $file->extension();
+        $nameFile = "{$name}.{$extension}";
+
+        return $file->storeAs('vacancy_image', $nameFile);
     }
 }
