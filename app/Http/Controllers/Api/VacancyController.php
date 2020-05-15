@@ -22,6 +22,7 @@ class VacancyController extends BaseController
 
         
         $causes_id = $request->input('causes_id');
+        //$causes_id = "9"; //test
         if(isset($causes_id) && $causes_id !== ''){
             $causes_id = explode(',',$causes_id);
             $vacancies = $vacancies->whereHas('causes', function (Builder $query) use ($causes_id) {
