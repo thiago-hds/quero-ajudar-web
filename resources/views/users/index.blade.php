@@ -189,5 +189,5 @@
 @stop
 
 @section('js')
-    <script src="{{ asset('/js/panel.js') }}"></script><s></s>
+    <script src="{{ asset('/js/panel.js') }}"></script>
 @stop

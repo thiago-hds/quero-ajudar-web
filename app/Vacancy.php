@@ -8,8 +8,20 @@ use Carbon\Carbon;
 class Vacancy extends Model
 {
 
-    public const RECURRENT           = 'recurrent';
-    public const UNIQUE_EVENT        = 'unique_event';
+    public const RECURRENT      = 'recurrent';
+    public const UNIQUE_EVENT   = 'unique_event';
+
+    public const DAILY          = 'daily';
+    public const WEEKLY         = 'weekly';
+    public const MONTHLY        = 'monthly';
+    
+    public const HOURS          = 'hours';
+    public const DAYS           = 'days';
+    
+    public const ORGANIZATION_ADDRESS   = 'organization_address';
+    public const SPECIFIC_ADDRESS       = 'specific_address';
+    public const REMOTE                 = 'remote';
+    public const NEGOTIABLE             = 'negotiable';
 
     /**
      * The table associated with the model.

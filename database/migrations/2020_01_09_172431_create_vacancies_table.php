@@ -20,7 +20,19 @@ class CreateVacanciesTable extends Migration
             $table->string('description');
             $table->enum('type',['recurrent','unique_event']);
             $table->string('tasks')->nullable();
-            $table->dateTime('time')->nullable();
+
+            // periodicity
+            $table->enum('periodicity', ['daily', 'weekly', 'monthly'])->nullable();
+            $table->integer('amount_per_period')->nullable();
+            $table->enum('unit_per_period', ['hours', 'days'])->nullable();
+
+            // time schedule
+            $table->dateTime('start_time')->nullable();
+            $table->dateTime('end_time')->nullable();
+
+            // location
+            $table->enum('location_type', ['organization_address', 'specific_address', 'remote', 'negotiable']);
+
             $table->date('promotion_start_date')->nullable();
             $table->date('promotion_end_date')->nullable();
             $table->integer('enrollment_limit')->nullable();

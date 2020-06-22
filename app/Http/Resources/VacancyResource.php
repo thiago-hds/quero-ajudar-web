@@ -25,7 +25,9 @@ class VacancyResource extends JsonResource
             'time'          => $this->time,
             'image'         => $this->image? Storage::url($this->image) : null,
             'organization'  => OrganizationResource::make($this->organization),
-            'address'       => AddressResource::make($this->address)
+            'address'       => AddressResource::make($this->address),
+            'causes'        => CauseResource::collection($this->causes),
+            'skills'        => SkillResource::collection($this->skills)
         ];
     }
 }

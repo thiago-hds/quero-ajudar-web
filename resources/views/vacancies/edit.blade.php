@@ -149,7 +149,7 @@
                                 </div>
                             </div>
                         </div>
-
+                        
                         <!-- status -->
                         <div class="form-group">
                             <label for="status">Status</label>
@@ -164,7 +164,7 @@
                                     name="status" value="inactive" {{ old('status', isset($vacancy->status)? $vacancy->status : null) == 'inactive'? 'checked' : '' }}>
                                 <label class="form-check-label">Inativo</label>
                             </div>
-                            
+                    
 
                             @error('status')
                                 {{ $message }} 
@@ -193,8 +193,98 @@
                             @enderror
                         </div>
 
+                        <div id="frequency_div">
+                            <hr>
 
-                        <div class="row">
+                            <h5>Frequência</h5> <br/>
+                            
+                            <!-- frequency_negotiable -->
+                            <div class="form-group">
+                                <label for="frequency_negotiable">À combinar</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio"
+                                        name="frequency_negotiable" value="false" {{ old('frequency_negotiable', isset($vacancy->periodicity)? $vacancy->periodicity : null) != null? '' : 'checked' }}>
+                                    <label class="form-check-label">Não</label>
+                                </div> 
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio"
+                                        name="frequency_negotiable" value="true" {{ old('frequency_negotiable', isset($vacancy->periodicity)? $vacancy->periodicity : null) != null? 'checked' : '' }}>
+                                    <label class="form-check-label">Sim</label>
+                                </div>
+                        
+                                @error('frequency_negotiable')
+                                    {{ $message }} 
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div id="periodicity_div" class="row">
+                                <!-- periodicity -->
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="periodicity">Periodicidade</label>
+                                        <select class="form-control @error('periodicity') is-invalid @enderror" style="width: 100%;" name="periodicity">
+                                            <option></option>
+                                            <option value="daily" {{ (old('periodicity', isset($vacancy->periodicity)? $vacancy->periodicity : null) == 'daily')? 'selected' : '' }}>Diária</option>
+                                            <option value="weekly" {{ (old('periodicity', isset($vacancy->periodicity)? $vacancy->periodicity : null) == 'weekly')? 'selected' : '' }}>Semanal</option>
+                                            <option value="monthly" {{ (old('periodicity', isset($vacancy->periodicity)? $vacancy->periodicity : null) == 'monthly' )? 'selected' : '' }}>Mensal</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- unit_per_period -->
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="unit_per_period">Unidade de tempo/período</label>
+                                        <select class="form-control @error('unit_per_period') is-invalid @enderror" style="width: 100%;" name="unit_per_period">
+                                            <option></option>
+                                            <option value="days" {{ (old('unit_per_period', isset($vacancy->unit_per_period)? $vacancy->unit_per_period : null) == 'days')? 'selected' : '' }}>Horas</option>
+                                            <option value="months" {{ (old('unit_per_period', isset($vacancy->unit_per_period)? $vacancy->unit_per_period : null) == 'months')? 'selected' : '' }}>Meses</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            
+                        
+                                <!-- amount_per_period -->
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="amount_per_period">Quantidade de tempo/período</label>
+                                        <input type="text" class="form-control @error('amount_per_period') is-invalid @enderror" name="amount_per_period" value="{{ old('amount_per_period', isset($vacancy->amount_per_period) ? $vacancy->amount_per_period : null) }}">
+                                        @error('amount_per_period')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        <h5>Horário</h5> <br/>
+                        <!-- hours_negotiable -->
+                        <div class="form-group">
+                            <label for="hours_negotiable">À combinar</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio"
+                                    name="hours_negotiable" value="false" {{ old('hours_negotiable', isset($vacancy->start_time)? $vacancy->start_time : null) != null? '' : 'checked' }}>
+                                <label class="form-check-label">Não</label>
+                            </div> 
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio"
+                                    name="hours_negotiable" value="true" {{ old('hours_negotiable', isset($vacancy->start_time)? $vacancy->start_time : null) != null? 'checked' : '' }}>
+                                <label class="form-check-label">Sim</label>
+                            </div>
+                    
+
+                            @error('hours_negotiable')
+                                {{ $message }} 
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div id="hours_div" class="row">
                             <!-- date -->
                             <div class="col-sm-6">
                                 <div class="form-group">
@@ -212,22 +302,19 @@
                                 </div>
                             </div>
 
-                            <!-- hour -->
+                            <!-- start_time -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="hour">Hora</label>
+                                    <label for="start_time">Hora de Início</label>
                                 
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="far fa-clock"></i></span>
                                         </div>
-                                        <input type="text" class="form-control hour-input @error('hour') is-invalid @enderror" placeholder="hh:mm" name="hour" value="{{ old('hour', isset($vacancy->hour) ? $vacancy->hour : null) }}">
-                                        @error('hour')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
+                                        <input type="text" class="form-control hour-input @error('start_time') is-invalid @enderror" placeholder="hh:mm" name="start_time" value="{{ old('start_time', isset($vacancy->start_time) ? $vacancy->start_time : null) }}">
                                     </div>
                                     
-                                    @error('hour')
+                                    @error('start_time')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -235,12 +322,49 @@
                         </div>
 
                         <hr>
-                        @include('address', ['address' => isset($vacancy->address)? $vacancy->address : null])
+                        <h5>Local</h5> <br/>
+                        
+                        <!-- location_type -->
+                        <div class="form-group">
+                            <label for="location_type">Tipo de Local</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio"
+                                    name="location_type" value="organization_address" {{ old('location_type', isset($vacancy->location_type)? $vacancy->location_type : 'organization_address') == 'organization_address'? 'checked' : '' }}>
+                                <label class="form-check-label">Endereço da Instituição</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio"
+                                    name="location_type" value="specific_address" {{ old('location_type', isset($vacancy->location_type)? $vacancy->location_type : null) == 'specific_address'? 'checked' : '' }}>
+                                <label class="form-check-label">Endereço Específico</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio"
+                                    name="location_type" value="remote" {{ old('location_type', isset($vacancy->location_type)? $vacancy->location_type : null) == 'remote'? 'checked' : '' }}>
+                                <label class="form-check-label">Remoto</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio"
+                                    name="location_type" value="negotiable" {{ old('location_type', isset($vacancy->location_type)? $vacancy->location_type : null) == 'negotiable'? 'checked' : '' }}>
+                                <label class="form-check-label">À combinar</label>
+                            </div>
+
+                            @error('location_type')
+                                {{ $message }} 
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div id="address_div">
+                            @include('address', ['address' => isset($vacancy->address)? $vacancy->address : null])
+                        </div>
                         <hr>
                         <div class="callout callout-info">
                             Os campos abaixo não são obrigatórios.</br> Eles podem ser usados para definir
                             o período em que a vaga será exibida no aplicativo e quantos voluntários podem se inscrever nela.
                         </div>
+
                         <h5>Divulgação</h5> <br/>
                         <div class="row">
                             <!-- promotion_start_date -->
@@ -309,6 +433,7 @@
 @stop
 
 @section('js')
-    <script src="{{ asset('/js/panel.js') }}"></script><s></s>
+    <script src="{{ asset('/js/panel.js') }}"></script>
+    <script src="{{ asset('/js/vacancy_edit.js') }}"></script>
 @stop
 
