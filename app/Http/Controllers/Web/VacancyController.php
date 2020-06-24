@@ -121,7 +121,6 @@ class VacancyController extends Controller
      */
     public function store(VacancyRequest $request)
     {
-
         $vacancy = new Vacancy([
             'name'                  => $request->input('name'),
             'description'           => $request->input('description'),

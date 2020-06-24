@@ -107,7 +107,7 @@
                             <!-- skills -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="skills">Habilidades</label>
+                                    <label for="skills">Habilidades Requeridas</label>
                                     <select class="form-control select2  @error('skills') is-invalid @enderror" multiple="multiple" data-placeholder="Selecione uma ou mais habilidades" style="width: 100%;" name="skills[]">
                                         <option></option>
                                         @foreach($skills as $skill)
@@ -203,13 +203,13 @@
                                 <label for="frequency_negotiable">À combinar</label>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio"
-                                        name="frequency_negotiable" value="false" {{ old('frequency_negotiable', isset($vacancy->periodicity)? $vacancy->periodicity : null) != null? '' : 'checked' }}>
+                                        name="frequency_negotiable" value="no" {{ old('frequency_negotiable', isset($vacancy->periodicity)? 'yes' : 'no') == 'no'? 'checked' : '' }}>
                                     <label class="form-check-label">Não</label>
                                 </div> 
 
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio"
-                                        name="frequency_negotiable" value="true" {{ old('frequency_negotiable', isset($vacancy->periodicity)? $vacancy->periodicity : null) != null? 'checked' : '' }}>
+                                        name="frequency_negotiable" value="yes" {{ old('frequency_negotiable', isset($vacancy->periodicity)? 'yes' : 'no') == 'yes'? 'checked' : '' }}>
                                     <label class="form-check-label">Sim</label>
                                 </div>
                         
@@ -229,8 +229,10 @@
                                             <option value="daily" {{ (old('periodicity', isset($vacancy->periodicity)? $vacancy->periodicity : null) == 'daily')? 'selected' : '' }}>Diária</option>
                                             <option value="weekly" {{ (old('periodicity', isset($vacancy->periodicity)? $vacancy->periodicity : null) == 'weekly')? 'selected' : '' }}>Semanal</option>
                                             <option value="monthly" {{ (old('periodicity', isset($vacancy->periodicity)? $vacancy->periodicity : null) == 'monthly' )? 'selected' : '' }}>Mensal</option>
-
                                         </select>
+                                        @error('periodicity')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
 
@@ -243,6 +245,9 @@
                                             <option value="days" {{ (old('unit_per_period', isset($vacancy->unit_per_period)? $vacancy->unit_per_period : null) == 'days')? 'selected' : '' }}>Horas</option>
                                             <option value="months" {{ (old('unit_per_period', isset($vacancy->unit_per_period)? $vacancy->unit_per_period : null) == 'months')? 'selected' : '' }}>Meses</option>
                                         </select>
+                                        @error('unit_per_period')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
                             
@@ -267,13 +272,13 @@
                             <label for="hours_negotiable">À combinar</label>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
-                                    name="hours_negotiable" value="false" {{ old('hours_negotiable', isset($vacancy->start_time)? $vacancy->start_time : null) != null? '' : 'checked' }}>
+                                    name="hours_negotiable" value="no" {{ old('hours_negotiable', isset($vacancy->start_time)? 'yes' : 'no') == 'no'? 'checked' : '' }}>
                                 <label class="form-check-label">Não</label>
                             </div> 
 
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
-                                    name="hours_negotiable" value="true" {{ old('hours_negotiable', isset($vacancy->start_time)? $vacancy->start_time : null) != null? 'checked' : '' }}>
+                                    name="hours_negotiable" value="yes" {{ old('hours_negotiable', isset($vacancy->start_time)? 'yes' : 'no') == 'yes'? 'checked' : '' }}>
                                 <label class="form-check-label">Sim</label>
                             </div>
                     
@@ -286,7 +291,7 @@
 
                         <div id="hours_div" class="row">
                             <!-- date -->
-                            <div class="col-sm-6">
+                            <div id="date_div" class="col-sm-6" style="display:{{(isset($vacancy->start_time) && $vacancy->type = 'unique_event')? 'block' : 'none'}};">
                                 <div class="form-group">
                                     <label for="date">Data</label>
 
@@ -312,11 +317,10 @@
                                         <span class="input-group-text"><i class="far fa-clock"></i></span>
                                         </div>
                                         <input type="text" class="form-control hour-input @error('start_time') is-invalid @enderror" placeholder="hh:mm" name="start_time" value="{{ old('start_time', isset($vacancy->start_time) ? $vacancy->start_time : null) }}">
+                                        @error('start_time')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                    
-                                    @error('start_time')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
                                 </div>
                             </div>
                         </div>
@@ -356,7 +360,7 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div id="address_div">
+                        <div id="address_div" style="display:{{(isset($vacancy->location_type) && ($vacancy->location_type == 'remote' || $vacancy->location_type == 'negotiable'))? 'none' : 'block' }}">
                             @include('address', ['address' => isset($vacancy->address)? $vacancy->address : null])
                         </div>
                         <hr>
