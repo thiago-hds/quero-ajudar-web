@@ -121,6 +121,7 @@ class VacancyController extends Controller
      */
     public function store(VacancyRequest $request)
     {
+
         $vacancy = new Vacancy([
             'name'                  => $request->input('name'),
             'description'           => $request->input('description'),
@@ -130,11 +131,14 @@ class VacancyController extends Controller
             'promotion_start_date'  => $request->input('promotion_start_date'),
             'promotion_end_date'    => $request->input('promotion_end_date'),
             'enrollment_limit'      => $request->input('enrollment_limit'),
+            'location_type'         => $request->input('location_type')
         ]);
 
-
-        if($vacancy->type == Vacancy::UNIQUE_EVENT){
-            $vacancy->time = sprintf('%s %s', $request->input('date'), $request->input('hour'));
+        if($request->hasFile('image') && $request->file('image')->isValid()){
+            $path = $this->saveImage($request->file('image'));
+            if($path){
+                $vacancy->image = $path;
+            }
         }
 
         if(!Auth::user()->isAdmin()){
@@ -146,28 +150,41 @@ class VacancyController extends Controller
 
         if(isset($organization)){
             $vacancy->organization()->associate($organization);
-        }   
+        }  
 
-        if($request->hasFile('image') && $request->file('image')->isValid()){
-            $path = $this->saveImage($request->file('image'));
-            if($path){
-                $vacancy->image = $path;
-            }
+        if($vacancy->type == Vacancy::RECURRENT && 
+            $request->input('frequency_negotiable') == 'no'){
+
+                $vacancy->periodicity       = $request->input('periodicity');
+                $vacancy->unit_per_period   = $request->input('unit_per_period');
+                $vacancy->amount_per_period = $request->input('amount_per_period');
+        }
+
+        if($vacancy->type == Vacancy::UNIQUE_EVENT &&
+            $request->input('hours_negotiable') == 'no'){
+                $vacancy->date = $request->input('date');
+                $vacancy->time = $request->input('time');
+        }
+        else if($vacancy->type == Vacancy::RECURRENT &&
+            $request->input('hours_negotiable') == 'no'){
+                $vacancy->time = $request->input('time');
         }
 
         $vacancy->save();
 
-        $vacancy->address()->create([
-            'zipcode'           => $request->input('address_zipcode'),
-            'street'            => $request->input('address_street'),
-            'number'            => $request->input('address_number'),
-            'neighborhood'      => $request->input('address_neighborhood'),
-            'city_id'           => $request->input('address_city'),
-        ]);
-
         $vacancy->causes()->sync($request->input('causes'));
         $vacancy->skills()->sync($request->input('skills'));
-        
+
+        if($vacancy->location_type == Vacancy::SPECIFIC_ADDRESS){
+            $vacancy->address()->create([
+                'zipcode'           => $request->input('address_zipcode'),
+                'street'            => $request->input('address_street'),
+                'number'            => $request->input('address_number'),
+                'neighborhood'      => $request->input('address_neighborhood'),
+                'city_id'           => $request->input('address_city'),
+            ]);
+        }
+
         return redirect('/vacancies')->with('success', 'Vaga salva!');
     }
 
@@ -216,7 +233,7 @@ class VacancyController extends Controller
             'promotion_start_date'  => $request->input('promotion_start_date'),
             'promotion_end_date'    => $request->input('promotion_end_date'),
             'enrollment_limit'      => $request->input('enrollment_limit'),
-            'time'                  => $request->input('type') == Vacancy::UNIQUE_EVENT? sprintf('%s %s', $request->input('date'), $request->input('hour')) : null,
+            'location_type'         => $request->input('location_type'),
         ]);
 
         if(!Auth::user()->isAdmin()){
@@ -236,16 +253,52 @@ class VacancyController extends Controller
                 $vacancy->image = $path;
             }
         }
+        
+        // FREQUENCIA
+        if($vacancy->type == Vacancy::RECURRENT && 
+            $request->input('frequency_negotiable') == 'no'){
+
+                $vacancy->periodicity       = $request->input('periodicity');
+                $vacancy->unit_per_period   = $request->input('unit_per_period');
+                $vacancy->amount_per_period = $request->input('amount_per_period');
+        }
+        else{
+            $vacancy->periodicity       = null;
+            $vacancy->unit_per_period   = null;
+            $vacancy->amount_per_period = null;
+        }
+
+        // HORARIO
+        if($vacancy->type == Vacancy::UNIQUE_EVENT &&
+            $request->input('hours_negotiable') == 'no'){            
+                $vacancy->date = $request->input('date');
+                $vacancy->time = $request->input('time');
+        }
+        else if($vacancy->type == Vacancy::RECURRENT &&
+            $request->input('hours_negotiable') == 'no'){
+                $vacancy->date = null;
+                $vacancy->time = $request->input('time');
+        }
+        else{
+            $vacancy->date = NULL;
+            $vacancy->time = null;
+        }
 
         $vacancy->save();
-
-        $vacancy->address()->update([
-            'zipcode'           => $request->input('address_zipcode'),
-            'street'            => $request->input('address_street'),
-            'number'            => $request->input('address_number'),
-            'neighborhood'      => $request->input('address_neighborhood'),
-            'city_id'           => $request->input('address_city'),
-        ]);
+        
+        // LOCAL
+        if($vacancy->location_type == Vacancy::SPECIFIC_ADDRESS){
+            $vacancy->address()->updateOrCreate([
+                'zipcode'           => $request->input('address_zipcode'),
+                'street'            => $request->input('address_street'),
+                'number'            => $request->input('address_number'),
+                'neighborhood'      => $request->input('address_neighborhood'),
+                'city_id'           => $request->input('address_city'),
+            ]);
+        }
+        else{
+            $vacancy->address()->delete();
+        }
 
         $vacancy->causes()->sync($request->input('causes'));
         $vacancy->skills()->sync($request->input('skills'));

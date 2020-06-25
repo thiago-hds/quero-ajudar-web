@@ -177,6 +177,8 @@ return [
         'start_time'            => 'hora de início',
         'tasks'                 => 'tarefas',
         'today'                 => 'hoje',
+        'type'                  => 'tipo',
+        'unique_event'          => 'evento único',
         'unit_per_period'       => 'unidade de tempo por período',
         'vacancy_id'            => 'vaga',
         'volunteer_user_id'     => 'voluntário'

@@ -61,7 +61,7 @@ class VacancyRequest extends FormRequest
         if($hours_negotiable == 'no'){
 
             $rules['date']          = 'required_if:type,unique_event|date_format:d/m/Y|after_or_equal:today';
-            $rules['start_time']    = 'required|date_format:H:i';
+            $rules['time']          = 'required|date_format:H:i';
         }
 
         return $rules;

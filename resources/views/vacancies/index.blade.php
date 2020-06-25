@@ -196,12 +196,12 @@
 
                                         <!-- state -->
                                         <td> 
-                                            {{ $vacancy->address->city->state->abbr}}
+                                            {{ isset($vacancy->address)? $vacancy->address->city->state->abbr : ''}}
                                         </td>
 
                                         <!-- city -->
                                         <td> 
-                                            {{ $vacancy->address->city->name}}
+                                            {{ isset($vacancy->address)? $vacancy->address->city->name : ''}}
                                         </td>
 
                                         <!-- type -->

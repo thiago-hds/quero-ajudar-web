@@ -193,7 +193,7 @@
                             @enderror
                         </div>
 
-                        <div id="frequency_div">
+                        <div id="frequency_div" style="display:{{(isset($vacancy) && $vacancy->type == 'unique_event')? 'none' : 'block'}};">
                             <hr>
 
                             <h5>Frequência</h5> <br/>
@@ -203,13 +203,14 @@
                                 <label for="frequency_negotiable">À combinar</label>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio"
-                                        name="frequency_negotiable" value="no" {{ old('frequency_negotiable', isset($vacancy->periodicity)? 'yes' : 'no') == 'no'? 'checked' : '' }}>
+                                        name="frequency_negotiable" value="no" {{ old('frequency_negotiable', (isset($vacancy) && !isset($vacancy->periodicity))? 'yes' : 'no') == 'no'? 'checked' : '' }}>
                                     <label class="form-check-label">Não</label>
                                 </div> 
 
                                 <div class="form-check">
+                                
                                     <input class="form-check-input" type="radio"
-                                        name="frequency_negotiable" value="yes" {{ old('frequency_negotiable', isset($vacancy->periodicity)? 'yes' : 'no') == 'yes'? 'checked' : '' }}>
+                                        name="frequency_negotiable" value="yes" {{ old('frequency_negotiable', (isset($vacancy) && !isset($vacancy->periodicity))? 'yes' : 'no') == 'yes'? 'checked' : '' }}>
                                     <label class="form-check-label">Sim</label>
                                 </div>
                         
@@ -219,7 +220,7 @@
                                 @enderror
                             </div>
 
-                            <div id="periodicity_div" class="row">
+                            <div id="periodicity_div"  class="row" style="display:{{ (isset($vacancy) && !isset($vacancy->periodicity)? 'none' : 'block') }}">
                                 <!-- periodicity -->
                                 <div class="col-sm-4">
                                     <div class="form-group">
@@ -272,13 +273,13 @@
                             <label for="hours_negotiable">À combinar</label>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
-                                    name="hours_negotiable" value="no" {{ old('hours_negotiable', isset($vacancy->start_time)? 'yes' : 'no') == 'no'? 'checked' : '' }}>
+                                    name="hours_negotiable" value="no" {{ old('hours_negotiable', (isset($vacancy) && !isset($vacancy->time))? 'yes' : 'no') == 'no'? 'checked' : '' }}>
                                 <label class="form-check-label">Não</label>
                             </div> 
 
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
-                                    name="hours_negotiable" value="yes" {{ old('hours_negotiable', isset($vacancy->start_time)? 'yes' : 'no') == 'yes'? 'checked' : '' }}>
+                                    name="hours_negotiable" value="yes" {{ old('hours_negotiable', (isset($vacancy) && !isset($vacancy->time))? 'yes' : 'no') == 'yes'? 'checked' : '' }}>
                                 <label class="form-check-label">Sim</label>
                             </div>
                     
@@ -289,9 +290,9 @@
                             @enderror
                         </div>
 
-                        <div id="hours_div" class="row">
+                        <div id="hours_div" class="row" style="display:{{ old('hours_negotiable', (isset($vacancy) && !isset($vacancy->time))? 'yes' : 'no') == 'no'? 'block' : 'none' }};">
                             <!-- date -->
-                            <div id="date_div" class="col-sm-6" style="display:{{(isset($vacancy->start_time) && $vacancy->type = 'unique_event')? 'block' : 'none'}};">
+                            <div id="date_div" class="col-sm-6" style="display:{{(isset($vacancy) && $vacancy->type == 'unique_event')? 'block' : 'none'}};">
                                 <div class="form-group">
                                     <label for="date">Data</label>
 
@@ -307,17 +308,17 @@
                                 </div>
                             </div>
 
-                            <!-- start_time -->
+                            <!-- time -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="start_time">Hora de Início</label>
+                                    <label for="time">Hora de Início</label>
                                 
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="far fa-clock"></i></span>
                                         </div>
-                                        <input type="text" class="form-control hour-input @error('start_time') is-invalid @enderror" placeholder="hh:mm" name="start_time" value="{{ old('start_time', isset($vacancy->start_time) ? $vacancy->start_time : null) }}">
-                                        @error('start_time')
+                                        <input type="text" class="form-control hour-input @error('time') is-invalid @enderror" placeholder="hh:mm" name="time" value="{{ old('time', isset($vacancy->time) ? $vacancy->time : null) }}">
+                                        @error('time')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>

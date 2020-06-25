@@ -36,9 +36,10 @@ class Vacancy extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'description', 'type', 'tasks', 'time',
+        'name', 'description', 'type', 'tasks', 'start_time',
         'promotion_start_date', 'promotion_end_date', 'enrollment_limit',
-        'image', 'status'
+        'image', 'status', 'periodicity', 'unit_per_period', 'amount_per_period',
+        'location_type'
     ];
 
     /**
@@ -82,6 +83,7 @@ class Vacancy extends Model
         if($value !== null){
             $this->attributes['promotion_start_date'] = Carbon::createFromFormat('d/m/Y', $value)->toDateString();
         }
+        $this->attributes['promotion_start_date'] = null;
     }
 
     public function getPromotionEndDateAttribute($value)
@@ -97,31 +99,39 @@ class Vacancy extends Model
         if($value !== null){
             $this->attributes['promotion_end_date'] = Carbon::createFromFormat('d/m/Y', $value)->toDateString();
         }
+        $this->attributes['promotion_end_date'] = null;
+    }
+
+    public function setDateAttribute($value)
+    {
+        if($value !== null){
+            $this->attributes['date'] = Carbon::createFromFormat('d/m/Y', $value)->toDateTimeString();
+        }
+        $this->attributes['date'] = null;
     }
 
     public function setTimeAttribute($value)
     {
         if($value !== null){
-            $this->attributes['time'] = Carbon::createFromFormat('d/m/Y H:i', $value)->toDateTimeString();
+            $this->attributes['time'] = Carbon::createFromFormat('H:i', $value)->toDateTimeString();
         }
+        $this->attributes['time'] = null;
     }
 
     public function getDateAttribute()
     {
-        if($this->attributes['time'] !== null){
-            return Carbon::parse($this->attributes['time'])->format('d/m/Y');
+        if($this->attributes['date'] !== null){
+            return Carbon::parse($this->attributes['date'])->format('d/m/Y');
         }
         return null;
     }
 
-    public function getHourAttribute()
+    public function getTimeAttribute()
     {
         if($this->attributes['time'] !== null){
             return Carbon::parse($this->attributes['time'])->format('H:i');
         }
         return null;
     }
-
-
 
 }

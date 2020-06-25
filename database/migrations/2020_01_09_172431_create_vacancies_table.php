@@ -27,8 +27,8 @@ class CreateVacanciesTable extends Migration
             $table->enum('unit_per_period', ['hours', 'days'])->nullable();
 
             // time schedule
-            $table->dateTime('start_time')->nullable();
-            $table->dateTime('end_time')->nullable();
+            $table->date('date')->nullable();
+            $table->time('time')->nullable();
 
             // location
             $table->enum('location_type', ['organization_address', 'specific_address', 'remote', 'negotiable']);
