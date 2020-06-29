@@ -31,6 +31,12 @@ class OrganizationRequest extends FormRequest
             'description'           => 'required',
             'email'                 => 'required|email',
             'website'               => '',
+            'address_zipcode'       => 'required',
+            'address_street'        => 'required',
+            'address_number'        => 'required',
+            'address_neighborhood'  => 'required',
+            'address_state'         => 'required',
+            'address_city'          => 'required|exists:cities,id',
             'phones'                => 'required|min:1',
             'phones.*'              => 'required',
             'status'                => 'required:in:active,inactive'

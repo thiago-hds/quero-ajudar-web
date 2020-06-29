@@ -6,6 +6,7 @@ use App\Organization;
 use App\OrganizationType;
 use App\Cause;
 use App\Phone;
+use App\State;
 use App\Http\Requests\Web\OrganizationRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -75,7 +76,9 @@ class OrganizationController extends Controller
     {
         $organizationTypes = OrganizationType::orderBy('name', 'asc')->get();
         $causes = Cause::orderBy('name', 'asc')->get();
-        return view('organizations.edit', compact('organizationTypes','causes'));
+        $states = State::orderBy('name', 'asc')->get();
+
+        return view('organizations.edit', compact('organizationTypes','causes', 'states'));
     }
 
     /**
@@ -106,6 +109,15 @@ class OrganizationController extends Controller
 
         $organization->causes()->sync($request->input('causes'));
 
+        
+        $organization->address()->create([
+            'zipcode'           => $request->input('address_zipcode'),
+            'street'            => $request->input('address_street'),
+            'number'            => $request->input('address_number'),
+            'neighborhood'      => $request->input('address_neighborhood'),
+            'city_id'           => $request->input('address_city'),
+        ]);
+        
         foreach($request->input('phones') as $number){
             $number = preg_replace('/[() ]/', '', $number);
             $organization->phones()->save(new Phone(['number' => $number]));
@@ -135,7 +147,8 @@ class OrganizationController extends Controller
     {
         $organizationTypes = OrganizationType::orderBy('name', 'asc')->get();
         $causes = Cause::orderBy('name', 'asc')->get();
-        return view('organizations.edit', compact('organizationTypes','causes','organization')); 
+        $states = State::orderBy('name', 'asc')->get();
+        return view('organizations.edit', compact('organizationTypes','causes','organization','states')); 
     }
 
     /**
@@ -165,6 +178,14 @@ class OrganizationController extends Controller
 
         $organization->organizationType()->associate($request->input('organization_type_id'));
         $organization->causes()->sync($request->input('causes'));
+
+        $organization->address()->updateOrCreate([
+            'zipcode'           => $request->input('address_zipcode'),
+            'street'            => $request->input('address_street'),
+            'number'            => $request->input('address_number'),
+            'neighborhood'      => $request->input('address_neighborhood'),
+            'city_id'           => $request->input('address_city'),
+        ]);
         
         $organization->phones()->delete();
         foreach($request->input('phones') as $number){

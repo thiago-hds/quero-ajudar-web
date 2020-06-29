@@ -10,7 +10,7 @@
 
 @section('content_header')
     
-    @if ($errors->any())
+    @if (config('app.debug') && $errors->any())
       <div class="alert alert-danger">
         <ul>
             @foreach ($errors->all() as $error)
@@ -243,8 +243,8 @@
                                         <label for="unit_per_period">Unidade de tempo/período</label>
                                         <select class="form-control @error('unit_per_period') is-invalid @enderror" style="width: 100%;" name="unit_per_period">
                                             <option></option>
-                                            <option value="days" {{ (old('unit_per_period', isset($vacancy->unit_per_period)? $vacancy->unit_per_period : null) == 'days')? 'selected' : '' }}>Horas</option>
-                                            <option value="months" {{ (old('unit_per_period', isset($vacancy->unit_per_period)? $vacancy->unit_per_period : null) == 'months')? 'selected' : '' }}>Meses</option>
+                                            <option value="hours" {{ (old('unit_per_period', isset($vacancy->unit_per_period)? $vacancy->unit_per_period : null) == 'hours')? 'selected' : '' }}>Horas</option>
+                                            <option value="days" {{ (old('unit_per_period', isset($vacancy->unit_per_period)? $vacancy->unit_per_period : null) == 'days')? 'selected' : '' }}>Dias</option>
                                         </select>
                                         @error('unit_per_period')
                                             <div class="invalid-feedback">{{ $message }}</div>

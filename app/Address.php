@@ -30,4 +30,13 @@ class Address extends Model
     {
         return sprintf("%s - %s", $this->city->name, $this->city->state->abbr);
     }
+
+    public function getFormattedAddress(){
+        return sprintf("%s, %d - %s - %s",
+            $this->street,
+            $this->number,
+            $this->neighborhood,
+            $this->getLocation()
+        );
+    }
 }

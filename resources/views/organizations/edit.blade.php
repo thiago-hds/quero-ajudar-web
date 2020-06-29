@@ -4,7 +4,7 @@
 
 @section('content_header')
 
-    @if ($errors->any())
+    @if (config('app.debug') == true && $errors->any())
       <div class="alert alert-danger">
         <ul>
             @foreach ($errors->all() as $error)
@@ -132,6 +132,9 @@
                             </div>
                         </div>
 
+                        <!-- address -->
+                        @include('address', ['address' => isset($organization->address)? $organization->address : null])
+                        
                         <!-- phones -->
                         <div class="row">
                             <div class="col-sm-6">

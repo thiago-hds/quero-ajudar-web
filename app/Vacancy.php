@@ -134,4 +134,76 @@ class Vacancy extends Model
         return null;
     }
 
+    public function getFormattedFrequency()
+    {
+        if($this->type == self::RECURRENT){
+            if($this->amount_per_period == null){
+                return "à combinar";
+            }
+            else{
+                $amount = $this->amount_per_period;
+                if($this->unit_per_period == self::HOURS){
+                    $unit = $amount == 1? "hora" : "horas";
+                }
+                else if($this->unit_per_period == self::DAYS){
+                    $unit = $amount == 1? "dia" : "dias";
+                }
+
+                if($this->periodicity == self::DAILY){
+                    $period = "diárias";
+                }
+                else if($this->periodicity == self::WEEKLY){
+                    $period = "semanais";
+                }
+                else if($this->periodicity == self::MONTHLY){
+                    $period = "mensais";
+                }
+
+                return sprintf("%d %s %s", $amount, $unit, $period);
+            }
+        }
+        else{
+            return null;
+        }
+    }
+
+    public function getFormattedDate(){
+        if($this->type == self::UNIQUE_EVENT){
+            if($this->date == null){
+                return "à combinar";
+            }
+            else{
+                return $this->date;
+            }
+        }
+        return null;
+    }
+
+    public function getFormattedTime(){
+        if($this->time == null){
+            return "à combinar";
+        }
+        else{
+            return $this->time;
+        }
+    }
+
+    public function getFormattedLocation(){
+        if($this->location_type == self::REMOTE){
+            return "remoto";
+        }
+        else if($this->location_type == self::NEGOTIABLE){
+            return "à combinar";
+        }
+        else if($this->location_type == self::ORGANIZATION_ADDRESS){
+            if($organization = Organization::find($this->organization_id)){
+                return $organization->address->getFormattedAddress();
+            }
+        }
+        else if($this->address != null){
+            return $this->address->getFormattedAddress();
+        }
+        return null;
+    }
+
 }
