@@ -21,7 +21,7 @@ class VacancyResource extends JsonResource
             'id'                    => $this->id,
             'name'                  => $this->name,
             'description'           => $this->description,
-            'type'                  => ($this->type == Vacancy::RECURRENT)? "Recorrente" : "Único",
+            'type'                  => $this->type,
             'tasks'                 => $this->tasks,
             'image'                 => $this->image? Storage::url($this->image) : null,
             'organization'          => OrganizationResource::make($this->organization),

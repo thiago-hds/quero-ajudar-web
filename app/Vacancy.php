@@ -80,10 +80,11 @@ class Vacancy extends Model
 
     public function setPromotionStartDateAttribute($value)
     {
+        $this->attributes['promotion_start_date'] = null;
         if($value !== null){
             $this->attributes['promotion_start_date'] = Carbon::createFromFormat('d/m/Y', $value)->toDateString();
         }
-        $this->attributes['promotion_start_date'] = null;
+
     }
 
     public function getPromotionEndDateAttribute($value)
@@ -96,26 +97,27 @@ class Vacancy extends Model
 
     public function setPromotionEndDateAttribute($value)
     {
+        $this->attributes['promotion_end_date'] = null;
         if($value !== null){
             $this->attributes['promotion_end_date'] = Carbon::createFromFormat('d/m/Y', $value)->toDateString();
         }
-        $this->attributes['promotion_end_date'] = null;
+
     }
 
     public function setDateAttribute($value)
     {
+        $this->attributes['date'] = null;
         if($value !== null){
             $this->attributes['date'] = Carbon::createFromFormat('d/m/Y', $value)->toDateTimeString();
         }
-        $this->attributes['date'] = null;
     }
 
     public function setTimeAttribute($value)
     {
+        $this->attributes['time'] = null;
         if($value !== null){
             $this->attributes['time'] = Carbon::createFromFormat('H:i', $value)->toDateTimeString();
         }
-        $this->attributes['time'] = null;
     }
 
     public function getDateAttribute()

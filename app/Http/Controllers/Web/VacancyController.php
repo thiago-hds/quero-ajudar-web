@@ -270,7 +270,8 @@ class VacancyController extends Controller
 
         // HORARIO
         if($vacancy->type == Vacancy::UNIQUE_EVENT &&
-            $request->input('hours_negotiable') == 'no'){            
+            $request->input('hours_negotiable') == 'no'){  
+
                 $vacancy->date = $request->input('date');
                 $vacancy->time = $request->input('time');
         }
@@ -280,7 +281,7 @@ class VacancyController extends Controller
                 $vacancy->time = $request->input('time');
         }
         else{
-            $vacancy->date = NULL;
+            $vacancy->date = null;
             $vacancy->time = null;
         }
 

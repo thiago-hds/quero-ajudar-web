@@ -19,6 +19,9 @@ class OrganizationResource extends JsonResource
             'id'   => $this->id,
             'name' => $this->name,
             'logo' => $this->logo? Storage::url($this->logo) : null,
+            'email' => $this->email,
+            'website' => $this->website,
+            'phones' => $this->phones->pluck('number')->all()
         ];
     }
 }
