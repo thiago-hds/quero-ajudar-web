@@ -3,7 +3,7 @@
 namespace App;
 
 use Carbon\Carbon;
-use Laravel\Airlock\HasApiTokens;
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;

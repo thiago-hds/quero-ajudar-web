@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateVolunteerFavoriteOrganizationTable extends Migration
+class CreateFavoritesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateVolunteerFavoriteOrganizationTable extends Migration
      */
     public function up()
     {
-        Schema::create('volunteer_favorite_organization', function (Blueprint $table) {
+        Schema::create('favorites', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->bigInteger('volunteer_id')->unsigned();
-            $table->bigInteger('organization_id')->unsigned();
-            $table->primary(['volunteer_id','organization_id'],'volunteer_favorite_organization_primary');
+            $table->morphs('favoritable');
             $table->foreign('volunteer_id')->references('user_id')->on('volunteers')->onDelete('cascade');
-            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -30,6 +29,8 @@ class CreateVolunteerFavoriteOrganizationTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('volunteer_favorite_organization');
+        Schema::table('favorites', function (Blueprint $table) {
+            Schema::dropIfExists('favorites');
+        });
     }
 }

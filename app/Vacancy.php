@@ -55,6 +55,11 @@ class Vacancy extends Model
         return $this->morphOne('App\Address', 'addressable');
     }
 
+    public function favorites()
+    {
+        return $this->morphMany('App\Favorite', 'favoritable');
+    }
+
     public function causes()
     {
         return $this->morphToMany('App\Cause', 'causeable');
@@ -197,8 +202,9 @@ class Vacancy extends Model
         else if($this->location_type == self::NEGOTIABLE){
             return "à combinar";
         }
-        else if($this->location_type == self::ORGANIZATION_ADDRESS){
-            if($organization = Organization::find($this->organization_id)){
+        else if($this->location_type == self::ORGANIZATION_ADDRESS ){
+            if($organization = Organization::find($this->organization_id) &&
+                isset($organization->address)){
                 return $organization->address->getFormattedAddress();
             }
         }

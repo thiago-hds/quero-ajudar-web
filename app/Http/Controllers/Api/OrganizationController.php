@@ -32,4 +32,11 @@ class OrganizationController extends BaseController
         return $this->sendResponse(new OrganizationResource($organization));
     }
 
+    public function favorite(Organization $organization){
+        $user = Auth::user();
+        $organization->favorites()->create([
+            'user_id' => $user->id
+        ]);
+    }
+
 }

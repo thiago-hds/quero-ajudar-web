@@ -30,6 +30,11 @@ class Organization extends Model
         return $this->morphOne('App\Address', 'addressable');
     }
 
+    public function favorites()
+    {
+        return $this->morphMany('App\Favorite', 'favoritable');
+    }
+
     /**
      * Get the users for the organization.
      */

@@ -21,13 +21,17 @@ Route::post('login', 'Api\AuthController@login');
 
 //Route::apiResource('causes', 'Api\CauseController');
 
-//Route::middleware('auth:airlock')->group( function () {
+Route::middleware('auth:sanctum')->group( function () {
     Route::apiResource('causes', 'Api\CauseController');
     Route::apiResource('skills', 'Api\SkillController');
+
+    Route::post('vacancies/{id}/favorite', 'Api\VacancyController@favorite');
     Route::apiResource('vacancies', 'Api\VacancyController');
+
+    Route::post('organizations/{id}/favorite', 'VacancyController@favorite');
     Route::apiResource('organizations', 'Api\OrganizationController');
 
-//});
+});
 /*
 Route::middleware('auth:airlock')->group( function () {
     Route::resource('causes', 'Api\CauseController');

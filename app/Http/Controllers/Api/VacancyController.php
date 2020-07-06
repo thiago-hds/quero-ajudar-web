@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
+
 use App\Http\Controllers\Controller;
 use App\Http\Resources\VacancyResource;
 use App\Vacancy;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 
 class VacancyController extends BaseController
 {
@@ -33,13 +35,12 @@ class VacancyController extends BaseController
         $skills_id = $request->input('skills_id');
         if(isset($skills_id) && $skills_id !== ''){
             $skills_id = explode(',',$skills_id);
-            $vacancies = $vacancies->whereHas('skills', function (Builder $query) use ($skill_id) {
+            $vacancies = $vacancies->whereHas('skills', function (Builder $query) use ($skills_id) {
                 $query->whereIn('id', $skills_id);
             });
         }
 
         $vacancies = $vacancies->orderBy('name', 'asc')->paginate(10);
-
         return $this->sendResponse(VacancyResource::collection($vacancies));
     }
 
@@ -53,5 +54,12 @@ class VacancyController extends BaseController
     public function show(Vacancy $vacancy)
     {
         return $this->sendResponse(new VacancyResource($vacancy));
+    }
+
+    public function favorite(Vacancy $vacancy){
+        $user = Auth::user();
+        $vacancy->favorites()->create([
+            'user_id' => $user->id
+        ]);
     }
 }
