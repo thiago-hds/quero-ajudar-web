@@ -18,7 +18,9 @@ class CreateFavoritesTable extends Migration
             $table->bigInteger('volunteer_id')->unsigned();
             $table->morphs('favoritable');
             $table->foreign('volunteer_id')->references('user_id')->on('volunteers')->onDelete('cascade');
+            $table->unique(['volunteer_id', 'favoritable_id', 'favoritable_type']);
             $table->timestamps();
+            
         });
     }
 

@@ -8,6 +8,15 @@ class Favorite extends Model
 {
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'volunteer_id',
+    ];
+
+    /**
      * Get the owning favoritable model.
      */
     public function favoritable()

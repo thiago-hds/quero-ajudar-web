@@ -6,6 +6,7 @@ use App\Vacancy;
 use App\Organization;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class VacancyResource extends JsonResource
 {
@@ -38,6 +39,7 @@ class VacancyResource extends JsonResource
             'formatted_date'        => $this->getFormattedDate(),
             'formatted_time'        => $this->getFormattedTime(),
             'formatted_location'    => $this->getFormattedLocation(),
+            'favorited'             => null
         ];
 
         if($this->location_type == Vacancy::SPECIFIC_ADDRESS){
@@ -47,6 +49,12 @@ class VacancyResource extends JsonResource
             && $organization = Organization::find($this->organization_id)){
                 $array['address'] = AddressResource::make($organization->address);
         }
+
+        if($user = Auth::user()){
+            $count = $this->favorites()->where('volunteer_id',$user->id)->count();
+            $array['favorited'] = $count > 0? true : false;
+        }
+
 
         return $array;
     }

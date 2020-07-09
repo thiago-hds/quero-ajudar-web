@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Organization;
 use App\Http\Resources\OrganizationResource;
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrganizationController extends BaseController
 {
@@ -31,12 +33,24 @@ class OrganizationController extends BaseController
     {
         return $this->sendResponse(new OrganizationResource($organization));
     }
-
+    /**
+     * Favorite a organization
+     *
+     * @param  Organization  $organization
+     * @return \Illuminate\Http\Response
+     */
     public function favorite(Organization $organization){
         $user = Auth::user();
-        $organization->favorites()->create([
-            'user_id' => $user->id
-        ]);
+        
+        try{
+            $organization->favorites()->create([
+                'volunteer_id' => $user->id
+            ]);
+        }
+        catch(Exception $ex){
+            return $this->sendFail('Não foi possível salvar a organização como favorita');
+        }
+        return $this->sendResponse('sucess');
     }
 
 }

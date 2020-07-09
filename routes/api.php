@@ -25,10 +25,10 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::apiResource('causes', 'Api\CauseController');
     Route::apiResource('skills', 'Api\SkillController');
 
-    Route::post('vacancies/{id}/favorite', 'Api\VacancyController@favorite');
+    Route::post('vacancies/{vacancy}/favorite', 'Api\VacancyController@favorite');
     Route::apiResource('vacancies', 'Api\VacancyController');
 
-    Route::post('organizations/{id}/favorite', 'VacancyController@favorite');
+    Route::post('organizations/{organization}/favorite', 'Api\OrganizationController@favorite');
     Route::apiResource('organizations', 'Api\OrganizationController');
 
 });

@@ -6,6 +6,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\VacancyResource;
 use App\Vacancy;
+use App\Favorite;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -56,10 +58,23 @@ class VacancyController extends BaseController
         return $this->sendResponse(new VacancyResource($vacancy));
     }
 
+    /**
+     * Favorite a vacancy
+     *
+     * @param  Vacancy  $vacancy
+     * @return \Illuminate\Http\Response
+     */
     public function favorite(Vacancy $vacancy){
         $user = Auth::user();
-        $vacancy->favorites()->create([
-            'user_id' => $user->id
-        ]);
+        
+        try{
+            $vacancy->favorites()->create([
+                'volunteer_id' => $user->id
+            ]);
+        }
+        catch(Exception $ex){
+            return $this->sendFail('Não foi possível salvar vaga como favorita');
+        }
+        return $this->sendResponse('sucess');
     }
 }
