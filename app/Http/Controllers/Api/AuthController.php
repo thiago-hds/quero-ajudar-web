@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Http\Requests\Api\LoginRequest;
 use App\Http\Requests\Api\RegisterRequest;
+use App\Http\Resources\UserResource;
 
 class AuthController extends BaseController
 {
@@ -29,9 +30,9 @@ class AuthController extends BaseController
         $volunteer->user()->associate($user);
         $volunteer->save();
     
-        $data = $user->createToken('android_app')->plainTextToken;
+        $user->createToken('android_app')->plainTextToken;        
    
-        return $this->sendResponse($data);
+        return $this->sendResponse(new UserResource($user));
     }
    
     /**
@@ -44,10 +45,11 @@ class AuthController extends BaseController
 
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
             $user = Auth::user();
-            $data = $user->createToken('android_app')->plainTextToken;
-
+            $token = $user->createToken('android_app')->plainTextToken;
+            $userResource = new UserResource($user);
+            $userResource->setToken($token);
    
-            return $this->sendResponse($data);
+            return $this->sendResponse($userResource);
         } 
         else{ 
             return $this->sendFail('E-mail e/ou senha incorretos');
