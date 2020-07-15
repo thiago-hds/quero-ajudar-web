@@ -68,13 +68,22 @@ class VacancyController extends BaseController
         $user = Auth::user();
         
         try{
-            $vacancy->favorites()->create([
-                'volunteer_id' => $user->id
-            ]);
+
+            $count = $vacancy->favorites()->where('volunteer_id',$user->id)->count();
+            if($count > 0){
+                $vacancy->favorites()->where('volunteer_id',$user->id)->delete();
+                $response = false;
+            }
+            else{ 
+                $vacancy->favorites()->create([
+                    'volunteer_id' => $user->id
+                ]);
+                $response = true;
+            }
         }
         catch(Exception $ex){
             return $this->sendFail('Não foi possível salvar vaga como favorita');
         }
-        return $this->sendResponse('sucess');
+        return $this->sendResponse($response);
     }
 }

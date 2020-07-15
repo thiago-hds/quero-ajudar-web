@@ -30,9 +30,14 @@ class AuthController extends BaseController
         $volunteer->user()->associate($user);
         $volunteer->save();
     
-        $user->createToken('android_app')->plainTextToken;        
-   
-        return $this->sendResponse(new UserResource($user));
+        $token = $user->createToken('android_app')->plainTextToken;        
+        
+        Auth::attempt(['email' => $request->email, 'password' => $request->password]);
+        $userResource = new UserResource($user);
+        $userResource->setToken($token);
+
+        
+        return $this->sendResponse($userResource);
     }
    
     /**
@@ -45,6 +50,7 @@ class AuthController extends BaseController
 
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
             $user = Auth::user();
+            $user->tokens()->delete();
             $token = $user->createToken('android_app')->plainTextToken;
             $userResource = new UserResource($user);
             $userResource->setToken($token);

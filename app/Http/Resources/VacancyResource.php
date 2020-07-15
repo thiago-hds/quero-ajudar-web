@@ -52,7 +52,7 @@ class VacancyResource extends JsonResource
 
         if($user = Auth::user()){
             $count = $this->favorites()->where('volunteer_id',$user->id)->count();
-            $array['favorited'] = $count > 0? true : false;
+            $array['favourited'] = $count > 0? true : false;
         }
 
 
