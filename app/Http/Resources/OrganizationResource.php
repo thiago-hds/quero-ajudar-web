@@ -17,12 +17,15 @@ class OrganizationResource extends JsonResource
     public function toArray($request)
     {
         $array =  [
-            'id'   => $this->id,
-            'name' => $this->name,
-            'logo' => $this->logo? Storage::url($this->logo) : null,
-            'email' => $this->email,
-            'website' => $this->website,
-            'phones' => $this->phones->pluck('number')->all(),
+            'id'                    => $this->id,
+            'name'                  => $this->name,
+            'logo'                  => $this->logo? Storage::url($this->logo) : null,
+            'causes'                => CauseResource::collection($this->causes),
+            'description'           => $this->description,
+            'email'                 => $this->email,
+            'website'               => $this->website,
+            'phones'                => $this->phones->pluck('number')->all(),
+            'formatted_location'    => $this->address->getFormattedAddress()
         ];
 
         if($user = Auth::user()){
