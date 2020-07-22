@@ -24,7 +24,11 @@ class VacancyController extends BaseController
 
         $vacancies = Vacancy::orderBy('name');
 
-        
+        $organization_id = $request->input('organization_id');
+        if(isset($organization_id) && $organization_id !== ''){
+            $vacancies = $vacancies->where('organization_id', $organization_id);
+        }
+
         $causes_id = $request->input('causes_id');
         //$causes_id = "9"; //test
         if(isset($causes_id) && $causes_id !== ''){
