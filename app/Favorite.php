@@ -23,4 +23,12 @@ class Favorite extends Model
     {
         return $this->morphTo();
     }
+
+    /**
+     * Get the volunteer that owns the favorite.
+     */
+    public function volunteer()
+    {
+        return $this->belongsTo('App\Volunteer');
+    }
 }

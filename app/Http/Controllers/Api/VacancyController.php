@@ -61,33 +61,4 @@ class VacancyController extends BaseController
     {
         return $this->sendResponse(new VacancyResource($vacancy));
     }
-
-    /**
-     * Favorite a vacancy
-     *
-     * @param  Vacancy  $vacancy
-     * @return \Illuminate\Http\Response
-     */
-    public function favorite(Vacancy $vacancy){
-        $user = Auth::user();
-        
-        try{
-
-            $count = $vacancy->favorites()->where('volunteer_id',$user->id)->count();
-            if($count > 0){
-                $vacancy->favorites()->where('volunteer_id',$user->id)->delete();
-                $response = false;
-            }
-            else{ 
-                $vacancy->favorites()->create([
-                    'volunteer_id' => $user->id
-                ]);
-                $response = true;
-            }
-        }
-        catch(Exception $ex){
-            return $this->sendFail('Não foi possível salvar vaga como favorita');
-        }
-        return $this->sendResponse($response);
-    }
 }

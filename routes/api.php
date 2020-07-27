@@ -24,15 +24,12 @@ Route::post('login', 'Api\AuthController@login');
 Route::middleware('auth:sanctum')->group( function () {
     Route::apiResource('causes', 'Api\CauseController');
     Route::apiResource('skills', 'Api\SkillController');
-
-    Route::post('vacancies/{vacancy}/favorite', 'Api\VacancyController@favorite');
     Route::apiResource('vacancies', 'Api\VacancyController');
-
-    Route::post('organizations/{organization}/favorite', 'Api\OrganizationController@favorite');
     Route::apiResource('organizations', 'Api\OrganizationController');
 
+    Route::post('favorites/vacancies/{vacancy}/favorite', 'Api\FavoritesController@saveVacancyAsFavorite');
+    Route::post('favorites/organizations/{organization}/favorite', 'Api\FavoritesController@saveOrganizationAsFavorite');
+    Route::get('favorites/vacancies', 'Api\FavoritesController@favoriteVacancies');
+    Route::get('favorites/organizations', 'Api\FavoritesController@favoriteOrganizations');
+
 });
-/*
-Route::middleware('auth:airlock')->group( function () {
-    Route::resource('causes', 'Api\CauseController');
-});*/

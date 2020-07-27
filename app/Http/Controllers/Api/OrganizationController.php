@@ -33,32 +33,4 @@ class OrganizationController extends BaseController
     {
         return $this->sendResponse(new OrganizationResource($organization));
     }
-    /**
-     * Favorite a organization
-     *
-     * @param  Organization  $organization
-     * @return \Illuminate\Http\Response
-     */
-    public function favorite(Organization $organization){
-        $user = Auth::user();
-
-        try{
-            $count = $organization->favorites()->where('volunteer_id',$user->id)->count();
-            if($count > 0){
-                $organization->favorites()->where('volunteer_id',$user->id)->delete();
-                $response = false;
-            }
-            else{ 
-                $organization->favorites()->create([
-                    'volunteer_id' => $user->id
-                ]);
-                $response = true;
-            }
-        }
-        catch(Exception $ex){
-            return $this->sendFail('Não foi possível salvar a organização como favorita');
-        }
-        return $this->sendResponse($response);
-    }
-
 }

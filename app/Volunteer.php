@@ -33,5 +33,10 @@ class Volunteer extends Model
     {
         return $this->hasMany('App\Enrollment');
     }
+
+    public function favorites()
+    {
+        return $this->hasMany('App\Favorite');
+    }
     
 }
