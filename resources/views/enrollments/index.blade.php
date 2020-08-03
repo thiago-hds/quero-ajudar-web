@@ -80,10 +80,18 @@
                                 <tbody>
                                     <tr>
                                         <!-- vacancy_name -->
-                                        <td> {{ $enrollment->vacancy->name }} </td>
+                                        <td>
+                                            <a href="{{action('Web\VacancyController@edit', ['vacancy' => $enrollment->vacancy])}}" target="_blank">
+                                                {{ $enrollment->vacancy->name }} 
+                                            </a>
+                                        </td>
 
                                         <!-- volunteer_name -->
-                                        <td> {{ $enrollment->volunteer->user->name }} </td>
+                                        <td> 
+                                            <a href="{{action('Web\VolunteerController@edit', ['volunteer' => $enrollment->volunteer])}}" target="_blank">
+                                            {{ $enrollment->volunteer->user->complete_name  }} 
+                                            </a>
+                                        </td>
 
                                         <!-- actions -->
                                         <td>

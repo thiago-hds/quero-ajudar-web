@@ -71,6 +71,12 @@ class User extends Authenticatable
         return $this->morphMany('App\Phone', 'owner');
     }
 
+    public function getCompleteNameAttribute($value)
+    {
+        return sprintf("%s %s", $this->first_name, $this->last_name);
+    }
+
+
     public function getDateOfBirthAttribute($value)
     {
         return Carbon::parse($value)->format('d/m/Y');

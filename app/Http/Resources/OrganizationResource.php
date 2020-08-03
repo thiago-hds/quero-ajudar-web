@@ -25,7 +25,7 @@ class OrganizationResource extends JsonResource
             'email'                 => $this->email,
             'website'               => $this->website,
             'phones'                => $this->phones->pluck('number')->all(),
-            'formatted_location'    => $this->address->getFormattedAddress()
+            'formatted_location'    => $this->address? $this->address->getFormattedAddress() : ''
         ];
 
         if($user = Auth::user()){

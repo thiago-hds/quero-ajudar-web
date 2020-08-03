@@ -26,6 +26,7 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::apiResource('skills', 'Api\SkillController');
     Route::apiResource('vacancies', 'Api\VacancyController');
     Route::apiResource('organizations', 'Api\OrganizationController');
+    Route::apiResource('enrollment', 'Api\EnrollmentController');
 
     Route::post('favorites/vacancies/{vacancy}/favorite', 'Api\FavoritesController@saveVacancyAsFavorite');
     Route::post('favorites/organizations/{organization}/favorite', 'Api\FavoritesController@saveOrganizationAsFavorite');

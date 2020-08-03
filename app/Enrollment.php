@@ -15,4 +15,9 @@ class Enrollment extends Model
     {
         return $this->belongsTo('App\Vacancy');
     }
+
+    public function phone()
+    {
+        return $this->morphOne('App\Phone', 'owner');
+    }
 }
