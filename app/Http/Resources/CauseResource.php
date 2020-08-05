@@ -17,7 +17,7 @@ class CauseResource extends JsonResource
         return [
             'id'                        => $this->id,
             'name'                      => $this->name,
-            'fontawesome_icon_unicode'  => $this->fontawesome_icon_unicode
+            'fontawesome_icon_unicode'  => sprintf('&#x%s;',$this->fontawesome_icon_unicode)
         ];
     }
 }

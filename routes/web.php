@@ -25,7 +25,9 @@ Route::resources([
     'organizations' => 'Web\OrganizationController',
     'vacancies'     => 'Web\VacancyController',
     'volunteers'    => 'Web\VolunteerController',
-    'enrollments'   => 'Web\EnrollmentController'
+    'enrollments'   => 'Web\EnrollmentController',
+    'causes'        => 'Web\CauseController',
+    'skills'        => 'Web\SkillController'
 ]);
 
 Route::resource('enrollments', 'Web\EnrollmentController')->except(['show', 'edit', 'update']);

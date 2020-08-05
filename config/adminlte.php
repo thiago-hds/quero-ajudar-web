@@ -344,6 +344,40 @@ return [
                 ]
             ]
         ],
+        [
+            'text' => 'Causas',
+            'url'  => '#',
+            'icon' => 'fas fa-fw fa-bullhorn',
+            'submenu' => [
+                [
+                    'text' => 'Nova',
+                    'icon' => 'fas fa-fw fa-plus-circle',
+                    'url'  => 'causes/create',
+                ],
+                [
+                    'text' => 'Listar',
+                    'icon' => 'fas fa-fw fa-list',
+                    'url'  => 'causes',
+                ]
+            ]
+        ],
+        [
+            'text' => 'Habilidades',
+            'url'  => '#',
+            'icon' => 'fas fa-fw fa-wrench',
+            'submenu' => [
+                [
+                    'text' => 'Nova',
+                    'icon' => 'fas fa-fw fa-plus-circle',
+                    'url'  => 'skills/create',
+                ],
+                [
+                    'text' => 'Listar',
+                    'icon' => 'fas fa-fw fa-list',
+                    'url'  => 'skills',
+                ]
+            ]
+        ],
         ['header' => 'account_settings'],
         [
             'text' => 'profile',
@@ -552,6 +586,6 @@ return [
                     'location' => '//cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/dropzone.css',
                 ]
             ],
-        ],
+        ],        
     ],
 ];
