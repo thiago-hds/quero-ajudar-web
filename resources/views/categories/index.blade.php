@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Causas')
+@section('title', $type=='causes' ? 'Causas' : 'Habilidades')
 
 @section('content_header')
     <div class="col-sm-12">
@@ -10,7 +10,7 @@
             </div>
         @endif
     </div>
-    <h1 class="m-0 text-dark">Causas</h1>
+    <h1 class="m-0 text-dark">{{$type=='causes' ? 'Causas' : 'Habilidades'}}</h1>
 @stop
 
 @section('content')
@@ -21,7 +21,7 @@
                 <form action="" method="GET">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="name">Nome</label>
                                     <input type="text" class="form-control" name="name" value="{{ isset($inputs->name)? $inputs->name : '' }}">
@@ -45,7 +45,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        {{ $causes->links() }}
+                        {{ $categories->links() }}
                     </div>
                     <div class="row">
                         <table id="example2" class="table table-bordered table-hover">
@@ -56,19 +56,23 @@
                                     <th>Ações</th>
                                 </tr>
                             </thead>
-                            @foreach($causes as $cause)
+                            @foreach($categories as $category)
                                 <tbody>
                                     <tr>
-                                        <td> {{ $cause->name}} </td>
-                                        <td> <i class="fa"> &#x{{ $cause->fontawesome_icon_unicode }}; </i></td>
+                                        <td> {{ $category->name}} </td>
                                         <td>
-                                            @can('update', $cause)
-                                            <a class="btn btn-info btn-sm" href="{{ route('causes.edit',$cause->id)}}">
+                                            @if($category->fontawesome_icon_unicode != "")
+                                                <i class="fa"> &#x{{ $category->fontawesome_icon_unicode }}; </i>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @can('update', $category)
+                                            <a class="btn btn-info btn-sm" href="{{ $type == 'causes' ? route('causes.edit',$category->id) : route('skills.edit',$category->id)}}">
                                                 <i class="fas fa-pencil-alt"></i>  Editar
                                             </a>
                                             @endcan
-                                            @can('delete', $cause)
-                                            <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal-delete" onclick="deleteData('causes',{{$cause->id}})" >
+                                            @can('delete', $category)
+                                            <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal-delete" onclick="deleteData('{{$type}}',{{$category->id}})" >
                                                 <i class="fas fa-trash"></i> Excluir
                                             </button>
                                             @endcan
@@ -87,7 +91,7 @@
                         </table>
                     </div>
                     <div class="row">
-                        {{ $causes->links() }}
+                        {{ $categories->links() }}
                     </div>
                 </div>
             </div>
@@ -95,7 +99,7 @@
     </div>
 
     <div class="modal fade" id="modal-delete">
-        @include('confirm_delete', ['model_name' => 'causa'])
+        @include('confirm_delete', ['model_name' => $type=='causes' ? 'causa' : 'habilidade'])
     </div>
     <!-- /.modal -->
 
