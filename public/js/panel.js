@@ -89,6 +89,12 @@ $(document).ready(function() {
         })
     });
 
+    $('input[name=fontawesome_icon_unicode]').on('change paste keyup', function () {
+        var icon_unicode = $(this).val();
+        console.log(icon_unicode);
+        $('div[name=category_icon]').find('i').html('&#x' + icon_unicode + ';');
+    });
+
 });
 
 // inclui a rota correta de remoção no modal de confirmação

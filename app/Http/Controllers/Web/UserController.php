@@ -105,17 +105,6 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\User  $user
@@ -123,6 +112,19 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        $organizations = Organization::all();
+        return view('users.edit', compact('user','organizations'));   
+    }
+
+    /**
+     * Show the form for editing the logged user profile.
+     *
+     * @param  \App\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function profile()
+    {
+        $user = Auth::user();
         $organizations = Organization::all();
         return view('users.edit', compact('user','organizations'));   
     }

@@ -16,8 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\UploadedFile;
 use App\Http\Controllers\Controller;
-
-
+use App\User;
 
 class VacancyController extends Controller
 {
@@ -39,9 +38,13 @@ class VacancyController extends Controller
         $likeFields     =   ['name'];
 
         $inputs = $request->all();
+
+        if(Auth::user()->profile == User::ORGANIZATION){
+            $inputs['organization_id'] = Auth::user()->organization_id;
+        }
         
         // definir clausulas where
-        $whereClauses = []; 
+        $whereClauses = [];
         
         foreach($inputs as $key => $input){
             if($input && in_array($key, array_merge($equalFields, $likeFields))){

@@ -109,7 +109,10 @@
                                         <!-- causes -->
                                         <td> 
                                             @foreach($organization->causes as $cause)
-                                            {{ $cause->name }} <br/>
+                                                <span class="fa-stack fa-1x" title="{{ $cause->name }}">
+                                                    <i class="fa fa-circle fa-stack-2x category-icon-background"></i>
+                                                    <i class="fa fa-stack-1x category-icon"> &#x{{ $cause->fontawesome_icon_unicode }}; </i>
+                                                </span>
                                             @endforeach     
                                         </td>
 

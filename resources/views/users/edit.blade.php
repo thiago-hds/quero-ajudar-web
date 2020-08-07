@@ -104,7 +104,7 @@
 
                         <div class="form-group">
                             <label for="email">E-mail</label>
-                            <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', isset($user->email) ? $user->email : null) }}">
+                            <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', isset($user->email) ? $user->email : null) }}" {{ (isset($user) && Auth::user()->id == $user->id)? 'disabled' : '' }}>
                             @error('email')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror

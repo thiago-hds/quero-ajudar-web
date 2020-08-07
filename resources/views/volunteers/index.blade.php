@@ -118,13 +118,19 @@
                                         <!-- causes -->
                                         <td> 
                                             @foreach($volunteer->causes as $cause)
-                                                {{ $cause->name}} <br/>
+                                                <span class="fa-stack fa-1x" title="{{ $cause->name }}">
+                                                    <i class="fa fa-circle fa-stack-2x category-icon-background"></i>
+                                                    <i class="fa fa-stack-1x category-icon"> &#x{{ $cause->fontawesome_icon_unicode }}; </i>
+                                                </span>
                                             @endforeach
                                         </td>
                                         <!-- skils -->
                                         <td> 
                                             @foreach($volunteer->skills as $skill)
-                                                {{ $skill->name}} <br/>
+                                                <span class="fa-stack fa-1x" title="{{ $skill->name }}">
+                                                    <i class="fa fa-circle fa-stack-2x category-icon-background"></i>
+                                                    <i class="fa fa-stack-1x category-icon"> &#x{{ $skill->fontawesome_icon_unicode }}; </i>
+                                                </span>
                                             @endforeach
                                         </td>
 

@@ -53,7 +53,7 @@
                                     <select class="form-control select2" data-placeholder="Selecione uma causa" style="width: 100%;" name="cause_id" >
                                         <option></option>
                                         @foreach($causes as $cause)
-                                            <option value="{{ $cause->id }}" {{ (isset($inputs->cause_id) && $inputs->cause_id == $cause->id)? 'selected' : '' }}>
+                                            <option value="{{ $cause->id }}" {{ (isset($inputs->cause_id) && $inputs->cause_id == $cause->id)? 'selected' : '' }}>                                            
                                                 {{ $cause->name }}
                                             </option>
                                         @endforeach
@@ -157,7 +157,7 @@
                         {{ $vacancies->links() }}
                     </div>
                     <div class="row">
-                        <table id="example2" class="table table-bordered table-hover">
+                        <table class="table table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th>Nome</th>
@@ -182,15 +182,21 @@
 
                                         <!-- causes -->
                                         <td> 
-                                            @foreach($vacancy->causes as $cause)
-                                            {{ $cause->name }} <br/>
+                                            @foreach($vacancy->causes as $key => $cause)
+                                                <span class="fa-stack fa-1x" title="{{ $cause->name }}">
+                                                    <i class="fa fa-circle fa-stack-2x category-icon-background"></i>
+                                                    <i class="fa fa-stack-1x category-icon"> &#x{{ $cause->fontawesome_icon_unicode }}; </i>
+                                                </span>
                                             @endforeach     
                                         </td>
 
                                         <!-- skills -->
                                         <td> 
                                             @foreach($vacancy->skills as $skill)
-                                            {{ $skill->name }} <br/>
+                                                <span class="fa-stack fa-1x" title="{{ $skill->name }}">
+                                                    <i class="fa fa-circle fa-stack-2x category-icon-background"></i>
+                                                    <i class="fa fa-stack-1x category-icon"> &#x{{ $skill->fontawesome_icon_unicode }}; </i>
+                                                </span>
                                             @endforeach     
                                         </td>
 

@@ -19,6 +19,7 @@ Auth::routes();
 
 Route::get('/home', 'Web\HomeController@index')->name('home');
 Route::get('state/{abbr}/cities', 'Web\AddressController@getCitiesByStateAbbr');
+Route::get('users/profile', 'Web\UserController@profile');
 
 Route::resources([
     'users'         => 'Web\UserController',
@@ -29,5 +30,7 @@ Route::resources([
     'causes'        => 'Web\CauseController',
     'skills'        => 'Web\SkillController'
 ]);
+
+
 
 Route::resource('enrollments', 'Web\EnrollmentController')->except(['show', 'edit', 'update']);

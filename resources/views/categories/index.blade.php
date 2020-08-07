@@ -48,7 +48,7 @@
                         {{ $categories->links() }}
                     </div>
                     <div class="row">
-                        <table id="example2" class="table table-bordered table-hover">
+                        <table class="table table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th>Nome</th>
@@ -62,7 +62,10 @@
                                         <td> {{ $category->name}} </td>
                                         <td>
                                             @if($category->fontawesome_icon_unicode != "")
-                                                <i class="fa"> &#x{{ $category->fontawesome_icon_unicode }}; </i>
+                                                <span class="fa-stack fa-1x">
+                                                    <i class="fa fa-circle fa-stack-2x category-icon-background"></i>
+                                                    <i class="fa fa-stack-1x category-icon"> &#x{{ $category->fontawesome_icon_unicode }}; </i>
+                                                </span>
                                             @endif
                                         </td>
                                         <td>
