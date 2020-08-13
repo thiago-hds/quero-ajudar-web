@@ -18,26 +18,26 @@ class CreateVacanciesTable extends Migration
             $table->bigInteger('organization_id')->unsigned();
             $table->string('name');
             $table->string('description');
-            $table->enum('type',['recurrent','unique_event']);
+            $table->tinyInteger('type');
             $table->string('tasks')->nullable();
 
             // periodicity
-            $table->enum('periodicity', ['daily', 'weekly', 'monthly'])->nullable();
+            $table->tinyInteger('periodicity')->nullable();
             $table->integer('amount_per_period')->nullable();
-            $table->enum('unit_per_period', ['hours', 'days'])->nullable();
+            $table->tinyInteger('unit_per_period')->nullable();
 
             // time schedule
             $table->date('date')->nullable();
             $table->time('time')->nullable();
 
             // location
-            $table->enum('location_type', ['organization_address', 'specific_address', 'remote', 'negotiable']);
+            $table->tinyInteger('location_type');
 
             $table->date('promotion_start_date')->nullable();
             $table->date('promotion_end_date')->nullable();
             $table->integer('enrollment_limit')->nullable();
             $table->string('image')->nullable();
-            $table->enum('status', ['active','inactive']);
+            $table->tinyInteger('status')->default(1);
             $table->timestamps();
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('restrict');
         });

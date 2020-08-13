@@ -119,8 +119,8 @@
                                     <label for="status">Tipo</label>
                                     <select class="form-control" name="type">
                                         <option></option>
-                                        <option value="recurrent" {{ (isset($inputs->type) && $inputs->type == 'recurrent')? 'selected' : '' }}>Recorrente</option>
-                                        <option value="unique_event" {{ (isset($inputs->type) && $inputs->type == 'unique_event')? 'selected' : '' }}>Evento Único</option>
+                                        <option value="recurrent" {{ (isset($inputs->type) && $inputs->type == \App\Enums\RecurrenceType::RECURRENT)? 'selected' : '' }}>Recorrente</option>
+                                        <option value="unique_event" {{ (isset($inputs->type) && $inputs->type == \App\Enums\RecurrenceType::UNIQUE_EVENT)? 'selected' : '' }}>Evento Único</option>
                                     </select>
                                 </div>
                             </div>
@@ -131,8 +131,8 @@
                                     <label for="status">Status</label>
                                     <select class="form-control" name="status">
                                         <option></option>
-                                        <option value="active" {{ (isset($inputs->status) && $inputs->status == 'active')? 'selected' : '' }}>Ativo</option>
-                                        <option value="inactive" {{ (isset($inputs->status) && $inputs->status == 'inactive')? 'selected' : '' }}>Inativo</option>
+                                        <option value="active" {{ (isset($inputs->status) && $inputs->status == \App\Enums\StatusType::ACTIVE)? 'selected' : '' }}>Ativo</option>
+                                        <option value="inactive" {{ (isset($inputs->status) && $inputs->status == \App\Enums\StatusType::INACTIVE)? 'selected' : '' }}>Inativo</option>
                                     </select>
                                 </div>
                             </div>
@@ -212,13 +212,13 @@
 
                                         <!-- type -->
                                         <td> 
-                                            {{ $vacancy->type == \App\Vacancy::RECURRENT? 'Recorrente' : 'Evento Único' }}
+                                            {{ $vacancy->type == \App\Enums\RecurrenceType::RECURRENT? 'Recorrente' : 'Evento Único' }}
                                         </td>
 
                                         <!-- status -->
                                         <td> 
-                                            <span class="badge badge-{{$vacancy->status == 'active'? 'success' : 'danger'}}">
-                                                {{ $vacancy->status == 'active'? 'ativo' : 'inativo'}}
+                                            <span class="badge badge-{{$vacancy->status == \App\Enums\StatusType::ACTIVE? 'success' : 'danger'}}">
+                                                {{ $vacancy->status == \App\Enums\StatusType::ACTIVE? 'ativo' : 'inativo'}}
                                             </span>
                                         </td>
 

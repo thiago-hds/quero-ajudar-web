@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\ProfileType;
 use App\User;
 use App\Volunteer;
 use Illuminate\Support\Facades\Auth;
@@ -18,12 +19,10 @@ class AuthController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function register(RegisterRequest $request)
-    {
-        
-   
+    {   
         $input = $request->validated();
         $input['password'] = bcrypt($input['password']);
-        $input['profile'] = User::VOLUNTEER;
+        $input['profile'] = ProfileType::VOLUNTEER;
         $user = User::create($input);
         
         $volunteer = new Volunteer;

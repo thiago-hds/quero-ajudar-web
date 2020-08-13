@@ -11,7 +11,7 @@ $(document).ready(function() {
 
     // controle de exibição select de instituições no cadastro de usuários
     $('input[name=profile]').change(function(){
-        if( $(this).val() == 'organization' ){ 
+        if( $(this).val() == '1' ){ 
             $('#organization_div').show(400);
         }
         else{ 

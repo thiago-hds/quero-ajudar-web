@@ -60,14 +60,14 @@
                             @if(Auth::user()->isAdmin())
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
-                                    name="profile" value="admin" {{ old('profile', isset($user->profile)? $user->profile : null) == 'organization'? '' : 'checked' }}>
+                                    name="profile" value="admin" {{ old('profile', isset($user->profile)? $user->profile : null) == \App\Enums\ProfileType::ORGANIZATION? '' : 'checked' }}>
                                 <label class="form-check-label">Administrador</label>
                             </div>  
                             @endif
 
                             <div class="form-check">          
                                 <input class="form-check-input" type="radio"
-                                    name="profile" value="organization" {{ (!Auth::user()->isAdmin() || old('profile', isset($user->profile)? $user->profile : null) == 'organization')? 'checked' : '' }}>
+                                    name="profile" value="organization" {{ (!Auth::user()->isAdmin() || old('profile', isset($user->profile)? $user->profile : null) == \App\Enums\ProfileType::ORGANIZATION)? 'checked' : '' }}>
                                 <label class="form-check-label">Instituição</label>
                             </div>
                             
@@ -77,7 +77,7 @@
                         </div>
                         
                         @if(Auth::user()->isAdmin())
-                        <div id="organization_div" class="form-group" style="display:{{ (isset($user->profile) && $user->profile == 'organization') ? 'block' : 'none' }}">
+                        <div id="organization_div" class="form-group" style="display:{{ (isset($user->profile) && $user->profile == \App\Enums\ProfileType::ORGANIZATION) ? 'block' : 'none' }}">
                             <label for="organization">Instituição</label>
                             <select class="form-control select2  @error('organization') is-invalid @enderror" data-placeholder="Selecione uma instituição" style="width: 100%;" name="organization_id">
                                 <option></option>
@@ -134,13 +134,13 @@
                             <label for="status">Status</label>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
-                                    name="status" value="active" {{ old('status', isset($user->status)? $user->status : null) == 'inactive'? '' : 'checked' }}>
+                                    name="status" value="active" {{ old('status', isset($user->status)? $user->status : null) == \App\Enums\StatusType::INACTIVE? '' : 'checked' }}>
                                 <label class="form-check-label">Ativo</label>
                             </div>
 
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
-                                    name="status" value="inactive" {{ old('status', isset($user->status)? $user->status : null) == 'inactive'? 'checked' : '' }}>
+                                    name="status" value="inactive" {{ old('status', isset($user->status)? $user->status : null) == \App\Enums\StatusType::INACTIVE? 'checked' : '' }}>
                                 <label class="form-check-label">Inativo</label>
                             </div>
                             

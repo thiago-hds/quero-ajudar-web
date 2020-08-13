@@ -21,7 +21,7 @@ class CreateOrganizationsTable extends Migration
             $table->string('website')->nullable();
             $table->string('description');
             $table->string('logo')->nullable();
-            $table->enum('status', ['active','inactive']);
+            $table->tinyInteger('status')->default(1);
             $table->timestamps();
             $table->foreign('organization_type_id')->references('id')->on('organization_types')->onDelete('restrict');
         });

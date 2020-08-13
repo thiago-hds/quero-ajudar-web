@@ -1,5 +1,9 @@
 @extends('adminlte::page')
 
+@php
+use App\Enums\StatusType;
+@endphp
+
 @section('title', 'Instituições')
 
 @section('content_header')
@@ -53,8 +57,8 @@
                                     <label for="status">Status</label>
                                     <select class="form-control" name="status">
                                         <option></option>
-                                        <option value="active" {{ (isset($inputs->status) && $inputs->status == 'active')? 'selected' : '' }}>Ativo</option>
-                                        <option value="inactive" {{ (isset($inputs->status) && $inputs->status == 'inactive')? 'selected' : '' }}>Inativo</option>
+                                        <option value="active" {{ (isset($inputs->status) && $inputs->status == \App\Enums\StatusType::ACTIVE)? 'selected' : '' }}>Ativo</option>
+                                        <option value="inactive" {{ (isset($inputs->status) && $inputs->status == \App\Enums\StatusType::INACTIVE)? 'selected' : '' }}>Inativo</option>
                                     </select>
                                 </div>
                             </div>
@@ -118,8 +122,8 @@
 
                                         <!-- status -->
                                         <td> 
-                                            <span class="badge badge-{{$organization->status == 'active'? 'success' : 'danger'}}">
-                                                {{ $organization->status == 'active'? 'ativo' : 'inativo'}}
+                                            <span class="badge badge-{{$organization->status == \App\Enums\StatusType::ACTIVE? 'success' : 'danger'}}">
+                                                {{ $organization->status == \App\Enums\StatusType::ACTIVE? 'ativo' : 'inativo'}}
                                             </span>
                                         </td>
 

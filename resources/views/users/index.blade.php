@@ -38,8 +38,8 @@
                                     <label for="profile">Perfil</label>
                                     <select class="form-control" name="profile">
                                         <option></option>
-                                        <option value="admin" {{ (isset($inputs->profile) && $inputs->profile == 'admin')? 'selected' : '' }}>Administrador</option>
-                                        <option value="organization" {{ (isset($inputs->profile) && $inputs->profile == 'organization')? 'selected' : '' }}>Instituição</option>
+                                        <option value="admin" {{ (isset($inputs->profile) && $inputs->profile == \App\Enums\ProfileType::ADMIN)? 'selected' : '' }}>Administrador</option>
+                                        <option value="organization" {{ (isset($inputs->profile) && $inputs->profile == \App\Enums\ProfileType::ORGANIZATION)? 'selected' : '' }}>Instituição</option>
                                     </select>
                                 </div>
                             </div>
@@ -63,8 +63,8 @@
                                     <label for="status">Status</label>
                                     <select class="form-control" name="status">
                                         <option></option>
-                                        <option value="active" {{ (isset($inputs->status) && $inputs->status == 'active')? 'selected' : '' }}>Ativo</option>
-                                        <option value="inactive" {{ (isset($inputs->status) && $inputs->status == 'inactive')? 'selected' : '' }}>Inativo</option>
+                                        <option value="active" {{ (isset($inputs->status) && $inputs->status == \App\Enums\StatusType::ACTIVE)? 'selected' : '' }}>Ativo</option>
+                                        <option value="inactive" {{ (isset($inputs->status) && $inputs->status == \App\Enums\StatusType::INACTIVE)? 'selected' : '' }}>Inativo</option>
                                     </select>
                                 </div>
                             </div>
@@ -106,16 +106,16 @@
                                         <td> {{ $user->first_name}} {{$user->last_name }} </td>
                                         <td> {{ $user->email }} </td>
                                         <td> 
-                                            <span class="badge badge-{{$user->profile == 'organization'? 'info' : 'warning'}}">
-                                                {{ $user->profile == 'organization'? 'instituição' : 'administrador'}}
+                                            <span class="badge badge-{{$user->profile == \App\Enums\ProfileType::ORGANIZATION? 'info' : 'warning'}}">
+                                                {{ $user->profile == \App\Enums\ProfileType::ORGANIZATION? 'instituição' : 'administrador'}}
                                             </span>
                                         </td>
                                         <td> 
-                                            {{ ($user->profile == 'organization' && isset($user->organization))? $user->organization->name : 'N/A'}}
+                                            {{ ($user->profile == \App\Enums\ProfileType::ORGANIZATION && isset($user->organization))? $user->organization->name : 'N/A'}}
                                         </td>
                                         <td> 
-                                            <span class="badge badge-{{$user->status == 'active'? 'success' : 'danger'}}">
-                                                {{ $user->status == 'active'? 'ativo' : 'inativo'}}
+                                            <span class="badge badge-{{$user->status == \App\Enums\StatusType::ACTIVE? 'success' : 'danger'}}">
+                                                {{ $user->status == \App\Enums\StatusType::ACTIVE? 'ativo' : 'inativo'}}
                                             </span>
                                         </td>
                                         <td>

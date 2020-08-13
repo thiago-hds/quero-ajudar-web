@@ -20,9 +20,9 @@ class CreateUsersTable extends Migration
             $table->string('last_name');
             $table->string('email'); 
             $table->string('password');
-            $table->enum('profile',['admin','organization','volunteer'])->default('admin');
+            $table->tinyInteger('profile')->default(0);
             $table->date('date_of_birth')->nullable();
-            $table->enum('status',['active','inactive'])->default('active');
+            $table->tinyInteger('status')->default(1);
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('restrict');
             $table->timestamps();
         });

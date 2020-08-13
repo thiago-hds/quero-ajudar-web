@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Web;
 
+use App\Enums\RecurrenceType;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Requests\Api\ApiFormRequest;
 use App\Vacancy;
@@ -50,7 +51,7 @@ class VacancyRequest extends FormRequest
         $frequency_negotiable   = $this->request->get('frequency_negotiable');
         $hours_negotiable       = $this->request->get('hours_negotiable');
 
-        if($type == 'recurrent' && $frequency_negotiable == 'no'){
+        if($type == RecurrenceType::RECURRENT && $frequency_negotiable == 'no'){
             
             $rules['periodicity']           = 'required|in:daily,weekly,monthly';
             $rules['unit_per_period']       = 'required|in:days,months';

@@ -1,5 +1,5 @@
 $('input[name=type]').change(function(){
-    if( $(this).val() == 'recurrent' ){ 
+    if( $(this).val() == '0' ){ 
         $('#frequency_div').show(400);
         $('#date_div').hide(400);
     }
@@ -29,7 +29,7 @@ $('input[name=hours_negotiable]').change(function(){
 
 
 $('input[name=location_type]').change(function(){
-    if($(this).val() == 'organization_address' || $(this).val() == 'specific_address'){ 
+    if($(this).val() == '0' || $(this).val() == '1'){ 
         $('#address_div').show(400);
     }
     else{ 

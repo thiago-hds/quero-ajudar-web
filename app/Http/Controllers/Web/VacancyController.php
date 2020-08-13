@@ -7,6 +7,8 @@ use App\Cause;
 use App\Skill;
 use App\State;
 use App\Address;
+use App\Enums\ProfileType;
+use App\Enums\RecurrenceType;
 use App\Vacancy;
 use Carbon\Carbon;
 use App\Organization;
@@ -39,7 +41,7 @@ class VacancyController extends Controller
 
         $inputs = $request->all();
 
-        if(Auth::user()->profile == User::ORGANIZATION){
+        if(Auth::user()->profile == ProfileType::ORGANIZATION){
             $inputs['organization_id'] = Auth::user()->organization_id;
         }
         
@@ -155,7 +157,7 @@ class VacancyController extends Controller
             $vacancy->organization()->associate($organization);
         }  
 
-        if($vacancy->type == Vacancy::RECURRENT && 
+        if($vacancy->type == RecurrenceType::RECURRENT && 
             $request->input('frequency_negotiable') == 'no'){
 
                 $vacancy->periodicity       = $request->input('periodicity');
@@ -163,12 +165,12 @@ class VacancyController extends Controller
                 $vacancy->amount_per_period = $request->input('amount_per_period');
         }
 
-        if($vacancy->type == Vacancy::UNIQUE_EVENT &&
+        if($vacancy->type == RecurrenceType::UNIQUE_EVENT &&
             $request->input('hours_negotiable') == 'no'){
                 $vacancy->date = $request->input('date');
                 $vacancy->time = $request->input('time');
         }
-        else if($vacancy->type == Vacancy::RECURRENT &&
+        else if($vacancy->type == RecurrenceType::RECURRENT &&
             $request->input('hours_negotiable') == 'no'){
                 $vacancy->time = $request->input('time');
         }
@@ -258,7 +260,7 @@ class VacancyController extends Controller
         }
         
         // FREQUENCIA
-        if($vacancy->type == Vacancy::RECURRENT && 
+        if($vacancy->type == RecurrenceType::RECURRENT && 
             $request->input('frequency_negotiable') == 'no'){
 
                 $vacancy->periodicity       = $request->input('periodicity');
@@ -272,13 +274,13 @@ class VacancyController extends Controller
         }
 
         // HORARIO
-        if($vacancy->type == Vacancy::UNIQUE_EVENT &&
+        if($vacancy->type == RecurrenceType::UNIQUE_EVENT &&
             $request->input('hours_negotiable') == 'no'){  
 
                 $vacancy->date = $request->input('date');
                 $vacancy->time = $request->input('time');
         }
-        else if($vacancy->type == Vacancy::RECURRENT &&
+        else if($vacancy->type == RecurrenceType::RECURRENT &&
             $request->input('hours_negotiable') == 'no'){
                 $vacancy->date = null;
                 $vacancy->time = $request->input('time');

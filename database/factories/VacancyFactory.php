@@ -4,6 +4,8 @@
 
 use App\Vacancy;
 use App\Address;
+use App\Enums\RecurrenceType;
+use App\Enums\StatusType;
 use Faker\Generator as Faker;
 
 $factory->define(Vacancy::class, function (Faker $faker) {
@@ -11,10 +13,10 @@ $factory->define(Vacancy::class, function (Faker $faker) {
         'organization_id'       => 1,
         'name'                  => $faker->company,
         'description'           => $faker->text,
-        'type'                  => 'unique_event',
+        'type'                  => RecurrenceType::UNIQUE_EVENT,
         'tasks'                 => 'asd',
         'image'                 => 'logo/145549202003075e63b5f5d1ef3.jpeg',
-        'status'                => 'active'
+        'status'                => StatusType::ACTIVE
     ];
 });
 

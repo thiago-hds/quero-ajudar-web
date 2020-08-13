@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Cause;
+use App\Enums\ProfileType;
 use App\Skill;
 use App\Volunteer;
 use App\User;
@@ -99,7 +100,7 @@ class VolunteerController extends Controller
             'first_name'        => $request->input('first_name'),
             'last_name'         => $request->input('last_name'),
             'date_of_birth'     => $request->input('date_of_birth'),
-            'profile'           => User::VOLUNTEER,
+            'profile'           => ProfileType::VOLUNTEER,
             'email'             => $request->input('email'),
             'password'          => Hash::make($request->input('password')),
             'status'            => $request->input('status')

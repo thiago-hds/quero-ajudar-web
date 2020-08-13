@@ -155,13 +155,13 @@
                             <label for="status">Status</label>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
-                                    name="status" value="active" {{ old('status', isset($vacancy->status)? $vacancy->status : null) == 'inactive'? '' : 'checked' }}>
+                                    name="status" value="active" {{ old('status', isset($vacancy->status)? $vacancy->status : null) == \App\Enums\StatusType::INACTIVE? '' : 'checked' }}>
                                 <label class="form-check-label">Ativo</label>
                             </div>
 
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
-                                    name="status" value="inactive" {{ old('status', isset($vacancy->status)? $vacancy->status : null) == 'inactive'? 'checked' : '' }}>
+                                    name="status" value="inactive" {{ old('status', isset($vacancy->status)? $vacancy->status : null) == \App\Enums\StatusType::INACTIVE? 'checked' : '' }}>
                                 <label class="form-check-label">Inativo</label>
                             </div>
                     
@@ -177,13 +177,13 @@
                             <label for="status">Tipo</label>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
-                                    name="type" value="recurrent" {{ old('type', isset($vacancy->type)? $vacancy->type : null) == 'unique_event'? '' : 'checked' }}>
+                                    name="type" value="recurrent" {{ old('type', isset($vacancy->type)? $vacancy->type : null) == \App\Enums\RecurrenceType::UNIQUE_EVENT? '' : 'checked' }}>
                                 <label class="form-check-label">Recorrente</label>
                             </div>
 
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
-                                    name="type" value="unique_event" {{ old('type', isset($vacancy->type)? $vacancy->type : null) == 'unique_event'? 'checked' : '' }}>
+                                    name="type" value="unique_event" {{ old('type', isset($vacancy->type)? $vacancy->type : null) == \App\Enums\RecurrenceType::UNIQUE_EVENT? 'checked' : '' }}>
                                 <label class="form-check-label">Evento Único</label>
                             </div>
 
@@ -193,7 +193,7 @@
                             @enderror
                         </div>
 
-                        <div id="frequency_div" style="display:{{(isset($vacancy) && $vacancy->type == 'unique_event')? 'none' : 'block'}};">
+                        <div id="frequency_div" style="display:{{(isset($vacancy) && $vacancy->type == \App\Enums\RecurrenceType::UNIQUE_EVENT)? 'none' : 'block'}};">
                             <hr>
 
                             <h5>Frequência</h5> <br/>
@@ -227,9 +227,9 @@
                                         <label for="periodicity">Periodicidade</label>
                                         <select class="form-control @error('periodicity') is-invalid @enderror" style="width: 100%;" name="periodicity">
                                             <option></option>
-                                            <option value="daily" {{ (old('periodicity', isset($vacancy->periodicity)? $vacancy->periodicity : null) == 'daily')? 'selected' : '' }}>Diária</option>
-                                            <option value="weekly" {{ (old('periodicity', isset($vacancy->periodicity)? $vacancy->periodicity : null) == 'weekly')? 'selected' : '' }}>Semanal</option>
-                                            <option value="monthly" {{ (old('periodicity', isset($vacancy->periodicity)? $vacancy->periodicity : null) == 'monthly' )? 'selected' : '' }}>Mensal</option>
+                                            <option value="daily" {{ (old('periodicity', isset($vacancy->periodicity)? $vacancy->periodicity : null) == \App\Enums\PeriodicityType::DAILY)? 'selected' : '' }}>Diária</option>
+                                            <option value="weekly" {{ (old('periodicity', isset($vacancy->periodicity)? $vacancy->periodicity : null) == \App\Enums\PeriodicityType::WEEKLY)? 'selected' : '' }}>Semanal</option>
+                                            <option value="monthly" {{ (old('periodicity', isset($vacancy->periodicity)? $vacancy->periodicity : null) == \App\Enums\PeriodicityType::MONTHLY )? 'selected' : '' }}>Mensal</option>
                                         </select>
                                         @error('periodicity')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -243,8 +243,8 @@
                                         <label for="unit_per_period">Unidade de tempo/período</label>
                                         <select class="form-control @error('unit_per_period') is-invalid @enderror" style="width: 100%;" name="unit_per_period">
                                             <option></option>
-                                            <option value="hours" {{ (old('unit_per_period', isset($vacancy->unit_per_period)? $vacancy->unit_per_period : null) == 'hours')? 'selected' : '' }}>Horas</option>
-                                            <option value="days" {{ (old('unit_per_period', isset($vacancy->unit_per_period)? $vacancy->unit_per_period : null) == 'days')? 'selected' : '' }}>Dias</option>
+                                            <option value="hours" {{ (old('unit_per_period', isset($vacancy->unit_per_period)? $vacancy->unit_per_period : null) == \App\Enums\UnitPerPeriodType::HOURS)? 'selected' : '' }}>Horas</option>
+                                            <option value="days" {{ (old('unit_per_period', isset($vacancy->unit_per_period)? $vacancy->unit_per_period : null) == \App\Enums\UnitPerPeriodType::DAYS)? 'selected' : '' }}>Dias</option>
                                         </select>
                                         @error('unit_per_period')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -292,7 +292,7 @@
 
                         <div id="hours_div" class="row" style="display:{{ old('hours_negotiable', (isset($vacancy) && !isset($vacancy->time))? 'yes' : 'no') == 'no'? 'block' : 'none' }};">
                             <!-- date -->
-                            <div id="date_div" class="col-sm-6" style="display:{{(isset($vacancy) && $vacancy->type == 'unique_event')? 'block' : 'none'}};">
+                            <div id="date_div" class="col-sm-6" style="display:{{(isset($vacancy) && $vacancy->type == \App\Enums\RecurrenceType::UNIQUE_EVENT)? 'block' : 'none'}};">
                                 <div class="form-group">
                                     <label for="date">Data</label>
 
@@ -334,25 +334,25 @@
                             <label for="location_type">Tipo de Local</label>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
-                                    name="location_type" value="organization_address" {{ old('location_type', isset($vacancy->location_type)? $vacancy->location_type : 'organization_address') == 'organization_address'? 'checked' : '' }}>
+                                    name="location_type" value="organization_address" {{ old('location_type', isset($vacancy->location_type)? $vacancy->location_type : \App\Enums\LocationType::ORGANIZATION_ADDRESS) == \App\Enums\LocationType::ORGANIZATION_ADDRESS? 'checked' : '' }}>
                                 <label class="form-check-label">Endereço da Instituição</label>
                             </div>
 
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
-                                    name="location_type" value="specific_address" {{ old('location_type', isset($vacancy->location_type)? $vacancy->location_type : null) == 'specific_address'? 'checked' : '' }}>
+                                    name="location_type" value="specific_address" {{ old('location_type', isset($vacancy->location_type)? $vacancy->location_type : null) == \App\Enums\LocationType::SPECIFIC_ADDRESS? 'checked' : '' }}>
                                 <label class="form-check-label">Endereço Específico</label>
                             </div>
 
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
-                                    name="location_type" value="remote" {{ old('location_type', isset($vacancy->location_type)? $vacancy->location_type : null) == 'remote'? 'checked' : '' }}>
+                                    name="location_type" value="remote" {{ old('location_type', isset($vacancy->location_type)? $vacancy->location_type : null) == \App\Enums\LocationType::REMOTE? 'checked' : '' }}>
                                 <label class="form-check-label">Remoto</label>
                             </div>
 
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
-                                    name="location_type" value="negotiable" {{ old('location_type', isset($vacancy->location_type)? $vacancy->location_type : null) == 'negotiable'? 'checked' : '' }}>
+                                    name="location_type" value="negotiable" {{ old('location_type', isset($vacancy->location_type)? $vacancy->location_type : null) == \App\Enums\LocationType::NEGOTIABLE? 'checked' : '' }}>
                                 <label class="form-check-label">À combinar</label>
                             </div>
 
@@ -361,7 +361,7 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div id="address_div" style="display:{{(isset($vacancy->location_type) && ($vacancy->location_type == 'remote' || $vacancy->location_type == 'negotiable'))? 'none' : 'block' }}">
+                        <div id="address_div" style="display:{{(isset($vacancy->location_type) && ($vacancy->location_type == \App\Enums\LocationType::REMOTE || $vacancy->location_type == \App\Enums\LocationType::NEGOTIABLE))? 'none' : 'block' }}">
                             @include('address', ['address' => isset($vacancy->address)? $vacancy->address : null])
                         </div>
                         <hr>

@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Web;
 use App\Vacancy;
 use App\Volunteer;
 use App\Enrollment;
+use App\Enums\StatusType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EnrollmentRequest;
+use App\Http\Requests\Web\EnrollmentRequest as WebEnrollmentRequest;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -54,9 +56,9 @@ class EnrollmentController extends Controller
      */
     public function create()
     {
-        $vacancies = Vacancy::where('status','active')->orderBy('name')->get();
+        $vacancies = Vacancy::where('status',StatusType::ACTIVE)->orderBy('name')->get();
         $volunteers = Volunteer::whereHas('user', function (Builder $query) {
-            $query->where('status', 'active');
+            $query->where('status', StatusType::ACTIVE);
         })->get();
 
 
@@ -69,7 +71,7 @@ class EnrollmentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(EnrollmentRequest $request)
+    public function store(WebEnrollmentRequest $request)
     {
         $enrollment = new Enrollment;
         $enrollment->vacancy()->associate(Vacancy::find($request->input('vacancy_id')));

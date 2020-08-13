@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ProfileType;
 use Illuminate\Database\Seeder;
 
 class UsersTableSeeder extends Seeder
@@ -16,7 +17,7 @@ class UsersTableSeeder extends Seeder
             'last_name'     => 'root',
             'email'         => 'root@root.com',
             'password'      => bcrypt('root1234'),
-            'profile'       => 'admin',
+            'profile'       => ProfileType::ADMIN,
             'date_of_birth' => '1990-01-01'
         ]);
     }

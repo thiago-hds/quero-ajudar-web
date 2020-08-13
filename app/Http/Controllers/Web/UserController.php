@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Enums\ProfileType;
 use App\User;
 use App\Organization;
 use App\Http\Requests\Web\UserRequest;
@@ -35,9 +36,9 @@ class UserController extends Controller
         $inputs = $request->all();
 
         // definir clausulas where
-        $whereClauses = [['profile','!=', 'volunteer']];
+        $whereClauses = [['profile','!=', ProfileType::VOLUNTEER]];
 
-        if(Auth::user()->profile == User::ORGANIZATION){
+        if(Auth::user()->profile == ProfileType::ORGANIZATION){
             $inputs['organization_id'] = Auth::user()->organization_id;
         }
 
@@ -83,7 +84,7 @@ class UserController extends Controller
             'first_name'        => $request->input('first_name'),
             'last_name'         => $request->input('last_name'),
             'date_of_birth'     => $request->input('date_of_birth'),
-            'profile'           => Auth::user()->isAdmin()? $request->input('profile') : User::ORGANIZATION,
+            'profile'           => Auth::user()->isAdmin()? $request->input('profile') : ProfileType::ORGANIZATION,
             'email'             => $request->input('email'),
             'password'          => Hash::make($request->input('password')),
             'status'            => $request->input('status')
@@ -92,7 +93,7 @@ class UserController extends Controller
         if(!Auth::user()->isAdmin()){
             $organization = Organization::find(Auth::user()->organization_id);
         }
-        elseif($user->profile == User::ORGANIZATION){
+        elseif($user->profile == ProfileType::ORGANIZATION){
             $organization = Organization::find($request->input('organization_id'));
         }
 
@@ -142,7 +143,7 @@ class UserController extends Controller
             'first_name'        => $request->input('first_name'),
             'last_name'         => $request->input('last_name'),
             'date_of_birth'     => $request->input('date_of_birth'),
-            'profile'           => Auth::user()->isAdmin()? $request->input('profile') : User::ORGANIZATION,
+            'profile'           => Auth::user()->isAdmin()? $request->input('profile') : ProfileType::ORGANIZATION,
             'email'             => $request->input('email'),
             'status'            => $request->input('status')
         ]);
@@ -150,7 +151,7 @@ class UserController extends Controller
         if(!Auth::user()->isAdmin()){
             $organization = Organization::find(Auth::user()->organization_id);
         }
-        elseif($user->profile == User::ORGANIZATION){
+        elseif($user->profile == ProfileType::ORGANIZATION){
             $organization = Organization::find($request->input('organization_id'));
         }
 
