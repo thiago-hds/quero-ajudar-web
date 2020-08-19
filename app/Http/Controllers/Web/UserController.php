@@ -31,7 +31,7 @@ class UserController extends Controller
     {
         // separacao dos campos de filtragem por tipo de comparacao
         $equalFields    =   ['profile', 'organization_id', 'status']; 
-        $likeFields     =   ['name', 'email'];
+        $likeFields     =   ['email'];
         
         $inputs = $request->all();
 
@@ -52,10 +52,15 @@ class UserController extends Controller
                 }
             }
         }
+        $users = User::where($whereClauses);
+
+        if($name = $request->get('name')){
+            $users->whereRaw("CONCAT(first_name, ' ', last_name) like '%{$name}%'");
+        }
 
         // retornar view com dados
         $inputs = (object) $inputs;
-        $users = User::where($whereClauses)->orderBy('first_name', 'asc')->paginate(10);
+        $users = $users->orderBy('first_name', 'asc')->paginate(10);
         $organizations = Organization::orderBy('name', 'asc')->get();
         
         return view('users.index', compact('inputs', 'users', 'organizations'));
