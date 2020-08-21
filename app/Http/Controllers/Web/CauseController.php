@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Cause;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CategoryRequest;
+use App\Http\Requests\Web\CategoryRequest;
 use Illuminate\Http\Request;
 
 class CauseController extends Controller

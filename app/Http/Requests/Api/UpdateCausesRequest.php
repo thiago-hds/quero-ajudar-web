@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Api;
 
-use Illuminate\Foundation\Http\FormRequest;
 
-class CategoryRequest extends FormRequest
+class UpdateCausesRequest extends ApiFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +23,8 @@ class CategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'                      => 'required',
-            'fontawesome_icon_unicode'  => 'required',
+            'causes_ids'    => 'required|array',
+            'causes_ids.*'  => 'exists:causes,id'
         ];
     }
 }
