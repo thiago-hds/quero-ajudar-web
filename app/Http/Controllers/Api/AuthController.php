@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Api\LoginRequest;
 use App\Http\Requests\Api\RegisterRequest;
 use App\Http\Resources\UserResource;
+use Illuminate\Http\Client\Request;
 
 class AuthController extends BaseController
 {

@@ -37,6 +37,8 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::get('favorites/vacancies', 'Api\FavoritesController@favoriteVacancies');
     Route::get('favorites/organizations', 'Api\FavoritesController@favoriteOrganizations');
     
+    //Profile routes
+    Route::get('profile', 'Api\VolunteerProfileController@getUserProfile');
 
 
 });
