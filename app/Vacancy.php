@@ -2,6 +2,10 @@
 
 namespace App;
 
+use App\Enums\LocationType;
+use App\Enums\PeriodicityType;
+use App\Enums\RecurrenceType;
+use App\Enums\UnitPerPeriodType;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
@@ -128,26 +132,26 @@ class Vacancy extends Model
 
     public function getFormattedFrequency()
     {
-        if($this->type == self::RECURRENT){
+        if($this->type == RecurrenceType::RECURRENT){
             if($this->amount_per_period == null){
                 return "à combinar";
             }
             else{
                 $amount = $this->amount_per_period;
-                if($this->unit_per_period == self::HOURS){
+                if($this->unit_per_period == UnitPerPeriodType::HOURS){
                     $unit = $amount == 1? "hora" : "horas";
                 }
-                else if($this->unit_per_period == self::DAYS){
+                else if($this->unit_per_period == UnitPerPeriodType::DAYS){
                     $unit = $amount == 1? "dia" : "dias";
                 }
 
-                if($this->periodicity == self::DAILY){
+                if($this->periodicity == PeriodicityType::DAILY){
                     $period = "diárias";
                 }
-                else if($this->periodicity == self::WEEKLY){
+                else if($this->periodicity == PeriodicityType::WEEKLY){
                     $period = "semanais";
                 }
-                else if($this->periodicity == self::MONTHLY){
+                else if($this->periodicity == PeriodicityType::MONTHLY){
                     $period = "mensais";
                 }
 
@@ -160,7 +164,7 @@ class Vacancy extends Model
     }
 
     public function getFormattedDate(){
-        if($this->type == self::UNIQUE_EVENT){
+        if($this->type == RecurrenceType::UNIQUE_EVENT){
             if($this->date == null){
                 return "à combinar";
             }
@@ -181,13 +185,13 @@ class Vacancy extends Model
     }
 
     public function getFormattedLocation(){
-        if($this->location_type == self::REMOTE){
+        if($this->location_type == LocationType::REMOTE){
             return "remoto";
         }
-        else if($this->location_type == self::NEGOTIABLE){
+        else if($this->location_type == LocationType::NEGOTIABLE){
             return "à combinar";
         }
-        else if($this->location_type == self::ORGANIZATION_ADDRESS ){
+        else if($this->location_type == LocationType::ORGANIZATION_ADDRESS ){
             if($organization = Organization::find($this->organization_id) &&
                 isset($organization->address)){
                 return $organization->address->getFormattedAddress();

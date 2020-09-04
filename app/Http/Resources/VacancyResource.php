@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\LocationType;
 use App\Vacancy;
 use App\Organization;
 use Illuminate\Support\Facades\Storage;
@@ -38,21 +39,20 @@ class VacancyResource extends JsonResource
             'formatted_frequency'   => $this->getFormattedFrequency(),
             'formatted_date'        => $this->getFormattedDate(),
             'formatted_time'        => $this->getFormattedTime(),
-            'formatted_location'    => $this->getFormattedLocation(),
-            'favorited'             => null
+            'formatted_location'    => $this->getFormattedLocation()
         ];
 
-        if($this->location_type == Vacancy::SPECIFIC_ADDRESS){
+        if($this->location_type == LocationType::SPECIFIC_ADDRESS){
             $array['address'] = AddressResource::make($this->address);
         }
-        else if($this->location_type == Vacancy::ORGANIZATION_ADDRESS
+        else if($this->location_type == LocationType::ORGANIZATION_ADDRESS
             && $organization = Organization::find($this->organization_id)){
                 $array['address'] = AddressResource::make($organization->address);
         }
 
         if($user = Auth::user()){
             $count = $this->favorites()->where('volunteer_id',$user->id)->count();
-            $array['favourited'] = $count > 0? true : false;
+            $array['favorite'] = $count > 0? true : false;
         }
 
 

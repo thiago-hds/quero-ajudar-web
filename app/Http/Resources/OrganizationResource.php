@@ -30,7 +30,7 @@ class OrganizationResource extends JsonResource
 
         if($user = Auth::user()){
             $count = $this->favorites()->where('volunteer_id',$user->id)->count();
-            $array['favourited'] = $count > 0? true : false;
+            $array['favorite'] = $count > 0? true : false;
         }
 
         return $array;
