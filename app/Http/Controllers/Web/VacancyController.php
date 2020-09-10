@@ -229,6 +229,10 @@ class VacancyController extends Controller
      */
     public function update(VacancyRequest $request, Vacancy $vacancy)
     {
+
+        //teste
+        $vacancy->updateTFIDF();
+        return false;
         $vacancy->update([
             'name'                  => $request->input('name'),
             'description'           => $request->input('description'),
