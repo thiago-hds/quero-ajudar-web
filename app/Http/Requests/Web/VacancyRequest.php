@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests\Web;
 
+use App\Enums\LocationType;
+use App\Enums\PeriodicityType;
 use App\Enums\RecurrenceType;
+use App\Enums\StatusType;
+use App\Enums\UnitPerPeriodType;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Requests\Api\ApiFormRequest;
 use App\Vacancy;
@@ -34,17 +38,17 @@ class VacancyRequest extends FormRequest
             'skills'                => 'nullable',
             'description'           => 'required',
             'tasks'                 => 'required',
-            'type'                  => 'required|in:recurrent,unique_event',
+            'type'                  => 'required|in:'. RecurrenceType::RECURRENT.','. RecurrenceType::UNIQUE_EVENT,
             'promotion_start_date'  => 'nullable|date_format:d/m/Y|after_or_equal:today',
             'promotion_end_date'    => 'nullable|date_format:d/m/Y|after_or_equal:promotion_start_date',
             'enrollment_limit'      => 'nullable|min:1',
-            'status'                => 'required|in:active,inactive',
-            'address_zipcode'       => 'required_if:location_type,specific_address',
-            'address_street'        => 'required_if:location_type,specific_address',
-            'address_number'        => 'required_if:location_type,specific_address',
-            'address_neighborhood'  => 'required_if:location_type,specific_address',
-            'address_state'         => 'required_if:location_type,specific_address',
-            'address_city'          => 'required_if:location_type,specific_address|exists:cities,id',
+            'status'                => 'required|in:' . StatusType::ACTIVE . ',' . StatusType::INACTIVE,
+            'address_zipcode'       => 'required_if:location_type,' . LocationType::SPECIFIC_ADDRESS,
+            'address_street'        => 'required_if:location_type,' . LocationType::SPECIFIC_ADDRESS,
+            'address_number'        => 'required_if:location_type,' . LocationType::SPECIFIC_ADDRESS,
+            'address_neighborhood'  => 'required_if:location_type,' . LocationType::SPECIFIC_ADDRESS,
+            'address_state'         => 'required_if:location_type,' . LocationType::SPECIFIC_ADDRESS,
+            'address_city'          => 'required_if:location_type,' . LocationType::SPECIFIC_ADDRESS,
         ];
         
         $type                   = $this->request->get('type');
@@ -53,15 +57,15 @@ class VacancyRequest extends FormRequest
 
         if($type == RecurrenceType::RECURRENT && $frequency_negotiable == 'no'){
             
-            $rules['periodicity']           = 'required|in:daily,weekly,monthly';
-            $rules['unit_per_period']       = 'required|in:days,months';
+            $rules['periodicity']           = 'required|in:' . PeriodicityType::DAILY . ',' . PeriodicityType::WEEKLY . ',' . PeriodicityType::MONTHLY;
+            $rules['unit_per_period']       = 'required|in:' . UnitPerPeriodType::HOURS . ',' . UnitPerPeriodType::DAYS;
             $rules['amount_per_period']     = 'required|min:1|max:31';
         
         }
 
         if($hours_negotiable == 'no'){
 
-            $rules['date']          = 'required_if:type,unique_event|date_format:d/m/Y|after_or_equal:today';
+            $rules['date']          = 'required_if:type,'. RecurrenceType::UNIQUE_EVENT .'|date_format:d/m/Y|after_or_equal:today';
             $rules['time']          = 'required|date_format:H:i';
         }
 

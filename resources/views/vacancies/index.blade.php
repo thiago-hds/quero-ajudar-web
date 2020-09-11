@@ -164,8 +164,7 @@
                                     <th>Instituição</th>
                                     <th>Causas</th>
                                     <th>Habilidades</th>
-                                    <th>Estado</th>
-                                    <th>Cidade</th>
+                                    <th>Local</th>
                                     <th>Tipo</th>
                                     <th>Status</th>
                                     <th>Ações</th>
@@ -202,12 +201,7 @@
 
                                         <!-- state -->
                                         <td> 
-                                            {{ isset($vacancy->address)? $vacancy->address->city->state->abbr : ''}}
-                                        </td>
-
-                                        <!-- city -->
-                                        <td> 
-                                            {{ isset($vacancy->address)? $vacancy->address->city->name : ''}}
+                                            {{ $vacancy->getFormattedLocation(false)}}
                                         </td>
 
                                         <!-- type -->
@@ -242,8 +236,7 @@
                                     <th>Instituição</th>
                                     <th>Causas</th>
                                     <th>Habilidades</th>
-                                    <th>Estado</th>
-                                    <th>Cidade</th>
+                                    <th>Local</th>
                                     <th>Tipo</th>
                                     <th>Status</th>
                                     <th>Ações</th>

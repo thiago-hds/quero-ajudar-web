@@ -7,6 +7,7 @@ use App\Cause;
 use App\Skill;
 use App\State;
 use App\Address;
+use App\Enums\LocationType;
 use App\Enums\ProfileType;
 use App\Enums\RecurrenceType;
 use App\Vacancy;
@@ -139,6 +140,8 @@ class VacancyController extends Controller
             'location_type'         => $request->input('location_type')
         ]);
 
+
+
         if($request->hasFile('image') && $request->file('image')->isValid()){
             $path = $this->saveImage($request->file('image'));
             if($path){
@@ -229,10 +232,7 @@ class VacancyController extends Controller
      */
     public function update(VacancyRequest $request, Vacancy $vacancy)
     {
-
-        //teste
-        $vacancy->updateTFIDF();
-        return false;
+        //return $request;
         $vacancy->update([
             'name'                  => $request->input('name'),
             'description'           => $request->input('description'),
@@ -297,7 +297,7 @@ class VacancyController extends Controller
         $vacancy->save();
         
         // LOCAL
-        if($vacancy->location_type == Vacancy::SPECIFIC_ADDRESS){
+        if($vacancy->location_type == LocationType::SPECIFIC_ADDRESS){
             $vacancy->address()->updateOrCreate([
                 'zipcode'           => $request->input('address_zipcode'),
                 'street'            => $request->input('address_street'),

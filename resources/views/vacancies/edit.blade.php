@@ -155,13 +155,13 @@
                             <label for="status">Status</label>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
-                                    name="status" value="active" {{ old('status', isset($vacancy->status)? $vacancy->status : null) == \App\Enums\StatusType::INACTIVE? '' : 'checked' }}>
+                                    name="status" value="{{\App\Enums\StatusType::ACTIVE}}" {{ old('status', isset($vacancy->status)? $vacancy->status : null) == \App\Enums\StatusType::INACTIVE? '' : 'checked' }}>
                                 <label class="form-check-label">Ativo</label>
                             </div>
 
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
-                                    name="status" value="inactive" {{ old('status', isset($vacancy->status)? $vacancy->status : null) == \App\Enums\StatusType::INACTIVE? 'checked' : '' }}>
+                                    name="status" value="{{\App\Enums\StatusType::INACTIVE}}" {{ old('status', isset($vacancy->status)? $vacancy->status : null) == \App\Enums\StatusType::INACTIVE? 'checked' : '' }}>
                                 <label class="form-check-label">Inativo</label>
                             </div>
                     
@@ -177,13 +177,13 @@
                             <label for="status">Tipo</label>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
-                                    name="type" value="recurrent" {{ old('type', isset($vacancy->type)? $vacancy->type : null) == \App\Enums\RecurrenceType::UNIQUE_EVENT? '' : 'checked' }}>
+                                    name="type" value="{{\App\Enums\RecurrenceType::RECURRENT}}" {{ old('type', isset($vacancy->type)? $vacancy->type : null) == \App\Enums\RecurrenceType::UNIQUE_EVENT? '' : 'checked' }}>
                                 <label class="form-check-label">Recorrente</label>
                             </div>
 
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
-                                    name="type" value="unique_event" {{ old('type', isset($vacancy->type)? $vacancy->type : null) == \App\Enums\RecurrenceType::UNIQUE_EVENT? 'checked' : '' }}>
+                                    name="type" value="{{\App\Enums\RecurrenceType::UNIQUE_EVENT}}" {{ old('type', isset($vacancy->type)? $vacancy->type : null) == \App\Enums\RecurrenceType::UNIQUE_EVENT? 'checked' : '' }}>
                                 <label class="form-check-label">Evento Único</label>
                             </div>
 
@@ -243,8 +243,8 @@
                                         <label for="unit_per_period">Unidade de tempo/período</label>
                                         <select class="form-control @error('unit_per_period') is-invalid @enderror" style="width: 100%;" name="unit_per_period">
                                             <option></option>
-                                            <option value="hours" {{ (old('unit_per_period', isset($vacancy->unit_per_period)? $vacancy->unit_per_period : null) == \App\Enums\UnitPerPeriodType::HOURS)? 'selected' : '' }}>Horas</option>
-                                            <option value="days" {{ (old('unit_per_period', isset($vacancy->unit_per_period)? $vacancy->unit_per_period : null) == \App\Enums\UnitPerPeriodType::DAYS)? 'selected' : '' }}>Dias</option>
+                                            <option value="{{\App\Enums\UnitPerPeriodType::HOURS}}" {{ (old('unit_per_period', isset($vacancy->unit_per_period)? $vacancy->unit_per_period : null) == \App\Enums\UnitPerPeriodType::HOURS)? 'selected' : '' }}>Horas</option>
+                                            <option value="{{\App\Enums\UnitPerPeriodType::DAYS}}" {{ (old('unit_per_period', isset($vacancy->unit_per_period)? $vacancy->unit_per_period : null) == \App\Enums\UnitPerPeriodType::DAYS)? 'selected' : '' }}>Dias</option>
                                         </select>
                                         @error('unit_per_period')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -334,25 +334,25 @@
                             <label for="location_type">Tipo de Local</label>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
-                                    name="location_type" value="organization_address" {{ old('location_type', isset($vacancy->location_type)? $vacancy->location_type : \App\Enums\LocationType::ORGANIZATION_ADDRESS) == \App\Enums\LocationType::ORGANIZATION_ADDRESS? 'checked' : '' }}>
+                                    name="location_type" value="{{\App\Enums\LocationType::ORGANIZATION_ADDRESS}}" {{ old('location_type', isset($vacancy->location_type)? $vacancy->location_type : \App\Enums\LocationType::ORGANIZATION_ADDRESS) == \App\Enums\LocationType::ORGANIZATION_ADDRESS? 'checked' : '' }}>
                                 <label class="form-check-label">Endereço da Instituição</label>
                             </div>
 
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
-                                    name="location_type" value="specific_address" {{ old('location_type', isset($vacancy->location_type)? $vacancy->location_type : null) == \App\Enums\LocationType::SPECIFIC_ADDRESS? 'checked' : '' }}>
+                                    name="location_type" value="{{\App\Enums\LocationType::SPECIFIC_ADDRESS}}" {{ old('location_type', isset($vacancy->location_type)? $vacancy->location_type : null) == \App\Enums\LocationType::SPECIFIC_ADDRESS? 'checked' : '' }}>
                                 <label class="form-check-label">Endereço Específico</label>
                             </div>
 
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
-                                    name="location_type" value="remote" {{ old('location_type', isset($vacancy->location_type)? $vacancy->location_type : null) == \App\Enums\LocationType::REMOTE? 'checked' : '' }}>
+                                    name="location_type" value="{{\App\Enums\LocationType::REMOTE}}" {{ old('location_type', isset($vacancy->location_type)? $vacancy->location_type : null) == \App\Enums\LocationType::REMOTE? 'checked' : '' }}>
                                 <label class="form-check-label">Remoto</label>
                             </div>
 
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
-                                    name="location_type" value="negotiable" {{ old('location_type', isset($vacancy->location_type)? $vacancy->location_type : null) == \App\Enums\LocationType::NEGOTIABLE? 'checked' : '' }}>
+                                    name="location_type" value="{{\App\Enums\LocationType::NEGOTIABLE}}" {{ old('location_type', isset($vacancy->location_type)? $vacancy->location_type : null) == \App\Enums\LocationType::NEGOTIABLE? 'checked' : '' }}>
                                 <label class="form-check-label">À combinar</label>
                             </div>
 

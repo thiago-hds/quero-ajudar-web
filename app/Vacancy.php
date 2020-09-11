@@ -186,7 +186,7 @@ class Vacancy extends Model
         }
     }
 
-    public function getFormattedLocation(){
+    public function getFormattedLocation($complete = true){
         if($this->location_type == LocationType::REMOTE){
             return "remoto";
         }
@@ -194,13 +194,23 @@ class Vacancy extends Model
             return "à combinar";
         }
         else if($this->location_type == LocationType::ORGANIZATION_ADDRESS ){
-            if($organization = Organization::find($this->organization_id) &&
+            if(($organization = Organization::find($this->organization_id)) &&
                 isset($organization->address)){
-                return $organization->address->getFormattedAddress();
+                    if($complete){
+                        return $organization->address->getFormattedAddress();
+                    }
+                    else{
+                        return $organization->address->getLocation();
+                    }
             }
         }
         else if($this->address != null){
-            return $this->address->getFormattedAddress();
+            if($complete){
+                return $this->address->getFormattedAddress();
+            }
+            else{
+                return $this->address->getLocation();
+            }
         }
         return null;
     }
