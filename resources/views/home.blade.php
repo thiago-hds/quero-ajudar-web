@@ -58,9 +58,9 @@
         <!-- small box -->
         <div class="small-box bg-orange">
             <div class="inner">
-                <h3> {{ $stats->enrollment_count }}</h3>
+                <h3> {{ $stats->application_count }}</h3>
 
-                <p> {{ $stats->enrollment_count == 1? 'Inscrição' : 'Inscrições' }}</p>
+                <p> {{ $stats->application_count == 1? 'Inscrição' : 'Inscrições' }}</p>
             </div>
             <div class="icon">
                 <i class="fas fa-fw fa-edit"></i>

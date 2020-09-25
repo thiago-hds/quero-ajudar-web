@@ -28,7 +28,7 @@ class Vacancy extends Model
      */
     protected $fillable = [
         'name', 'description', 'type', 'tasks', 'start_time',
-        'promotion_start_date', 'promotion_end_date', 'enrollment_limit',
+        'promotion_start_date', 'promotion_end_date', 'application_limit',
         'image', 'status', 'periodicity', 'unit_per_period', 'amount_per_period',
         'location_type'
     ];
@@ -61,9 +61,9 @@ class Vacancy extends Model
         return $this->morphToMany('App\Skill', 'skillable');
     }
 
-    public function enrollments()
+    public function applications()
     {
-        return $this->hasMany('App\Enrollment');
+        return $this->hasMany('App\Application');
     }
 
     public function getPromotionStartDateAttribute($value)

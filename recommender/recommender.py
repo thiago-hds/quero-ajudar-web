@@ -6,10 +6,48 @@ import pymysql.cursors
 from vacancy import Vacancy
 import databaseconfig as cfg
 
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk.stem import RSLPStemmer 
+
+
+
 
 def updateVacancyDescription(dbConnection, vacancyId):
     vacancy = Vacancy.load(dbConnection, vacancyId)
     print(vacancy.name, vacancy.description, vacancy.causes, vacancy.skills)
+
+    # 1 - remocao de stopwords
+    stopwords_list = stopwords.words('portuguese')
+    print(stopwords_list)
+    import nltk
+    nltk.download('punkt')
+
+    stop_words = set(stopwords_list) 
+    
+    word_tokens = word_tokenize(vacancy.description.lower(), language='portuguese') 
+    
+    filtered_sentence = [w for w in word_tokens if not w in stop_words] 
+    
+    filtered_sentence = [] 
+    
+    for w in word_tokens: 
+        if w not in stop_words: 
+            filtered_sentence.append(w) 
+    
+    print(word_tokens) 
+    print(filtered_sentence) 
+
+    print(len(vacancy.description.split()))
+    print(len(filtered_sentence))
+
+    # 2 - stemming
+    nltk.download('rslp')
+    stemmer = RSLPStemmer()
+    filtered_sentence = [stemmer.stem(w) for w in filtered_sentence]
+    print(filtered_sentence)
+
+
 
 
 

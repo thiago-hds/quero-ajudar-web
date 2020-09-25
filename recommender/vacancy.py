@@ -37,16 +37,13 @@ class Vacancy:
                      AND C.`causeable_type` = 'App\\Vacancy' \
                      GROUP BY C.`causeable_id`"
             """
-            print(sql)
             cursor.execute(sql, (vacancyId))
             result = cursor.fetchone()
-            print(result)
             title = result['name']
             description = result['description']
             skills = result['causes']
             causes = result['skills']
 
-            print(result)
 
             return Vacancy(connection, title, description, causes, skills)
 

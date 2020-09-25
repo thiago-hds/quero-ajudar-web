@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Web;
 
-use App\Enrollment;
+use App\Application;
 use App\Enums\StatusType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -33,7 +33,7 @@ class HomeController extends Controller
             'organization_count'    => Organization::where('status', StatusType::ACTIVE)->count(),
             'vacancy_count'         => Vacancy::where('status', StatusType::ACTIVE)->count(),
             'volunteer_count'       => Volunteer::all()->count(),
-            'enrollment_count'      => Enrollment::all()->count()
+            'application_count'      => Application::all()->count()
         ];
         
         return view('home', compact('stats'));

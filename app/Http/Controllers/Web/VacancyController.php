@@ -136,7 +136,7 @@ class VacancyController extends Controller
             'type'                  => $request->input('type'),
             'promotion_start_date'  => $request->input('promotion_start_date'),
             'promotion_end_date'    => $request->input('promotion_end_date'),
-            'enrollment_limit'      => $request->input('enrollment_limit'),
+            'application_limit'      => $request->input('application_limit'),
             'location_type'         => $request->input('location_type')
         ]);
 
@@ -241,7 +241,7 @@ class VacancyController extends Controller
             'type'                  => $request->input('type'),
             'promotion_start_date'  => $request->input('promotion_start_date'),
             'promotion_end_date'    => $request->input('promotion_end_date'),
-            'enrollment_limit'      => $request->input('enrollment_limit'),
+            'application_limit'      => $request->input('application_limit'),
             'location_type'         => $request->input('location_type'),
         ]);
 

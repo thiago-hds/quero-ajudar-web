@@ -403,12 +403,12 @@
                                 </div> 
                             </div>
 
-                            <!-- enrollment_limit -->
+                            <!-- application_limit -->
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label for="name">Número máximo de inscrições</label>
-                                    <input type="text" class="form-control @error('enrollment_limit') is-invalid @enderror" name="enrollment_limit" value="{{ old('enrollment_limit', isset($vacancy->enrollment_limit) ? $vacancy->enrollment_limit : null) }}">
-                                    @error('enrollment_limit')
+                                    <input type="text" class="form-control @error('application_limit') is-invalid @enderror" name="application_limit" value="{{ old('application_limit', isset($vacancy->application_limit) ? $vacancy->application_limit : null) }}">
+                                    @error('application_limit')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>  

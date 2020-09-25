@@ -5,7 +5,7 @@ namespace App\Http\Requests\Api;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class EnrollmentRequest extends ApiFormRequest
+class ApplicationRequest extends ApiFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,7 +27,7 @@ class EnrollmentRequest extends ApiFormRequest
         $user = Auth::user();
 
         return [
-            'vacancy_id'        => 'required|exists:vacancies,id|unique:enrollments,vacancy_id,NULL,id,volunteer_user_id,' . $user->id,
+            'vacancy_id'        => 'required|exists:vacancies,id|unique:applications,vacancy_id,NULL,id,volunteer_user_id,' . $user->id,
             'volunteer_phone'   => 'required',
             'volunteer_message' => 'max:255'
         ];

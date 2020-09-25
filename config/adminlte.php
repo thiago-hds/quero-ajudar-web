@@ -310,13 +310,13 @@ return [
                 [
                     'text' => 'Nova',
                     'icon' => 'fas fa-fw fa-plus-circle',
-                    'url'  => 'enrollments/create',
-                    'can'  => 'create-enrollments',
+                    'url'  => 'applications/create',
+                    'can'  => 'create-applications',
                 ],
                 [
                     'text' => 'Listar',
                     'icon' => 'fas fa-fw fa-list',
-                    'url'  => 'enrollments',
+                    'url'  => 'applications',
                 ]
             ]
         ],

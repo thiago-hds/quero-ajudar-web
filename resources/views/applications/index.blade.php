@@ -65,7 +65,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        {{ $enrollments->links() }}
+                        {{ $applications->links() }}
                     </div>
                     <div class="row">
                         <table id="example2" class="table table-bordered table-hover">
@@ -76,26 +76,26 @@
                                     <th>Ações</th>
                                 </tr>
                             </thead>
-                            @foreach($enrollments as $enrollment)
+                            @foreach($applications as $application)
                                 <tbody>
                                     <tr>
                                         <!-- vacancy_name -->
                                         <td>
-                                            <a href="{{action('Web\VacancyController@edit', ['vacancy' => $enrollment->vacancy])}}" target="_blank">
-                                                {{ $enrollment->vacancy->name }} 
+                                            <a href="{{action('Web\VacancyController@edit', ['vacancy' => $application->vacancy])}}" target="_blank">
+                                                {{ $application->vacancy->name }} 
                                             </a>
                                         </td>
 
                                         <!-- volunteer_name -->
                                         <td> 
-                                            <a href="{{action('Web\VolunteerController@edit', ['volunteer' => $enrollment->volunteer])}}" target="_blank">
-                                            {{ $enrollment->volunteer->user->complete_name  }} 
+                                            <a href="{{action('Web\VolunteerController@edit', ['volunteer' => $application->volunteer])}}" target="_blank">
+                                            {{ $application->volunteer->user->complete_name  }} 
                                             </a>
                                         </td>
 
                                         <!-- actions -->
                                         <td>
-                                            <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal-delete" onclick="deleteData('enrollments',{{$enrollment->id}})" >
+                                            <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal-delete" onclick="deleteData('applications',{{$application->id}})" >
                                                 <i class="fas fa-trash"></i> Excluir
                                             </button>
                                         </td>
@@ -113,7 +113,7 @@
                         </table>
                     </div>
                     <div class="row">
-                        {{ $enrollments->links() }}
+                        {{ $applications->links() }}
                     </div>
                 </div>
             </div>

@@ -4,22 +4,22 @@ namespace App\Http\Controllers\Web;
 
 use App\Vacancy;
 use App\Volunteer;
-use App\Enrollment;
+use App\Application;
 use App\Enums\StatusType;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\EnrollmentRequest;
-use App\Http\Requests\Web\EnrollmentRequest as WebEnrollmentRequest;
+use App\Http\Requests\ApplicationRequest;
+use App\Http\Requests\Web\ApplicationRequest as WebApplicationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 
 
-class EnrollmentController extends Controller
+class ApplicationController extends Controller
 {
 
     public function __construct()
     {   
         $this->middleware('auth');
-        $this->authorizeResource(\App\Enrollment::class);
+        $this->authorizeResource(\App\Application::class);
     }
 
     /**
@@ -42,11 +42,11 @@ class EnrollmentController extends Controller
 
         // retornar view com dados
         $inputs = (object) $inputs;
-        $enrollments = Enrollment::where($whereClauses)->paginate(10);
+        $applications = Application::where($whereClauses)->paginate(10);
         $vacancies  = Vacancy::orderBy('name')->get();
         $volunteers = Volunteer::all();
 
-        return view('enrollments.index', compact('inputs', 'enrollments', 'vacancies', 'volunteers'));
+        return view('applications.index', compact('inputs', 'applications', 'vacancies', 'volunteers'));
     }
 
     /**
@@ -62,7 +62,7 @@ class EnrollmentController extends Controller
         })->get();
 
 
-        return view('enrollments.edit', compact('vacancies', 'volunteers'));
+        return view('applications.edit', compact('vacancies', 'volunteers'));
     }
 
     /**
@@ -71,24 +71,24 @@ class EnrollmentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(WebEnrollmentRequest $request)
+    public function store(WebApplicationRequest $request)
     {
-        $enrollment = new Enrollment;
-        $enrollment->vacancy()->associate(Vacancy::find($request->input('vacancy_id')));
-        $enrollment->volunteer()->associate(Volunteer::find($request->input('volunteer_user_id')));
-        $enrollment->save();
+        $application = new Application;
+        $application->vacancy()->associate(Vacancy::find($request->input('vacancy_id')));
+        $application->volunteer()->associate(Volunteer::find($request->input('volunteer_user_id')));
+        $application->save();
 
-        return redirect('/enrollments')->with('success', 'Inscrição salva!');
+        return redirect('/applications')->with('success', 'Inscrição salva!');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Enrollment  $enrollment
+     * @param  \App\Application  $application
      * @return \Illuminate\Http\Response
      */
-    public function destroy($enrollment)
+    public function destroy($application)
     {
-        $enrollment->delete();
+        $application->delete();
     }
 }

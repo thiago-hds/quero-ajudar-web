@@ -17,7 +17,7 @@ class CreateVacanciesTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('organization_id')->unsigned();
             $table->string('name');
-            $table->string('description');
+            $table->text('description');
             $table->tinyInteger('type');
             $table->string('tasks')->nullable();
 
@@ -35,7 +35,7 @@ class CreateVacanciesTable extends Migration
 
             $table->date('promotion_start_date')->nullable();
             $table->date('promotion_end_date')->nullable();
-            $table->integer('enrollment_limit')->nullable();
+            $table->integer('application_limit')->nullable();
             $table->string('image')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->timestamps();

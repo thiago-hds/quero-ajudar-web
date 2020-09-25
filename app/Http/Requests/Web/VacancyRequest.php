@@ -41,7 +41,7 @@ class VacancyRequest extends FormRequest
             'type'                  => 'required|in:'. RecurrenceType::RECURRENT.','. RecurrenceType::UNIQUE_EVENT,
             'promotion_start_date'  => 'nullable|date_format:d/m/Y|after_or_equal:today',
             'promotion_end_date'    => 'nullable|date_format:d/m/Y|after_or_equal:promotion_start_date',
-            'enrollment_limit'      => 'nullable|min:1',
+            'application_limit'      => 'nullable|min:1',
             'status'                => 'required|in:' . StatusType::ACTIVE . ',' . StatusType::INACTIVE,
             'address_zipcode'       => 'required_if:location_type,' . LocationType::SPECIFIC_ADDRESS,
             'address_street'        => 'required_if:location_type,' . LocationType::SPECIFIC_ADDRESS,

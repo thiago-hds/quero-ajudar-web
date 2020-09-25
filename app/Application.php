@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Enrollment extends Model
+class Application extends Model
 {
     public function volunteer()
     {

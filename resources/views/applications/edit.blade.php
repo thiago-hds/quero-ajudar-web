@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', (isset($enrollment)? 'Editar' : 'Nova') . ' Inscrição')
+@section('title', (isset($application)? 'Editar' : 'Nova') . ' Inscrição')
 
 @section('content_header')
     <!-- s
@@ -13,7 +13,7 @@
         </ul>
       </div><br />
     @endif -->
-    <h1 class="m-0 text-dark">{{ (isset($enrollment)? 'Editar' : 'Nova') . ' Inscrição' }}</h1>
+    <h1 class="m-0 text-dark">{{ (isset($application)? 'Editar' : 'Nova') . ' Inscrição' }}</h1>
 @stop
 
 @section('content')    
@@ -22,8 +22,8 @@
         
             <div class="card">
                 <!-- form start -->
-                <form role="form" method="post" enctype="multipart/form-data" action="{{ isset($enrollment->id)? route('enrollments.update', $enrollment->id) : route('enrollments.store') }}">
-                    @if(isset($enrollment))
+                <form role="form" method="post" enctype="multipart/form-data" action="{{ isset($application->id)? route('applications.update', $application->id) : route('applications.store') }}">
+                    @if(isset($application))
                         @method('PATCH') 
                     @endif
                     @csrf
@@ -35,7 +35,7 @@
                             <select class="form-control select2  @error('vacancy_id') is-invalid @enderror" data-placeholder="Selecione uma vaga" style="width: 100%;" name="vacancy_id">
                                 <option></option>
                                 @foreach($vacancies as $vacancy)
-                                    <option value="{{ $vacancy->id }}" {{ (old('vacancy_id', isset($enrollment->vacancy_id)? $enrollment->vacancy_id : null) == $vacancy->id)? 'selected' : '' }}>
+                                    <option value="{{ $vacancy->id }}" {{ (old('vacancy_id', isset($application->vacancy_id)? $application->vacancy_id : null) == $vacancy->id)? 'selected' : '' }}>
                                         {{ $vacancy->name . ' - ' . $vacancy->organization->name}}
                                     </option>
                                 @endforeach
@@ -52,7 +52,7 @@
                             <select class="form-control select2  @error('volunteer_user_id') is-invalid @enderror" data-placeholder="Selecione um voluntário" style="width: 100%;" name="volunteer_user_id">
                                 <option></option>
                                 @foreach($volunteers as $volunteer)
-                                    <option value="{{ $volunteer->user_id }}" {{ (old('volunteer_user_id', isset($enrollment->volunteer_user_id)? $enrollment->volunteer_user_id : null) == $volunteer->user_id)? 'selected' : '' }}>
+                                    <option value="{{ $volunteer->user_id }}" {{ (old('volunteer_user_id', isset($application->volunteer_user_id)? $application->volunteer_user_id : null) == $volunteer->user_id)? 'selected' : '' }}>
                                         {{ $volunteer->user->name}}
                                     </option>
                                 @endforeach
@@ -69,7 +69,7 @@
                     <button type="submit" class="btn btn-success float-right">
                         <i class="fas fa-save"></i>  Salvar
                     </button>
-                    <a class="btn btn-danger" href="{{ route('enrollments.index')}}">
+                    <a class="btn btn-danger" href="{{ route('applications.index')}}">
                         <i class="fas fa-arrow-left"></i>  Cancelar
                     </a>    
                     </div>
