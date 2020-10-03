@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Application;
+use App\Enums\ApplicationStatusType;
+use App\Enums\StatusType;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\Api\ApplicationRequest;
@@ -46,11 +48,14 @@ class ApplicationController extends BaseController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Application  $application
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        
+    public function destroy(Application $application)
+    {        
+        $application->status = ApplicationStatusType::CANCELLED_BY_VOLUNTEER;
+        $application->save();
+
+        return $this->sendResponse(true);
     }
 }

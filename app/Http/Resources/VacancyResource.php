@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Enums\LocationType;
+use App\Http\Resources\Api\ApplicationResource;
 use App\Vacancy;
 use App\Organization;
 use Illuminate\Support\Facades\Storage;
@@ -52,10 +53,12 @@ class VacancyResource extends JsonResource
 
         if($user = Auth::user()){
             $count = $this->favorites()->where('volunteer_id',$user->id)->count();
-            $array['favorite'] = $count > 0? true : false;
+            $array['favorite'] = $count > 0;
+
+            $application = $this->applications()->where('volunteer_user_id', $user->id)->first();
+            $array['application'] = ApplicationResource::make($application);
         }
-
-
+        
         return $array;
     }
 }

@@ -18,7 +18,7 @@ class ApplicationResource extends JsonResource
             'id'                    => $this->id,
             'volunteer_user_id'     => $this->volunteer_user_id,
             'vacancy_id'            => $this->vacancy_id,
-            'phone'                 => $this->phone->number
+            'status'                => $this->status
 
         ];
     }
