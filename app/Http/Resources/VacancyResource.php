@@ -36,7 +36,7 @@ class VacancyResource extends JsonResource
             'date'                  => $this->date,
             'time'                  => $this->time,
             'location_type'         => $this->location_type,
-            'address'               =>  null,
+            'address'               => null,
             'formatted_frequency'   => $this->getFormattedFrequency(),
             'formatted_date'        => $this->getFormattedDate(),
             'formatted_time'        => $this->getFormattedTime(),

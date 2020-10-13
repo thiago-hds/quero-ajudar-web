@@ -29,7 +29,7 @@ class UserResource extends JsonResource
             'last_name'                 => $this->last_name,
             'email'                     => $this->email,
             'date_of_birth'             => $this->date_of_birth,
-            'status'                    => $this->status,
+            'status'                    => $this->status
         ];
 
         if(isset($this->token) && Auth::user()->id == $this->id){

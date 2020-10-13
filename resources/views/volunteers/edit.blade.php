@@ -136,13 +136,13 @@
                             <label for="status">Status</label>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
-                                    name="status" value="active" {{ old('status', isset($volunteer->user->status)? $volunteer->user->status : null) == \App\Enums\StatusType::INACTIVE? '' : 'checked' }}>
+                                    name="status" value="1" {{ old('status', isset($volunteer->user->status)? $volunteer->user->status : null) == \App\Enums\StatusType::INACTIVE? '' : 'checked' }}>
                                 <label class="form-check-label">Ativo</label>
                             </div>
 
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
-                                    name="status" value="inactive" {{ old('status', isset($volunteer->user->status)? $volunteer->user->status : null) == \App\Enums\StatusType::INACTIVE? 'checked' : '' }}>
+                                    name="status" value="0" {{ old('status', isset($volunteer->user->status)? $volunteer->user->status : null) == \App\Enums\StatusType::INACTIVE? 'checked' : '' }}>
                                 <label class="form-check-label">Inativo</label>
                             </div>
                             
