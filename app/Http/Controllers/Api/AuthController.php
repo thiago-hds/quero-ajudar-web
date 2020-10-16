@@ -60,7 +60,10 @@ class AuthController extends BaseController
             return $this->sendResponse($userResource);
         } 
         else{ 
-            return $this->sendFail('E-mail e/ou senha incorretos');
+            return $this->sendFail(
+                'Erro de autententicação',
+                ['email' => ['E-mail ou senha inválidos']]
+            );
         } 
     }
 }

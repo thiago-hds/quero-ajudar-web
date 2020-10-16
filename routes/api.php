@@ -39,6 +39,7 @@ Route::middleware('auth:sanctum')->group( function () {
     
     //Profile routes
     Route::get('profile', 'Api\VolunteerProfileController@getUserProfile');
+    Route::post('profile/edit', 'Api\VolunteerProfileController@editUserProfile');
 
 
 });
