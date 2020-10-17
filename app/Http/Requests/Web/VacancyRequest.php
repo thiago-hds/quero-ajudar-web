@@ -54,11 +54,18 @@ class VacancyRequest extends FormRequest
         $type                   = $this->request->get('type');
         $frequency_negotiable   = $this->request->get('frequency_negotiable');
         $hours_negotiable       = $this->request->get('hours_negotiable');
+        $unit_per_period        = $this->request->get('unit_per_period');
 
         if($type == RecurrenceType::RECURRENT && $frequency_negotiable == 'no'){
             
             $rules['periodicity']           = 'required|in:' . PeriodicityType::DAILY . ',' . PeriodicityType::WEEKLY . ',' . PeriodicityType::MONTHLY;
-            $rules['unit_per_period']       = 'required|in:' . UnitPerPeriodType::HOURS . ',' . UnitPerPeriodType::DAYS;
+            
+            if($unit_per_period == UnitPerPeriodType::DAYS){
+                $rules['unit_per_period']       = 'required|in:' . UnitPerPeriodType::HOURS;
+            }
+            else{
+                $rules['unit_per_period']       = 'required|in:' . UnitPerPeriodType::HOURS . ',' . UnitPerPeriodType::DAYS;
+            }
             $rules['amount_per_period']     = 'required|min:1|max:31';
         
         }

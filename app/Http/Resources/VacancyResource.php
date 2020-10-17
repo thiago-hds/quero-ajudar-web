@@ -12,6 +12,13 @@ use Illuminate\Support\Facades\Auth;
 
 class VacancyResource extends JsonResource
 {
+
+    protected $completeAddress = false;
+
+    public function setCompleteAddress($value){
+        $this->completeAddress = $value;
+    }
+
     /**
      * Transform the resource into an array.
      *
@@ -40,7 +47,7 @@ class VacancyResource extends JsonResource
             'formatted_frequency'   => $this->getFormattedFrequency(),
             'formatted_date'        => $this->getFormattedDate(),
             'formatted_time'        => $this->getFormattedTime(),
-            'formatted_location'    => $this->getFormattedLocation()
+            'formatted_location'    => $this->getFormattedLocation($this->completeAddress)
         ];
 
         if($this->location_type == LocationType::SPECIFIC_ADDRESS){

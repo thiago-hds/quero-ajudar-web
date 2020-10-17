@@ -136,7 +136,7 @@ class Vacancy extends Model
     {
         if($this->type == RecurrenceType::RECURRENT){
             if($this->amount_per_period == null){
-                return "à combinar";
+                return "Vaga recorrente";
             }
             else{
                 $amount = $this->amount_per_period;
@@ -160,6 +160,14 @@ class Vacancy extends Model
                 return sprintf("%d %s %s", $amount, $unit, $period);
             }
         }
+        else if($this->type == RecurrenceType::UNIQUE_EVENT){
+            if($this->date){
+                return sprintf("%s %s", $this->date, $this-> time);
+            }
+            else{
+                return "À combinar";
+            }
+        }
         else{
             return null;
         }
@@ -168,7 +176,7 @@ class Vacancy extends Model
     public function getFormattedDate(){
         if($this->type == RecurrenceType::UNIQUE_EVENT){
             if($this->date == null){
-                return "à combinar";
+                return "À combinar";
             }
             else{
                 return $this->date;
@@ -179,7 +187,7 @@ class Vacancy extends Model
 
     public function getFormattedTime(){
         if($this->time == null){
-            return "à combinar";
+            return "À combinar";
         }
         else{
             return $this->time;
@@ -188,10 +196,10 @@ class Vacancy extends Model
 
     public function getFormattedLocation($complete = true){
         if($this->location_type == LocationType::REMOTE){
-            return "remoto";
+            return "Remoto";
         }
         else if($this->location_type == LocationType::NEGOTIABLE){
-            return "à combinar";
+            return "À combinar";
         }
         else if($this->location_type == LocationType::ORGANIZATION_ADDRESS ){
             if(($organization = Organization::find($this->organization_id)) &&

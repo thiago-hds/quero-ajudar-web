@@ -59,6 +59,8 @@ class VacancyController extends BaseController
      */
     public function show(Vacancy $vacancy)
     {
-        return $this->sendResponse(new VacancyResource($vacancy));
+        $resource = new VacancyResource($vacancy);
+        $resource->setCompleteAddress(true);
+        return $this->sendResponse($resource);
     }
 }

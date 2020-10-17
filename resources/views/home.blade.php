@@ -20,7 +20,7 @@
             <div class="icon">
                 <i class="fas fa-fw fa-building"></i>
             </div>
-            <a href="#" class="small-box-footer">Mais Informações <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="{{ route('organizations.index')}}" class="small-box-footer">Mais Informações <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
     <!-- ./col -->
@@ -35,7 +35,7 @@
             <div class="icon">
                 <i class="fas fa-fw fa-suitcase"></i>
             </div>
-            <a href="#" class="small-box-footer">Mais Informações <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="{{ route('vacancies.index')}}" class="small-box-footer">Mais Informações <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
 
@@ -50,7 +50,7 @@
             <div class="icon">
                 <i class="fas fa-fw fa-hands-helping"></i>
             </div>
-            <a href="#" class="small-box-footer">Mais Informações <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="{{ route('volunteers.index')}}" class="small-box-footer">Mais Informações <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
 
@@ -65,7 +65,7 @@
             <div class="icon">
                 <i class="fas fa-fw fa-edit"></i>
             </div>
-            <a href="#" class="small-box-footer">Mais Informações <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="{{ route('applications.index')}}" class="small-box-footer">Mais Informações <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
     

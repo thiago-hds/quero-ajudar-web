@@ -177,6 +177,7 @@ return [
         'skills'                    => 'habilidades',
         'start_time'                => 'hora de início',
         'tasks'                     => 'tarefas',
+        'time'                      => 'hora',
         'today'                     => 'hoje',
         'type'                      => 'tipo',
         'unique_event'              => 'evento único',

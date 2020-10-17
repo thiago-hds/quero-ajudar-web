@@ -220,16 +220,16 @@
                                 @enderror
                             </div>
 
-                            <div id="periodicity_div"  class="row" style="display:{{ (isset($vacancy) && !isset($vacancy->periodicity)? 'none' : 'block') }}">
+                            <div id="periodicity_div"  class="row" style="display:{{ old('frequency_negotiable', (isset($vacancy) && !isset($vacancy->periodicity))? 'yes' : 'no') == 'yes'? 'none' : 'block' }}">
                                 <!-- periodicity -->
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <label for="periodicity">Periodicidade</label>
                                         <select class="form-control @error('periodicity') is-invalid @enderror" style="width: 100%;" name="periodicity">
                                             <option></option>
-                                            <option value="daily" {{ (old('periodicity', isset($vacancy->periodicity)? $vacancy->periodicity : null) == \App\Enums\PeriodicityType::DAILY)? 'selected' : '' }}>Diária</option>
-                                            <option value="weekly" {{ (old('periodicity', isset($vacancy->periodicity)? $vacancy->periodicity : null) == \App\Enums\PeriodicityType::WEEKLY)? 'selected' : '' }}>Semanal</option>
-                                            <option value="monthly" {{ (old('periodicity', isset($vacancy->periodicity)? $vacancy->periodicity : null) == \App\Enums\PeriodicityType::MONTHLY )? 'selected' : '' }}>Mensal</option>
+                                            <option value="{{\App\Enums\PeriodicityType::DAILY}}" {{ (old('periodicity', isset($vacancy->periodicity)? $vacancy->periodicity : null) == \App\Enums\PeriodicityType::DAILY)? 'selected' : '' }}>Diária</option>
+                                            <option value="\App\Enums\PeriodicityType::WEEKLY" {{ (old('periodicity', isset($vacancy->periodicity)? $vacancy->periodicity : null) == \App\Enums\PeriodicityType::WEEKLY)? 'selected' : '' }}>Semanal</option>
+                                            <option value="\App\Enums\PeriodicityType::MONTHLY" {{ (old('periodicity', isset($vacancy->periodicity)? $vacancy->periodicity : null) == \App\Enums\PeriodicityType::MONTHLY )? 'selected' : '' }}>Mensal</option>
                                         </select>
                                         @error('periodicity')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -311,7 +311,7 @@
                             <!-- time -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="time">Hora de Início</label>
+                                    <label for="time">Hora</label>
                                 
                                     <div class="input-group">
                                         <div class="input-group-prepend">

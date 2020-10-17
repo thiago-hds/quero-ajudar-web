@@ -183,7 +183,7 @@ class VacancyController extends Controller
         $vacancy->causes()->sync($request->input('causes'));
         $vacancy->skills()->sync($request->input('skills'));
 
-        if($vacancy->location_type == Vacancy::SPECIFIC_ADDRESS){
+        if($vacancy->location_type == LocationType::SPECIFIC_ADDRESS){
             $vacancy->address()->create([
                 'zipcode'           => $request->input('address_zipcode'),
                 'street'            => $request->input('address_street'),
@@ -241,7 +241,7 @@ class VacancyController extends Controller
             'type'                  => $request->input('type'),
             'promotion_start_date'  => $request->input('promotion_start_date'),
             'promotion_end_date'    => $request->input('promotion_end_date'),
-            'application_limit'      => $request->input('application_limit'),
+            'application_limit'     => $request->input('application_limit'),
             'location_type'         => $request->input('location_type'),
         ]);
 
