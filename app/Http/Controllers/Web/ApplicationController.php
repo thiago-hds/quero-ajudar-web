@@ -61,7 +61,6 @@ class ApplicationController extends Controller
             $query->where('status', StatusType::ACTIVE);
         })->get();
 
-
         return view('applications.edit', compact('vacancies', 'volunteers'));
     }
 

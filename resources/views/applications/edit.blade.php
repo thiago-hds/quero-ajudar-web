@@ -53,7 +53,7 @@
                                 <option></option>
                                 @foreach($volunteers as $volunteer)
                                     <option value="{{ $volunteer->user_id }}" {{ (old('volunteer_user_id', isset($application->volunteer_user_id)? $application->volunteer_user_id : null) == $volunteer->user_id)? 'selected' : '' }}>
-                                        {{ $volunteer->user->name}}
+                                        {{ $volunteer->user->first_name . ' ' .$volunteer->user->last_name}}
                                     </option>
                                 @endforeach
                             </select>
