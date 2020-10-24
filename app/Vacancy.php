@@ -182,7 +182,9 @@ class Vacancy extends Model
                 return $this->date;
             }
         }
-        return null;
+	else{
+		return "Vaga recorrente";
+	}
     }
 
     public function getFormattedTime(){
