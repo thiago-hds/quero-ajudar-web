@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\VacancyResource;
 use App\Vacancy;
 use App\Favorite;
+use App\Volunteer;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
@@ -22,7 +23,14 @@ class VacancyController extends BaseController
     public function index(Request $request)
     {
 
-        $vacancies = Vacancy::orderBy('name');
+        $volunteer = Volunteer::find(Auth::user()->id);
+        
+        $recommendationIds = json_decode($volunteer->getVacancyRecommendations());
+        $recommendationsOrdered = implode(',', $recommendationIds);
+
+        $vacancies = Vacancy::whereIn('id', $recommendationIds)
+                            ->orderByRaw("FIELD(id, $recommendationsOrdered)");
+
 
         $organization_id = $request->input('organization_id');
         if(isset($organization_id) && $organization_id !== ''){
@@ -46,7 +54,7 @@ class VacancyController extends BaseController
             });
         }
 
-        $vacancies = $vacancies->orderBy('name', 'asc')->paginate(10);
+        $vacancies = $vacancies->paginate(10);
         return $this->sendResponse(VacancyResource::collection($vacancies));
     }
 

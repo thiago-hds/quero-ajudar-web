@@ -197,17 +197,6 @@ class VacancyController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Vacancy  $vacancy
@@ -312,8 +301,6 @@ class VacancyController extends Controller
 
         $vacancy->causes()->sync($request->input('causes'));
         $vacancy->skills()->sync($request->input('skills'));
-        
-
         
         return redirect('/vacancies')->with('success', 'Vaga atualizada!');
     }

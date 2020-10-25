@@ -8,8 +8,6 @@ use App\Enums\RecurrenceType;
 use App\Enums\UnitPerPeriodType;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
 
 class Vacancy extends Model
 {
@@ -223,20 +221,5 @@ class Vacancy extends Model
             }
         }
         return null;
-    }
-
-    public function updateTFIDF(){
-        $process = new Process(["python3", "recommender.py", "update-vacancy-features", $this->id]);
-        $process->setWorkingDirectory(base_path() . "/recommender");
-        $process->run();
-
-        // executes after the command finishes
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
-
-        echo $process->getOutput();
-    }
-        
-
+    }       
 }
