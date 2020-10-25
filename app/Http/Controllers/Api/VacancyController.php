@@ -22,7 +22,6 @@ class VacancyController extends BaseController
      */
     public function index(Request $request)
     {
-
         $vacancies = Vacancy::orderBy('name');
 
         $organization_id = $request->input('organization_id');
@@ -59,21 +58,42 @@ class VacancyController extends BaseController
     {
 
         $volunteer = Volunteer::find(Auth::user()->id);
+        $causes_id = $request->input('causes_id');
+        $skills_id = $request->input('skills_id');
         
-        $recommendationIds = json_decode($volunteer->getVacancyRecommendations());
-        $recommendationsOrdered = implode(',', $recommendationIds);
+        // se o usuario ja tiver inscrições, usar sistema de recomendação
+        if($volunteer->applications()->count() > 0){
+            if($volunteer->recommendations === ''){
+                $recommendations = $volunteer->getVacancyRecommendations();
+                $volunteer->recommendations = $recommendations;
+                $volunteer->save();
+            }
 
-        $vacancies = Vacancy::whereIn('id', $recommendationIds)
-                            ->orderByRaw("FIELD(id, $recommendationsOrdered)");
+            $recommendationIds = json_decode($volunteer->recommendations);
+            
+            $recommendationsOrdered = implode(',', $recommendationIds);
 
+            $vacancies = Vacancy::whereIn('id', $recommendationIds)
+                                ->orderByRaw("FIELD(id, $recommendationsOrdered)");
+        }
+
+        //caso contrário, filtrar por causas selecionadas
+        else{
+            $vacancies = Vacancy::where('status', 1)->inRandomOrder();
+            
+            if(isset($causes_id) && $causes_id !== ''){
+                $causes_id = $volunteer->causes()->pluck('id');
+            }
+            if(isset($skills_id) && $skills_id !== ''){
+                $skills_id = $volunteer->skills()->pluck('id');
+            }
+        }
 
         $organization_id = $request->input('organization_id');
         if(isset($organization_id) && $organization_id !== ''){
             $vacancies = $vacancies->where('organization_id', $organization_id);
         }
 
-        $causes_id = $request->input('causes_id');
-        
         if(isset($causes_id) && $causes_id !== ''){
             $causes_id = explode(',',$causes_id);
             $vacancies = $vacancies->whereHas('causes',
@@ -83,7 +103,7 @@ class VacancyController extends BaseController
             );
         }
 
-        $skills_id = $request->input('skills_id');
+
         if(isset($skills_id) && $skills_id !== ''){
             $skills_id = explode(',',$skills_id);
             $vacancies = $vacancies->whereHas('skills',

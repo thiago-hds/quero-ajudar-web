@@ -1,6 +1,6 @@
 # recommender.py
 #!/usr/bin/python3.8
-
+import json
 import os
 import sys
 import pymysql
@@ -13,6 +13,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.compose import ColumnTransformer
 from sklearn.metrics.pairwise import cosine_similarity
+
+
 
 class VacancyRecommender:
     
@@ -41,7 +43,7 @@ class VacancyRecommender:
         self.connect_database()
 
         if self.connection is None:
-            raise Exception('Recommender is not connected to any database')
+            raise Exception('Recommender is not connected to a database')
 
         vacancies_sql = ("SELECT V.`id`, V.`name`, V.`description`,"
                             "(SELECT GROUP_CONCAT(C.`cause_id`) "
@@ -60,7 +62,7 @@ class VacancyRecommender:
         self.connect_database()
 
         if self.connection is None:
-            raise Exception('Recommender is not connected to any database')
+            raise Exception('Recommender is not connected to a database')
 
         applications_sql = ("SELECT A.`volunteer_user_id`, A.`vacancy_id`, A.`created_at` "
                             "FROM `applications` as A "
@@ -71,7 +73,7 @@ class VacancyRecommender:
             index_col=['volunteer_user_id', 'vacancy_id']
         )
 
-        self.disconnect_database()
+        self.disconnect_database()        
     
     def extract_vacancies_features(self):
 
@@ -85,9 +87,6 @@ class VacancyRecommender:
         def text_tokenizer(str_input):
             tokenizer = nltk.RegexpTokenizer(r'\b[^\d\W]+\b')
             words = tokenizer.tokenize(str_input)
-            
-            #stemming
-            #words = [stemmer.stem(w) for w in words if w not in stopword_list]
             
             #remocao de stopwords
             words = [w for w in words if w not in stopword_list]
@@ -132,7 +131,7 @@ class VacancyRecommender:
                 )
             except FileNotFoundError:
                 self.extract_vacancies_features()
-            
+        
         #obter descrições de todas as vagas em que o usuário se inscreveu
         user_applications = self.df_applications.loc[user_id].index.get_level_values(
             'vacancy_id'
@@ -147,15 +146,21 @@ class VacancyRecommender:
         return user_vacancy_profile_mean
 
 
-    def recommend(self, user_id, k=200, force_update_features=False):
+    def recommend(self, user_id, k=500):
 
         self.load_applications_from_database()
         self.load_vacancies_from_database()
 
-        user_profile = self.build_user_profile(user_id)
+        try:
+            user_profile = self.build_user_profile(user_id)
 
-        #ignorar vagas em que o usuarios ja se inscreveu
-        items_to_ignore = self.df_applications.loc[user_id].index.get_level_values('vacancy_id').values
+            #ignorar vagas em que o usuarios ja se inscreveu
+            items_to_ignore = self.df_applications.loc[user_id].index.get_level_values(
+                'vacancy_id'
+            ).values
+        except KeyError:
+            return None
+
         
         #calcular similaridades entre perfil do usuario e vagas
         cosine_similarities = cosine_similarity(user_profile, self.tfidf_vacancies)[0]
@@ -166,8 +171,11 @@ class VacancyRecommender:
         similarity_scores = sorted(similarity_scores, key=lambda x: x[1], reverse=True)
         
         # retornar k mais similares exceto as que o usuario ja se inscreveu
-        similarity_scores = list(filter(lambda x: x[0] not in items_to_ignore, similarity_scores))
+        similarity_scores = list(
+            filter(lambda x: x[0] not in items_to_ignore, similarity_scores)
+        )
         similarity_scores = similarity_scores[:k]
 
         vacancies_index = [i[0] for i in similarity_scores]
         return self.df_vacancies.loc[vacancies_index].index.values.tolist()
+
