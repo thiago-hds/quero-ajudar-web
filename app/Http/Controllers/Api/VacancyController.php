@@ -23,6 +23,41 @@ class VacancyController extends BaseController
     public function index(Request $request)
     {
 
+        $vacancies = Vacancy::orderBy('name');
+
+        $organization_id = $request->input('organization_id');
+        if(isset($organization_id) && $organization_id !== ''){
+            $vacancies = $vacancies->where('organization_id', $organization_id);
+        }
+
+        $causes_id = $request->input('causes_id');
+        
+        if(isset($causes_id) && $causes_id !== ''){
+            $causes_id = explode(',',$causes_id);
+            $vacancies = $vacancies->whereHas('causes',
+                function (Builder $query) use ($causes_id) {
+                    $query->whereIn('id', $causes_id);
+                }
+            );
+        }
+
+        $skills_id = $request->input('skills_id');
+        if(isset($skills_id) && $skills_id !== ''){
+            $skills_id = explode(',',$skills_id);
+            $vacancies = $vacancies->whereHas('skills',
+                function (Builder $query) use ($skills_id) {
+                    $query->whereIn('id', $skills_id);
+                }
+            );
+        }
+
+        $vacancies = $vacancies->orderBy('name', 'asc')->paginate(10);
+        return $this->sendResponse(VacancyResource::collection($vacancies));
+    }
+
+    public function vacancyRecommendations(Request $request)
+    {
+
         $volunteer = Volunteer::find(Auth::user()->id);
         
         $recommendationIds = json_decode($volunteer->getVacancyRecommendations());
@@ -41,17 +76,21 @@ class VacancyController extends BaseController
         
         if(isset($causes_id) && $causes_id !== ''){
             $causes_id = explode(',',$causes_id);
-            $vacancies = $vacancies->whereHas('causes', function (Builder $query) use ($causes_id) {
-                $query->whereIn('id', $causes_id);
-            });
+            $vacancies = $vacancies->whereHas('causes',
+                function (Builder $query) use ($causes_id) {
+                    $query->whereIn('id', $causes_id);
+                }
+            );
         }
 
         $skills_id = $request->input('skills_id');
         if(isset($skills_id) && $skills_id !== ''){
             $skills_id = explode(',',$skills_id);
-            $vacancies = $vacancies->whereHas('skills', function (Builder $query) use ($skills_id) {
-                $query->whereIn('id', $skills_id);
-            });
+            $vacancies = $vacancies->whereHas('skills',
+                function (Builder $query) use ($skills_id) {
+                    $query->whereIn('id', $skills_id);
+                }
+            );
         }
 
         $vacancies = $vacancies->paginate(10);

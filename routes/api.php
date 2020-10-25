@@ -12,18 +12,13 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-/*
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});*/
 Route::post('register', 'Api\AuthController@register');
 Route::post('login', 'Api\AuthController@login');
-
-//Route::apiResource('causes', 'Api\CauseController');
 
 Route::middleware('auth:sanctum')->group( function () {
     Route::post('causes/update-user-causes', 'Api\CauseController@updateUserCauses');
     Route::post('skills/update-user-skills', 'Api\SkillController@updateUserSkills');
+    Route::get('vacancies/recommendations', 'Api\VacancyController@vacancyRecommendations');
 
     Route::apiResource('causes', 'Api\CauseController');
     Route::apiResource('skills', 'Api\SkillController');
@@ -32,14 +27,19 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::apiResource('applications', 'Api\ApplicationController');
 
     //Favorites routes
-    Route::post('favorites/vacancies/{vacancy}/favorite', 'Api\FavoritesController@saveVacancyAsFavorite');
-    Route::post('favorites/organizations/{organization}/favorite', 'Api\FavoritesController@saveOrganizationAsFavorite');
+    Route::post(
+        'favorites/vacancies/{vacancy}/favorite',
+        'Api\FavoritesController@saveVacancyAsFavorite'
+    );
+    Route::post(
+        'favorites/organizations/{organization}/favorite',
+         'Api\FavoritesController@saveOrganizationAsFavorite'
+    );
     Route::get('favorites/vacancies', 'Api\FavoritesController@favoriteVacancies');
     Route::get('favorites/organizations', 'Api\FavoritesController@favoriteOrganizations');
     
     //Profile routes
     Route::get('profile', 'Api\VolunteerProfileController@getUserProfile');
     Route::post('profile/edit', 'Api\VolunteerProfileController@editUserProfile');
-
 
 });
