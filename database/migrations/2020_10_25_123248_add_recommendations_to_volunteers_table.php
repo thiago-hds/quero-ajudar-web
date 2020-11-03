@@ -14,7 +14,7 @@ class AddRecommendationsToVolunteersTable extends Migration
     public function up()
     {
         Schema::table('volunteers', function (Blueprint $table) {
-            $table->longText('recommendations')->default(NULL);
+            $table->longText('recommendations')->nullable()->default(NULL);
         });
     }
 
