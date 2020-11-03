@@ -1,3 +1,5 @@
+#!/virtualenv/bin/python
+
 import sys
 import json
 from vacancy_recommender import VacancyRecommender

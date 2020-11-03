@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class VolunteerController extends Controller
 {
@@ -31,13 +32,12 @@ class VolunteerController extends Controller
     {
         // separacao dos campos de filtragem por tipo de comparacao
         $equalFields    =   ['status']; 
-        $likeFields     =   ['name', 'email'];
-
-        $inputs = $request->all();
+        $likeFields     =   ['email'];
 
         // definir clausulas where
         $whereClauses = [];
 
+        $inputs = $request->all();
         foreach($inputs as $key => $input){
             if($input && in_array($key, array_merge($equalFields, $likeFields))){
                 if(in_array($key,$equalFields)){
@@ -48,10 +48,18 @@ class VolunteerController extends Controller
                 }
             }
         }
-
+        
         $volunteers = Volunteer::whereHas('user', function (Builder $query) use ($whereClauses) {
             $query->where($whereClauses);
         });
+
+        if($request->has('name')){
+            $name = $request->input('name');
+            $volunteers = $volunteers
+                ->whereHas('user', function (Builder $query) use ($name) {
+                    return $query->whereRaw("CONCAT(first_name, ' ', last_name) like '%{$name}%'");
+                });
+        }
         
         $cause_id = $request->input('cause_id');
         if(isset($cause_id) && $cause_id !== ''){

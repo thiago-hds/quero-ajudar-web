@@ -43,7 +43,7 @@ class Volunteer extends Model
 
     public function getVacancyRecommendations(){
         $process = new Process(
-            ["python3.8", "recommender.py", "recommend", $this->user_id]
+            ["./virtualenv/bin/python", "recommender.py", "recommend", $this->user_id]
         );
         $process->setWorkingDirectory(base_path() . "/recommender");
         $process->run();

@@ -1,5 +1,5 @@
-# recommender.py
-#!/usr/bin/python3.8
+#!./virtualenv/bin/python
+
 import json
 import os
 import sys
@@ -94,10 +94,10 @@ class VacancyRecommender:
             return words
 
         #vetorização TF-IDF
-        text_vectorizer = TfidfVectorizer(tokenizer=text_tokenizer)
+        text_vectorizer = TfidfVectorizer(tokenizer=text_tokenizer, max_df=0.6, max_features=8000)
         causes_vectorizer = TfidfVectorizer(tokenizer=causes_tokenizer, use_idf=False)
 
-        weights = {'name': 1.4, 'description':1.2, 'causes': 1.0}
+        weights = {'name': 2.0, 'description':3.0, 'causes': 1.0}
         column_transformer = ColumnTransformer(
             [('name', text_vectorizer, 'name'),
             ('description', text_vectorizer, 'description'),

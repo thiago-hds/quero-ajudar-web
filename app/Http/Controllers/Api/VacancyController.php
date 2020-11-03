@@ -63,7 +63,7 @@ class VacancyController extends BaseController
         
         // se o usuario ja tiver inscrições, usar sistema de recomendação
         if($volunteer->applications()->count() > 0){
-            if($volunteer->recommendations === NULL){
+            if($volunteer->recommendations === null){
                 $recommendations = $volunteer->getVacancyRecommendations();
                 $volunteer->recommendations = $recommendations;
                 $volunteer->save();
