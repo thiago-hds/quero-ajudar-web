@@ -72,10 +72,14 @@ class ApplicationController extends Controller
      */
     public function store(WebApplicationRequest $request)
     {
+        $volunteer = Volunteer::find($request->input('volunteer_user_id'));
+
         $application = new Application;
         $application->vacancy()->associate(Vacancy::find($request->input('vacancy_id')));
-        $application->volunteer()->associate(Volunteer::find($request->input('volunteer_user_id')));
+        $application->volunteer()->associate($volunteer);
         $application->save();
+
+        $volunteer->updateRecommendations();
 
         return redirect('/applications')->with('success', 'Inscrição salva!');
     }

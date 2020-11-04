@@ -6,6 +6,7 @@ import sys
 import pymysql
 import nltk
 import scipy
+import json
 import databaseconfig as cfg
 import pandas as pd
 
@@ -74,6 +75,25 @@ class VacancyRecommender:
         )
 
         self.disconnect_database()        
+
+    def save_recommendations_to_database(self, volunteer_id, recommendations):
+        self.connect_database()
+
+        if self.connection is None:
+            raise Exception('Recommender is not connected to a database')
+
+        update_sql =    ("UPDATE `volunteers` as V "
+                        "SET V.`recommendations` = %s "
+                        "WHERE V.`user_id` = %s")
+
+        values = (recommendations, volunteer_id)
+
+        cursor = self.connection.cursor()
+        cursor.execute(update_sql, values)
+        
+        self.connection.commit()
+
+        self.disconnect_database()    
     
     def extract_vacancies_features(self):
 
@@ -127,7 +147,7 @@ class VacancyRecommender:
             
             try:
                 self.tfidf_vacancies = scipy.sparse.load_npz(
-                    'tfidf_vacancsies.npz',
+                    'tfidf_vacancies.npz',
                 )
             except FileNotFoundError:
                 self.extract_vacancies_features()
@@ -177,5 +197,8 @@ class VacancyRecommender:
         similarity_scores = similarity_scores[:k]
 
         vacancies_index = [i[0] for i in similarity_scores]
-        return self.df_vacancies.loc[vacancies_index].index.values.tolist()
+        
+        results = self.df_vacancies.loc[vacancies_index].index.values.tolist()
+        self.save_recommendations_to_database(user_id, json.dumps(results))
+        return results
 

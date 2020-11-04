@@ -56,5 +56,21 @@ class Volunteer extends Model
         $recommendations =  $process->getOutput();
         return $recommendations;
     }
-    
+
+
+    public function updateRecommendations(){
+        $process = new Process(
+            ["./virtualenv/bin/python", "recommender.py", "recommend", $this->user_id, '&']
+        );
+        $process->setWorkingDirectory(base_path() . "/recommender");
+        $process->run();
+
+        // executes after the command finishes
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+
+        return true;
+    }   
 }

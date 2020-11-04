@@ -38,6 +38,9 @@ class ApplicationController extends BaseController
             $application->phone()->save(
                 new Phone(['number' => $request->input('volunteer_phone')])
             );
+
+            $volunteer->updateRecommendations();
+            
         }
         catch(Exception $ex){
             return $this->sendFail('Não foi possível salvar se inscrever na vaga');

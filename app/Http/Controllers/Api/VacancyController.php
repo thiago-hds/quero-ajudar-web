@@ -61,13 +61,8 @@ class VacancyController extends BaseController
         $causes_id = $request->input('causes_id');
         $skills_id = $request->input('skills_id');
         
-        // se o usuario ja tiver inscrições, usar sistema de recomendação
-        if($volunteer->applications()->count() > 0){
-            if($volunteer->recommendations === null){
-                $recommendations = $volunteer->getVacancyRecommendations();
-                $volunteer->recommendations = $recommendations;
-                $volunteer->save();
-            }
+        // se o usuario ja tiver recomendações, retorna-las
+        if($volunteer->recommendations !== null){
 
             $recommendationIds = json_decode($volunteer->recommendations);
             

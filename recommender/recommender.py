@@ -11,7 +11,7 @@ if __name__ == "__main__":
     recommender = VacancyRecommender()
 
     if(args[0] == "recommend"):
-        if(len(args) != 2):
+        if(len(args) < 2):
             raise Exception("invalid number of parameters")
         
         user_id = args[1]
