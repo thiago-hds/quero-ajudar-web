@@ -20,11 +20,11 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('skills/update-user-skills', 'Api\SkillController@updateUserSkills');
     Route::get('vacancies/recommendations', 'Api\VacancyController@vacancyRecommendations');
 
-    Route::apiResource('causes', 'Api\CauseController');
-    Route::apiResource('skills', 'Api\SkillController');
-    Route::apiResource('vacancies', 'Api\VacancyController');
-    Route::apiResource('organizations', 'Api\OrganizationController');
-    Route::apiResource('applications', 'Api\ApplicationController');
+    Route::apiResource('causes', 'Api\CauseController',  array("as" => "api"));
+    Route::apiResource('skills', 'Api\SkillController',  array("as" => "api"));
+    Route::apiResource('vacancies', 'Api\VacancyController', array("as" => "api"));
+    Route::apiResource('organizations', 'Api\OrganizationController',  array("as" => "api"));
+    Route::apiResource('applications', 'Api\ApplicationController',  array("as" => "api"));
 
     //Favorites routes
     Route::post(
@@ -37,7 +37,7 @@ Route::middleware('auth:sanctum')->group( function () {
     );
     Route::get('favorites/vacancies', 'Api\FavoritesController@favoriteVacancies');
     Route::get('favorites/organizations', 'Api\FavoritesController@favoriteOrganizations');
-    
+
     //Profile routes
     Route::get('profile', 'Api\VolunteerProfileController@getUserProfile');
     Route::post('profile/edit', 'Api\VolunteerProfileController@editUserProfile');
