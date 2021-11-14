@@ -18,7 +18,8 @@
         "laravel/sanctum": "^2.4",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
-        "lucascudo/laravel-pt-br-localization": "^1.0"
+        "lucascudo/laravel-pt-br-localization": "^1.0",
+        "squizlabs/php_codesniffer": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",

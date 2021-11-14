@@ -6,13 +6,13 @@ use App\Enums\ProfileType;
 use Carbon\Carbon;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
-
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable;
+    use HasApiTokens;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -43,12 +43,19 @@ class User extends Authenticatable
         'date_of_birth'     => 'date'
     ];
 
-    public function isAdmin(){
+    public function isAdmin()
+    {
         return $this->attributes['profile'] === ProfileType::ADMIN;
     }
 
-    public function isVolunteer(){
+    public function isVolunteer()
+    {
         return $this->attributes['profile'] === ProfileType::VOLUNTEER;
+    }
+
+    public function isOrganization()
+    {
+        return $this->attributes['profile'] === ProfileType::ORGANIZATION;
     }
 
     public function volunteer()
@@ -84,6 +91,4 @@ class User extends Authenticatable
     {
         $this->attributes['date_of_birth'] = Carbon::createFromFormat('d/m/Y', $value)->toDateString();
     }
-
-
 }
