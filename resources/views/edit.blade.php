@@ -49,22 +49,32 @@
 
                 {{-- profile --}}
                 <x-form-group label="Perfil">
-                    @if (Auth::user()->isAdmin())
 
-                        {{-- TODO: determinar se o campo deve estar checado ou não --}}
-                        <x-radio name="profile" label="Adminstrador"
-                            value="{{ \App\Enums\ProfileType::ADMIN }}" checked />
-                    @endif
+
+                    @php
+                        $isAdminSelected = old('profile', $user->profile ?? '') === \App\Enums\ProfileType::ADMIN || !isset($user);
+                        // $isAdminSelected = false;
+                    @endphp
+
+
+                    {{-- TODO: determinar se o campo deve estar checado ou não --}}
                     <x-radio name="profile" label="Adminstrador"
+                        value="{{ \App\Enums\ProfileType::ADMIN }}"
+                        checked="{{ $isAdminSelected }}">
+                    </x-radio>
+
+                    <x-radio name="profile" label="Organização"
                         value="{{ \App\Enums\ProfileType::ORGANIZATION }}"
-                        {{ !Auth::user()->isAdmin() || old('profile', isset($user->profile) ? $user->profile : null) == \App\Enums\ProfileType::ORGANIZATION ? 'checked' : '' }} />
+                        checked="{{ !$isAdminSelected }}">
+                    </x-radio>
 
                     @error('profile')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </x-form-group>
             </div>
-            @if (Auth::user()->isAdmin())
+
+            @if (auth()->user()->isAdmin())
                 <div id="organization_div" class="form-group"
                     style="display:{{ old('profile', isset($user->profile) ? $user->profile : null) == \App\Enums\ProfileType::ORGANIZATION ? 'block' : 'none' }}">
                     <label for="organization">Instituição</label>
@@ -93,7 +103,7 @@
                         data-placeholder="Selecione uma instituição"
                         style="width: 100%;" name="organization_id" disabled>
                         <option>
-                            {{ Auth::user()->organization->name }}
+                            {{ auth()->user()->organization->name }}
                         </option>
                     </select>
                 </div>
