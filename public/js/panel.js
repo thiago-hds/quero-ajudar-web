@@ -1,7 +1,7 @@
 var cityId = null;
 
 $(document).ready(function () {
-    $(".select2").select2({ allowClear: true });
+    // $(".select2").select2({ allowClear: true });
     $(".date-input").inputmask("99/99/9999");
     $(".phone-input").inputmask("(99) 99999999[9]");
     $(".hour-input").inputmask("99:99");
@@ -10,10 +10,10 @@ $(document).ready(function () {
 
     // controle de exibição select de instituições no cadastro de usuários
     $("input[name=profile]").change(function () {
-        if ($(this).val() == "1") {
-            $("#organization_div").show(400);
+        if (this.value == "1") {
+            $(".organization-container").show(300);
         } else {
-            $("#organization_div").hide(400);
+            $(".organization-container").hide(300);
         }
     });
 
