@@ -74,40 +74,56 @@
                 </x-form-group>
             </div>
 
-            @if (auth()->user()->isAdmin())
-                <div id="organization_div" class="form-group"
-                    style="display:{{ old('profile', isset($user->profile) ? $user->profile : null) == \App\Enums\ProfileType::ORGANIZATION ? 'block' : 'none' }}">
-                    <label for="organization">Instituição</label>
-                    <select
-                        class="form-control select2  @error('organization') is-invalid @enderror"
-                        data-placeholder="Selecione uma instituição"
-                        style="width: 100%;" name="organization_id">
-                        <option></option>
-                        @foreach ($organizations as $organization)
-                            <option value="{{ $organization->id }}"
-                                {{ old('organization_id', isset($user->organization_id) ? $user->organization_id : null) == $organization->id ? 'selected' : '' }}>
-                                {{ $organization->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('organization')
-                        <div class="invalid-feedback">{{ $message }}
-                        </div>
-                    @enderror
-                </div>
-            @else
-                <div id="organization_div" class="form-group">
-                    <label for="organization">Instituição</label>
-                    <select
-                        class="form-control select2  @error('organization') is-invalid @enderror"
-                        data-placeholder="Selecione uma instituição"
-                        style="width: 100%;" name="organization_id" disabled>
-                        <option>
-                            {{ auth()->user()->organization->name }}
+
+            @php
+                $config = [
+                    'placeholder' => 'Selecione uma instituição...',
+                    'allowClear' => true,
+                ];
+
+            @endphp
+            <div class="organization-container"
+                style="display:{{ !$isAdminSelected ? 'block' : 'none' }}">
+
+                <x-adminlte-select2 id="organization_id" name="organization_id"
+                    label="Instituição" :config="$config">
+                    <x-slot name="prependSlot">
+                        <span class="input-group-text">
+                            <i class="fas fa-fw fa-building "></i>
+                        </span>
+                    </x-slot>
+
+                    <option></option>
+                    @foreach ($organizations as $organization)
+                        <option value="{{ $organization->id }}"
+                            {{ old('organization_id', isset($user->organization_id) ? $user->organization_id : null) == $organization->id ? 'selected' : '' }}>
+                            {{ $organization->name }}
                         </option>
-                    </select>
-                </div>
-            @endif
+                    @endforeach
+                </x-adminlte-select2>
+            </div>
+
+            {{-- <div class="form-group organization-container"
+                style="display:{{ old('profile', $user->profile ?? '') == \App\Enums\ProfileType::ORGANIZATION ? 'block' : 'none' }}">
+                <label for="organization">Instituição</label>
+                <select
+                    class="form-control select2  @error('organization') is-invalid @enderror"
+                    data-placeholder="Selecione uma instituição"
+                    style="width: 100%;" name="organization_id">
+                    <option></option>
+                    @foreach ($organizations as $organization)
+                        <option value="{{ $organization->id }}"
+                            {{ old('organization_id', isset($user->organization_id) ? $user->organization_id : null) == $organization->id ? 'selected' : '' }}>
+                            {{ $organization->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('organization')
+                    <div class="invalid-feedback">{{ $message }}
+                    </div>
+                @enderror
+            </div> --}}
+
             <div class="row">
 
                 {{-- email --}}
@@ -151,7 +167,33 @@
 
             </div>
 
-            <div class="form-group">
+            <div class="row">
+
+                {{-- profile --}}
+                <x-form-group label="Status">
+                    @php
+
+                        $isActive = old('status', $user->status ?? \App\Enums\StatusType::ACTIVE) == \App\Enums\StatusType::ACTIVE;
+                    @endphp
+
+                    {{-- TODO: determinar se o campo deve estar checado ou não --}}
+                    <x-radio name="status" label="Ativo"
+                        value="{{ \App\Enums\StatusType::ACTIVE }}"
+                        checked="{{ $isActive }}">
+                    </x-radio>
+
+                    <x-radio name="status" label="Inativo"
+                        value="{{ \App\Enums\StatusType::INACTIVE }}"
+                        checked="{{ !$isActive }}">
+                    </x-radio>
+
+                    @error('status')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </x-form-group>
+            </div>
+
+            {{-- <div class="form-group">
                 <label for="status">Status</label>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="status"
@@ -169,12 +211,12 @@
                     {{ $message }}
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
-            </div>
+            </div> --}}
             <!-- /.card-body -->
         </div>
 
         <div class="card-footer">
-            <x-adminlte-button class="float-right" type="submit" label="Submit"
+            <x-adminlte-button class="float-right" type="submit" label="Enviar"
                 theme="success" icon="fas fa-save" />
 
             <a class="btn btn-danger" href="{{ route('users.index') }}">
@@ -191,5 +233,5 @@
 @stop
 
 @section('js')
-    <script src="{{ asset('/js/panel.js') }}"></script><s></s>
+    <script src="{{ asset('/js/panel.js') }}"></script>
 @stop
