@@ -1,229 +1,160 @@
-@extends('adminlte::page')
+@extends('layout.edit', [
+'model' => $user ?? null,
+'action' => isset($user->id) ? route('users.update', $user->id) :
+route('users.store'),
+'cancelUrl' => route('users.index')
+])
 
-@section('title', (isset($user) ? 'Editar' : 'Novo') . ' Usuário')
+@php
+$selectedProfile = old('profile', $user->profile ?? '');
+$isAdminSelected = $selectedProfile === \App\Enums\ProfileType::ADMIN || !isset($user);
+$organizationsSelectConfig = [
+    'placeholder' => 'Selecione uma instituição...',
+    'allowClear' => true,
+];
+@endphp
 
-@section('content_header')
-    <h1 class="m-0 text-dark">
-        {{ (isset($user) ? 'Editar' : 'Novo') . ' Usuário' }}</h1>
-@stop
+@section('plugins.Select2', true)
 
-@section('content')
+@section('fields')
     <div class="row">
-        <div class="col-12">
 
-            <div class="card">
-                <!-- form start -->
-                <form role="form" method="post"
-                    action="{{ isset($user->id) ? route('users.update', $user->id) : route('users.store') }}">
-                    @if (isset($user))
-                        @method('PATCH')
-                    @endif
-                    @csrf
-                    <div class="card-body">
+        {{-- first name --}}
+        <x-adminlte-input type="text" name="first_name" label="Nome"
+            fgroup-class="col-md-4"
+            value="{{ old('first_name', $user->first_name ?? '') }}" />
 
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label for="name">Nome</label>
-                                    <input type="text"
-                                        class="form-control @error('first_name') is-invalid @enderror"
-                                        name="first_name"
-                                        value="{{ old('first_name', isset($user->first_name) ? $user->first_name : null) }}">
-                                    @error('first_name')
-                                        <div class="invalid-feedback">{{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label for="name">Sobrenome</label>
-                                    <input type="text"
-                                        class="form-control @error('last_name') is-invalid @enderror"
-                                        name="last_name"
-                                        value="{{ old('last_name', isset($user->last_name) ? $user->last_name : null) }}">
-                                    @error('last_name')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label for="date_of_birth">Data de
-                                        Nascimento</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i
-                                                    class="far fa-calendar-alt"></i></span>
-                                        </div>
-                                        <input type="text"
-                                            class="form-control date-input @error('date_of_birth') is-invalid @enderror"
-                                            placeholder="dd/mm/aaaa"
-                                            name="date_of_birth"
-                                            value="{{ old('date_of_birth', isset($user->date_of_birth) ? $user->date_of_birth : null) }}">
-                                        @error('date_of_birth')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        {{-- last name --}}
+        <x-adminlte-input type="text" name="last_name" label="Sobrenome"
+            fgroup-class="col-md-4"
+            value="{{ old('last_name', $user->last_name ?? '') }}" />
 
-                        <div class="form-group">
-                            <label for="profile">Perfil</label>
+        {{-- date of birth --}}
+        <x-adminlte-input type="text" name="date_of_birth"
+            label="Data de Nascimento" placeholder="dd/mm/aaaa"
+            fgroup-class="col-md-4"
+            value="{{ old('date_of_birth', $user->date_of_birth ?? '') }}">
 
-                            @if (Auth::user()->isAdmin())
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio"
-                                        name="profile"
-                                        value="{{ \App\Enums\ProfileType::ADMIN }}"
-                                        {{ old('profile', isset($user->profile) ? $user->profile : null) == \App\Enums\ProfileType::ORGANIZATION ? '' : 'checked' }}>
-                                    <label
-                                        class="form-check-label">Administrador</label>
-                                </div>
-                            @endif
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio"
-                                    name="profile"
-                                    value="{{ \App\Enums\ProfileType::ORGANIZATION }}"
-                                    {{ !Auth::user()->isAdmin() || old('profile', isset($user->profile) ? $user->profile : null) == \App\Enums\ProfileType::ORGANIZATION ? 'checked' : '' }}>
-                                <label class="form-check-label">Instituição</label>
-                            </div>
-
-                            @error('profile')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        @if (Auth::user()->isAdmin())
-                            <div id="organization_div" class="form-group"
-                                style="display:{{ old('profile', isset($user->profile) ? $user->profile : null) == \App\Enums\ProfileType::ORGANIZATION ? 'block' : 'none' }}">
-                                <label for="organization">Instituição</label>
-                                <select
-                                    class="form-control select2  @error('organization') is-invalid @enderror"
-                                    data-placeholder="Selecione uma instituição"
-                                    style="width: 100%;" name="organization_id">
-                                    <option></option>
-                                    @foreach ($organizations as $organization)
-                                        <option value="{{ $organization->id }}"
-                                            {{ old('organization_id', isset($user->organization_id) ? $user->organization_id : null) == $organization->id ? 'selected' : '' }}>
-                                            {{ $organization->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-
-                                @error('organization')
-                                    <div class="invalid-feedback">{{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-
-                        @else
-                            <div id="organization_div" class="form-group">
-                                <label for="organization">Instituição</label>
-                                <select
-                                    class="form-control select2  @error('organization') is-invalid @enderror"
-                                    data-placeholder="Selecione uma instituição"
-                                    style="width: 100%;" name="organization_id"
-                                    disabled>
-                                    <option>
-                                        {{ Auth::user()->organization->name }}
-                                    </option>
-                                </select>
-                            </div>
-                        @endif
-
-                        <div class="form-group">
-                            <label for="email">E-mail</label>
-                            <input type="email"
-                                class="form-control @error('email') is-invalid @enderror"
-                                name="email"
-                                value="{{ old('email', isset($user->email) ? $user->email : null) }}"
-                                {{ isset($user) && Auth::user()->id == $user->id ? 'disabled' : '' }}>
-                            @error('email')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="password">Senha</label>
-                                    <input type="password"
-                                        class="form-control @error('password') is-invalid @enderror"
-                                        name="password"
-                                        value="{{ old('password', isset($user->password) ? $user->password : null) }}">
-                                    @error('password')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="password_confirm">Confirmação de
-                                        Senha</label>
-                                    <input type="password"
-                                        class="form-control @error('password_confirm') is-invalid @enderror"
-                                        name="password_confirm"
-                                        value="{{ old('password_confirm', isset($user->password) ? $user->password : null) }}">
-                                    @error('password_confirm')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="status">Status</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio"
-                                    name="status"
-                                    value="{{ \App\Enums\StatusType::ACTIVE }}"
-                                    {{ old('status', isset($user->status) ? $user->status : \App\Enums\StatusType::ACTIVE) == \App\Enums\StatusType::INACTIVE ? '' : 'checked' }}>
-                                <label class="form-check-label">Ativo</label>
-                            </div>
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio"
-                                    name="status"
-                                    value="{{ \App\Enums\StatusType::INACTIVE }}"
-                                    {{ old('status', isset($user->status) ? $user->status : \App\Enums\StatusType::ACTIVE) == \App\Enums\StatusType::INACTIVE ? 'checked' : '' }}>
-                                <label class="form-check-label">Inativo</label>
-                            </div>
-
-
-                            @error('status')
-                                {{ $message }}
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <!-- /.card-body -->
-
-                    <div class="card-footer">
-                        <button type="submit" class="btn btn-success float-right">
-                            <i class="fas fa-save"></i> Salvar
-                        </button>
-                        <a class="btn btn-danger"
-                            href="{{ route('users.index') }}">
-                            <i class="fas fa-arrow-left"></i> Cancelar
-                        </a>
-                    </div>
-                </form>
-
-            </div>
-        </div>
+            <x-slot name="prependSlot">
+                <span class="input-group-text">
+                    <i class="far fa-calendar-alt"></i>
+                </span>
+            </x-slot>
+        </x-adminlte-input>
     </div>
-@stop
 
-@section('css')
-    <link rel="stylesheet" href="{{ asset('/css/panel.css') }}">
-@stop
+    <div class="row">
 
-@section('js')
-    <script src="{{ asset('/js/panel.js') }}"></script><s></s>
-@stop
+        {{-- profile --}}
+        <x-form-group label="Perfil">
+
+            {{-- TODO: determinar se o campo deve estar checado ou não --}}
+            <x-radio name="profile" label="Adminstrador"
+                value="{{ \App\Enums\ProfileType::ADMIN }}"
+                checked="{{ $isAdminSelected }}">
+            </x-radio>
+
+            <x-radio name="profile" label="Organização"
+                value="{{ \App\Enums\ProfileType::ORGANIZATION }}"
+                checked="{{ !$isAdminSelected }}">
+            </x-radio>
+
+            @error('profile')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </x-form-group>
+    </div>
+
+
+
+    <div class="organization-container"
+        style="display:{{ !$isAdminSelected ? 'block' : 'none' }}">
+
+        <x-adminlte-select2 id="organization_id" name="organization_id"
+            label="Instituição" :config="$organizationsSelectConfig">
+            <x-slot name="prependSlot">
+                <span class="input-group-text">
+                    <i class="fas fa-fw fa-building "></i>
+                </span>
+            </x-slot>
+
+            <option></option>
+            @foreach ($organizations as $organization)
+                <option value="{{ $organization->id }}"
+                    {{ old('organization_id', isset($user->organization_id) ? $user->organization_id : null) == $organization->id ? 'selected' : '' }}>
+                    {{ $organization->name }}
+                </option>
+            @endforeach
+        </x-adminlte-select2>
+    </div>
+
+    <div class="row">
+
+        {{-- email --}}
+        <x-email-input fgroup-class="col-md-4"
+            value="{{ old('email', $user->email ?? '') }}" />
+        {{-- <x-adminlte-input type="email" name="email" label="E-mail"
+            fgroup-class="col-md-4"
+            value="{{ old('email', $user->email ?? '') }}">
+
+            <x-slot name="prependSlot">
+                <span class="input-group-text">
+                    <i class="fa fa-envelope"></i>
+                </span>
+            </x-slot>
+
+        </x-adminlte-input> --}}
+
+        {{-- password --}}
+        <x-adminlte-input type="password" name="password" label="Senha"
+            fgroup-class="col-md-4" value="{{ $user->password ?? '' }}">
+
+            <x-slot name="prependSlot">
+                <span class="input-group-text">
+                    <i class="fa fa-key"></i>
+                </span>
+            </x-slot>
+
+        </x-adminlte-input>
+
+        <x-adminlte-input type="password" name="password_confirm"
+            label="Confirmação de Senha" fgroup-class="col-md-4"
+            placeholder="Repita a senha" value="{{ $user->password ?? '' }}">
+
+            <x-slot name="prependSlot">
+                <span class="input-group-text">
+                    <i class="fa fa-key"></i>
+                </span>
+            </x-slot>
+
+        </x-adminlte-input>
+
+    </div>
+
+    <div class="row">
+
+        {{-- profile --}}
+        <x-form-group label="Status">
+            @php
+
+                $isActive = old('status', $user->status ?? \App\Enums\StatusType::ACTIVE) == \App\Enums\StatusType::ACTIVE;
+            @endphp
+
+            {{-- TODO: determinar se o campo deve estar checado ou não --}}
+            <x-radio name="status" label="Ativo"
+                value="{{ \App\Enums\StatusType::ACTIVE }}"
+                checked="{{ $isActive }}">
+            </x-radio>
+
+            <x-radio name="status" label="Inativo"
+                value="{{ \App\Enums\StatusType::INACTIVE }}"
+                checked="{{ !$isActive }}">
+            </x-radio>
+
+            @error('status')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </x-form-group>
+    </div>
+
+@endsection

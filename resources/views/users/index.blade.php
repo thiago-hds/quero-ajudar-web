@@ -38,11 +38,11 @@
                                     <select class="form-control" name="profile">
                                         <option></option>
                                         <option value="admin"
-                                            {{                                             isset($inputs->profile) && $inputs->profile == \App\Enums\ProfileType::ADMIN ? 'selected' : '' }}>
+                                            {{ isset($inputs->profile) && $inputs->profile == \App\Enums\ProfileType::ADMIN ? 'selected' : '' }}>
                                             Administrador
                                         </option>
                                         <option value="organization"
-                                            {{                                             isset($inputs->profile) && $inputs->profile == \App\Enums\ProfileType::ORGANIZATION ? 'selected' : '' }}>
+                                            {{ isset($inputs->profile) && $inputs->profile == \App\Enums\ProfileType::ORGANIZATION ? 'selected' : '' }}>
                                             Instituição
                                         </option>
                                     </select>
@@ -61,7 +61,7 @@
                                         @foreach ($organizations as $organization)
                                             <option
                                                 value="{{ $organization->id }}"
-                                                {{                                                 isset($inputs->organization_id) && $inputs->organization_id == $organization->id ? 'selected' : '' }}>
+                                                {{ isset($inputs->organization_id) && $inputs->organization_id == $organization->id ? 'selected' : '' }}>
                                                 {{ $organization->name }}
                                             </option>
                                         @endforeach
@@ -74,11 +74,11 @@
                                     <select class="form-control" name="status">
                                         <option></option>
                                         <option value="active"
-                                            {{                                             isset($inputs->status) && $inputs->status == \App\Enums\StatusType::ACTIVE ? 'selected' : '' }}>
+                                            {{ isset($inputs->status) && $inputs->status == \App\Enums\StatusType::ACTIVE ? 'selected' : '' }}>
                                             Ativo
                                         </option>
                                         <option value="inactive"
-                                            {{                                             isset($inputs->status) && $inputs->status == \App\Enums\StatusType::INACTIVE ? 'selected' : '' }}>
+                                            {{ isset($inputs->status) && $inputs->status == \App\Enums\StatusType::INACTIVE ? 'selected' : '' }}>
                                             Inativo
                                         </option>
                                     </select>
