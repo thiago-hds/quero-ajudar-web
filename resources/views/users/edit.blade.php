@@ -8,13 +8,9 @@ route('users.store'),
 @php
 $selectedProfile = old('profile', $user->profile ?? '');
 $isAdminSelected = $selectedProfile === \App\Enums\ProfileType::ADMIN || !isset($user);
-$organizationsSelectConfig = [
-    'placeholder' => 'Selecione uma instituição...',
-    'allowClear' => true,
-];
 @endphp
 
-@section('plugins.Select2', true)
+
 
 @section('fields')
     <div class="row">
@@ -70,7 +66,10 @@ $organizationsSelectConfig = [
     <div class="organization-container"
         style="display:{{ !$isAdminSelected ? 'block' : 'none' }}">
 
-        <x-adminlte-select2 id="organization_id" name="organization_id"
+        <x-organization-select fgroup-class="col-md-12"
+            :selected="old('organization_id', $user->organization_id ?? null)" />
+
+        {{-- <x-adminlte-select2 id="organization_id" name="organization_id"
             label="Instituição" :config="$organizationsSelectConfig">
             <x-slot name="prependSlot">
                 <span class="input-group-text">
@@ -85,7 +84,7 @@ $organizationsSelectConfig = [
                     {{ $organization->name }}
                 </option>
             @endforeach
-        </x-adminlte-select2>
+        </x-adminlte-select2> --}}
     </div>
 
     <div class="row">
