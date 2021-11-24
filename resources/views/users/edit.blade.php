@@ -10,8 +10,6 @@ $selectedProfile = old('profile', $user->profile ?? '');
 $isAdminSelected = $selectedProfile === \App\Enums\ProfileType::ADMIN || !isset($user);
 @endphp
 
-
-
 @section('fields')
     <div class="row">
 
@@ -44,7 +42,6 @@ $isAdminSelected = $selectedProfile === \App\Enums\ProfileType::ADMIN || !isset(
         {{-- profile --}}
         <x-form-group label="Perfil">
 
-            {{-- TODO: determinar se o campo deve estar checado ou não --}}
             <x-radio name="profile" label="Adminstrador"
                 value="{{ \App\Enums\ProfileType::ADMIN }}"
                 checked="{{ $isAdminSelected }}">
@@ -68,23 +65,6 @@ $isAdminSelected = $selectedProfile === \App\Enums\ProfileType::ADMIN || !isset(
 
         <x-organization-select fgroup-class="col-md-12"
             :selected="old('organization_id', $user->organization_id ?? null)" />
-
-        {{-- <x-adminlte-select2 id="organization_id" name="organization_id"
-            label="Instituição" :config="$organizationsSelectConfig">
-            <x-slot name="prependSlot">
-                <span class="input-group-text">
-                    <i class="fas fa-fw fa-building "></i>
-                </span>
-            </x-slot>
-
-            <option></option>
-            @foreach ($organizations as $organization)
-                <option value="{{ $organization->id }}"
-                    {{ old('organization_id', isset($user->organization_id) ? $user->organization_id : null) == $organization->id ? 'selected' : '' }}>
-                    {{ $organization->name }}
-                </option>
-            @endforeach
-        </x-adminlte-select2> --}}
     </div>
 
     <div class="row">
@@ -92,17 +72,6 @@ $isAdminSelected = $selectedProfile === \App\Enums\ProfileType::ADMIN || !isset(
         {{-- email --}}
         <x-email-input fgroup-class="col-md-4"
             value="{{ old('email', $user->email ?? '') }}" />
-        {{-- <x-adminlte-input type="email" name="email" label="E-mail"
-            fgroup-class="col-md-4"
-            value="{{ old('email', $user->email ?? '') }}">
-
-            <x-slot name="prependSlot">
-                <span class="input-group-text">
-                    <i class="fa fa-envelope"></i>
-                </span>
-            </x-slot>
-
-        </x-adminlte-input> --}}
 
         {{-- password --}}
         <x-adminlte-input type="password" name="password" label="Senha"
@@ -139,7 +108,6 @@ $isAdminSelected = $selectedProfile === \App\Enums\ProfileType::ADMIN || !isset(
                 $isActive = old('status', $user->status ?? \App\Enums\StatusType::ACTIVE) == \App\Enums\StatusType::ACTIVE;
             @endphp
 
-            {{-- TODO: determinar se o campo deve estar checado ou não --}}
             <x-radio name="status" label="Ativo"
                 value="{{ \App\Enums\StatusType::ACTIVE }}"
                 checked="{{ $isActive }}">

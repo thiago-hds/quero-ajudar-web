@@ -27,8 +27,25 @@
                 {{ $users->links() }}
             </div>
             <div class="row">
-                <table id="example2" class="table table-bordered table-hover">
-                    @yield('table')
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            @foreach ($cols as $col)
+                                <th>{{ $col }}</th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @yield('table-rows')
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            @foreach ($cols as $col)
+                                <th>{{ $col }}</th>
+                            @endforeach
+                        </tr>
+                    </tfoot>
+
                 </table>
             </div>
             <div class="row">

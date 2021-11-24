@@ -72,8 +72,8 @@ class UserController extends Controller
     public function create()
     {
         $organizations = Organization::orderBy('name', 'asc')->get();
-        return view('edit', compact('organizations'));
-        // return view('users.edit', compact('organizations'));
+        // return view('edit', compact('organizations'));
+        return view('users.edit', compact('organizations'));
     }
 
     /**
