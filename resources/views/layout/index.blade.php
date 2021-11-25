@@ -1,20 +1,26 @@
 @extends('adminlte::page')
 
-@section('title', 'Usuários')
+@section('title', $title)
 
 @section('content_header')
     <x-flash />
-    <h1 class="m-0 text-dark">Usuários</h1>
+    <h1 class="m-0 text-dark">{{ $title }}</h1>
 @endsection
 
 @section('content')
     <div class="card">
-        <form action="" method="GET">
+        <form
+            action=""
+            method="GET"
+        >
             <div class="card-body">
                 @yield('fields')
             </div>
             <div class="card-footer">
-                <button type="submit" class="btn btn-primary float-right">
+                <button
+                    type="submit"
+                    class="btn btn-primary float-right"
+                >
                     <i class="fas fa-search"></i> Buscar
                 </button>
             </div>
@@ -24,7 +30,7 @@
     <div class="card">
         <div class="card-body">
             <div class="row">
-                {{ $users->links() }}
+                {{ $collection->links() }}
             </div>
             <div class="row">
                 <table class="table table-bordered table-hover">
@@ -49,7 +55,7 @@
                 </table>
             </div>
             <div class="row">
-                {{ $users->links() }}
+                {{ $collection->links() }}
             </div>
         </div>
     </div>
@@ -58,7 +64,10 @@
 @endsection
 
 @section('css')
-    <link rel="stylesheet" href="{{ asset('/css/panel.css') }}" />
+    <link
+        rel="stylesheet"
+        href="{{ asset('/css/panel.css') }}"
+    />
 @endsection
 
 @section('js')
