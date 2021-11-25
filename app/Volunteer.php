@@ -2,12 +2,14 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
 class Volunteer extends Model
 {
+    use HasFactory;
 
     /**
      * The primary key associated with the table.
@@ -41,7 +43,8 @@ class Volunteer extends Model
         return $this->hasMany('App\Favorite');
     }
 
-    public function getVacancyRecommendations(){
+    public function getVacancyRecommendations()
+    {
         $process = new Process(
             ["./virtualenv/bin/python", "recommender.py", "recommend", $this->user_id]
         );
@@ -58,7 +61,8 @@ class Volunteer extends Model
     }
 
 
-    public function updateRecommendations(){
+    public function updateRecommendations()
+    {
         $process = new Process(
             ["./virtualenv/bin/python", "recommender.py", "recommend", $this->user_id, '&']
         );
@@ -72,5 +76,5 @@ class Volunteer extends Model
 
 
         return true;
-    }   
+    }
 }
