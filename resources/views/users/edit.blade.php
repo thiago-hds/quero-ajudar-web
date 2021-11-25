@@ -1,33 +1,51 @@
+@php
+use App\Enums\StatusType;
+use App\Enums\ProfileType;
+
+$selectedProfile = old('profile', $user->profile ?? '');
+$isAdminSelected = $selectedProfile === ProfileType::ADMIN || !isset($user);
+@endphp
+
 @extends('layout.edit', [
 'model' => $user ?? null,
-'action' => isset($user->id) ? route('users.update', $user->id) :
+'title' => sprintf("%s %s", isset($user) ? 'Editar' : 'Novo', "Usuário"),
+'action' => isset($user) ? route('users.update', $user->id) :
 route('users.store'),
 'cancelUrl' => route('users.index')
 ])
 
-@php
-$selectedProfile = old('profile', $user->profile ?? '');
-$isAdminSelected = $selectedProfile === \App\Enums\ProfileType::ADMIN || !isset($user);
-@endphp
+
 
 @section('fields')
     <div class="row">
 
         {{-- first name --}}
-        <x-adminlte-input type="text" name="first_name" label="Nome"
+        <x-adminlte-input
+            type="text"
+            name="first_name"
+            label="Nome"
             fgroup-class="col-md-4"
-            value="{{ old('first_name', $user->first_name ?? '') }}" />
+            value="{{ old('first_name', $user->first_name ?? '') }}"
+        />
 
         {{-- last name --}}
-        <x-adminlte-input type="text" name="last_name" label="Sobrenome"
+        <x-adminlte-input
+            type="text"
+            name="last_name"
+            label="Sobrenome"
             fgroup-class="col-md-4"
-            value="{{ old('last_name', $user->last_name ?? '') }}" />
+            value="{{ old('last_name', $user->last_name ?? '') }}"
+        />
 
         {{-- date of birth --}}
-        <x-adminlte-input type="text" name="date_of_birth"
-            label="Data de Nascimento" placeholder="dd/mm/aaaa"
+        <x-adminlte-input
+            type="text"
+            name="date_of_birth"
+            label="Data de Nascimento"
+            placeholder="dd/mm/aaaa"
             fgroup-class="col-md-4"
-            value="{{ old('date_of_birth', $user->date_of_birth ?? '') }}">
+            value="{{ old('date_of_birth', $user->date_of_birth ?? '') }}"
+        >
 
             <x-slot name="prependSlot">
                 <span class="input-group-text">
@@ -42,14 +60,20 @@ $isAdminSelected = $selectedProfile === \App\Enums\ProfileType::ADMIN || !isset(
         {{-- profile --}}
         <x-form-group label="Perfil">
 
-            <x-radio name="profile" label="Adminstrador"
+            <x-radio
+                name="profile"
+                label="Adminstrador"
                 value="{{ \App\Enums\ProfileType::ADMIN }}"
-                checked="{{ $isAdminSelected }}">
+                checked="{{ $isAdminSelected }}"
+            >
             </x-radio>
 
-            <x-radio name="profile" label="Organização"
+            <x-radio
+                name="profile"
+                label="Organização"
                 value="{{ \App\Enums\ProfileType::ORGANIZATION }}"
-                checked="{{ !$isAdminSelected }}">
+                checked="{{ !$isAdminSelected }}"
+            >
             </x-radio>
 
             @error('profile')
@@ -60,22 +84,33 @@ $isAdminSelected = $selectedProfile === \App\Enums\ProfileType::ADMIN || !isset(
 
 
 
-    <div class="organization-container"
-        style="display:{{ !$isAdminSelected ? 'block' : 'none' }}">
+    <div
+        class="organization-container"
+        style="display:{{ !$isAdminSelected ? 'block' : 'none' }}"
+    >
 
-        <x-organization-select fgroup-class="col-md-12"
-            :selected="old('organization_id', $user->organization_id ?? null)" />
+        <x-organization-select
+            fgroup-class="col-md-12"
+            :selected="old('organization_id', $user->organization_id ?? null)"
+        />
     </div>
 
     <div class="row">
 
         {{-- email --}}
-        <x-email-input fgroup-class="col-md-4"
-            value="{{ old('email', $user->email ?? '') }}" />
+        <x-email-input
+            fgroup-class="col-md-4"
+            value="{{ old('email', $user->email ?? '') }}"
+        />
 
         {{-- password --}}
-        <x-adminlte-input type="password" name="password" label="Senha"
-            fgroup-class="col-md-4" value="{{ $user->password ?? '' }}">
+        <x-adminlte-input
+            type="password"
+            name="password"
+            label="Senha"
+            fgroup-class="col-md-4"
+            value="{{ $user->password ?? '' }}"
+        >
 
             <x-slot name="prependSlot">
                 <span class="input-group-text">
@@ -85,9 +120,15 @@ $isAdminSelected = $selectedProfile === \App\Enums\ProfileType::ADMIN || !isset(
 
         </x-adminlte-input>
 
-        <x-adminlte-input type="password" name="password_confirm"
-            label="Confirmação de Senha" fgroup-class="col-md-4"
-            placeholder="Repita a senha" value="{{ $user->password ?? '' }}">
+        {{-- password confirmation --}}
+        <x-adminlte-input
+            type="password"
+            name="password_confirm"
+            label="Confirmação de Senha"
+            fgroup-class="col-md-4"
+            placeholder="Repita a senha"
+            value="{{ $user->password ?? '' }}"
+        >
 
             <x-slot name="prependSlot">
                 <span class="input-group-text">
@@ -101,21 +142,27 @@ $isAdminSelected = $selectedProfile === \App\Enums\ProfileType::ADMIN || !isset(
 
     <div class="row">
 
-        {{-- profile --}}
+        {{-- status --}}
         <x-form-group label="Status">
             @php
 
                 $isActive = old('status', $user->status ?? \App\Enums\StatusType::ACTIVE) == \App\Enums\StatusType::ACTIVE;
             @endphp
 
-            <x-radio name="status" label="Ativo"
+            <x-radio
+                name="status"
+                label="Ativo"
                 value="{{ \App\Enums\StatusType::ACTIVE }}"
-                checked="{{ $isActive }}">
+                checked="{{ $isActive }}"
+            >
             </x-radio>
 
-            <x-radio name="status" label="Inativo"
+            <x-radio
+                name="status"
+                label="Inativo"
                 value="{{ \App\Enums\StatusType::INACTIVE }}"
-                checked="{{ !$isActive }}">
+                checked="{{ !$isActive }}"
+            >
             </x-radio>
 
             @error('status')
