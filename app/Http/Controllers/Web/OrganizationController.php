@@ -77,7 +77,7 @@ class OrganizationController extends Controller
         $causes = Cause::orderBy('name', 'asc')->get();
         $states = State::orderBy('name', 'asc')->get();
 
-        return view('organizations.edit2', compact('organizationTypes', 'causes', 'states'));
+        return view('organizations.edit', compact('organizationTypes', 'causes', 'states'));
     }
 
     /**

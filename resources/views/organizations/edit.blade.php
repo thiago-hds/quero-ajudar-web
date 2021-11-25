@@ -1,275 +1,135 @@
-@extends('adminlte::page')
+@php
+use App\Enums\ProfileType;
+use App\Enums\StatusType;
 
-@section('title', (isset($organization) ? 'Editar' : 'Nova') . ' Instituição')
+$selectedProfile = old('profile', $organization->profile ?? '');
+$isAdminSelected = $selectedProfile === ProfileType::ADMIN || !isset($user);
+@endphp
 
-@section('content_header')
+@extends('layout.edit', [
+'model' => $organization ?? null,
+'title' => sprintf("%s %s", isset($organization) ? 'Editar' : 'Nova', "Instituição"),
+'action' => isset($organization) ? route('organizations.update', $organization->id) : route('organizations.store'),
+'cancelUrl' => route('organizations.index')
+])
 
-    @if (config('app.debug') == true && $errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div><br />
-    @endif
-    <h1 class="m-0 text-dark">
-        {{ (isset($organization) ? 'Editar' : 'Nova') . ' Instituição' }}</h1>
-@stop
-
-@section('content')
+@section('fields')
     <div class="row">
-        <div class="col-12">
 
-            <div class="card">
-                <!-- form start -->
-                <form role="form" method="post" enctype="multipart/form-data"
-                    action="{{ isset($organization->id) ? route('organizations.update', $organization->id) : route('organizations.store') }}">
-                    @if (isset($organization))
-                        @method('PATCH')
-                    @endif
-                    @csrf
-                    <div class="card-body">
+        {{-- name --}}
+        <x-adminlte-input
+            type="text"
+            name="name"
+            label="Nome"
+            fgroup-class="col-sm-6"
+            value="{{ old('name', $organization->name ?? '') }}"
+        />
 
-                        <div class="row">
-                            <!-- name -->
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="name">Nome</label>
-                                    <input type="text"
-                                        class="form-control @error('name') is-invalid @enderror"
-                                        name="name"
-                                        value="{{ old('name', isset($organization->name) ? $organization->name : null) }}">
-                                    @error('name')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
+        {{-- logo --}}
+        <x-adminlte-input-file
+            name="logo"
+            label="Logo"
+            fgroup-class="col-sm-6"
+            placeholder="Escolha um arquivo..."
+            accept=".jpg,.jpeg,.gif,.png"
+        >
 
-                            <!-- logo -->
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="logo">Logo</label>
-                                    <input type="file" name="logo"
-                                        accept=".jpg,.jpeg,.gif,.png"
-                                        class="form-control-file @error('logo') is-invalid @enderror"
-                                        id="logo">
-                                    <!-- <div class="dropzone"> </div> -->
-                                    @error('logo')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}</div>
-                                    @enderror
+            <x-slot name="prependSlot">
+                <div class="input-group-text">
+                    <i class="fas fa-upload"></i>
+                </div>
+            </x-slot>
 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <!-- organzation_type_id -->
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="organization_type_id">Tipo de
-                                        Instituição</label>
-                                    <select
-                                        class="form-control select2  @error('organization_type_id') is-invalid @enderror"
-                                        data-placeholder="Selecione um tipo de instituição"
-                                        style="width: 100%;"
-                                        name="organization_type_id">
-                                        <option></option>
-                                        @foreach ($organizationTypes as $organizationType)
-                                            <option
-                                                value="{{ $organizationType->id }}"
-                                                {{ old('organization_type_id', isset($organization->organization_type_id) ? $organization->organization_type_id : null) == $organizationType->id ? 'selected' : '' }}>
-                                                {{ $organizationType->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-
-                                    @error('organization_type_id')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <!-- causes --->
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="causes">Causas</label>
-                                    <select
-                                        class="form-control select2  @error('causes') is-invalid @enderror"
-                                        multiple="multiple"
-                                        data-placeholder="Selecione uma ou mais causas"
-                                        style="width: 100%;" name="causes[]">
-                                        <option></option>
-                                        @foreach ($causes as $cause)
-                                            <option value="{{ $cause->id }}"
-                                                {{ in_array($cause->id, old('causes', isset($organization->causes) ? $organization->causes->pluck('id')->all() : [])) ? 'selected' : '' }}>
-                                                {{ $cause->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-
-                                    @error('causes')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- description -->
-                        <div class="form-group">
-                            <label for="description">Descrição</label>
-                            <textarea
-                                class="form-control @error('description') is-invalid @enderror"
-                                name="description"
-                                rows="3">{{ old('description', isset($organization->description) ? $organization->description : null) }}</textarea>
-                            @error('description')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="row">
-                            <!-- email -->
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="email">E-mail</label>
-                                    <div class="input-group">
-                                        <input type="text"
-                                            class="form-control @error('email') is-invalid @enderror"
-                                            name="email"
-                                            value="{{ old('email', isset($organization->email) ? $organization->email : null) }}">
-                                        @error('email')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- website -->
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="website">Website</label>
-                                    <div class="input-group">
-                                        <input type="text"
-                                            class="form-control @error('website') is-invalid @enderror"
-                                            name="website"
-                                            value="{{ old('website', isset($organization->website) ? $organization->website : null) }}">
-                                        @error('website')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- address -->
-
-
-                        <!-- phones -->
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="phone">Telefones</label>
-                                    <div class="phone-list">
-                                        @if (old('phones', null) || isset($organization->phones))
-                                            @php
-                                                $phones = isset($organization->phones) ? $organization->phones->pluck('number')->all() : old('phones');
-                                            @endphp
-                                            @foreach ($phones as $key => $phone)
-                                                <div
-                                                    class="input-group phone-input-group">
-                                                    <input type="text"
-                                                        name="phones[{{ $key }}]"
-                                                        class="form-control phone-input @error('phones.0') is-invalid @enderror"
-                                                        value="{{ $phone }}" />
-                                                    @if ($key > 0)
-                                                        <div
-                                                            class="input-group-prepend">
-                                                            <button
-                                                                class="btn btn-danger btn-remove-phone"
-                                                                type="button"><i
-                                                                    class="fas fa-times"></i></button>
-                                                        </div>
-                                                    @endif
-                                                </div>
-
-                                            @endforeach
-                                        @else
-                                            <div
-                                                class="input-group phone-input-group">
-                                                <input type="text" name="phones[0]"
-                                                    class="form-control phone-input @error('phones.0') is-invalid @enderror"
-                                                    placeholder="(99) 999999999" />
-                                            </div>
-                                            @error('phones.0')
-                                                <div class="invalid-feedback d-block">
-                                                    {{ $message }}</div>
-                                            @enderror
-                                        @endif
-
-                                    </div>
-                                    <button type="button"
-                                        class="btn btn-success btn-sm float-right btn-add-phone"><i
-                                            class="fas fa-plus"></i> Adicionar
-                                        Telefone </button>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-
-                            </div>
-                        </div>
-
-                        <!-- status -->
-                        <div class="form-group">
-                            <label for="status">Status</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio"
-                                    name="status"
-                                    value="{{ \App\Enums\StatusType::ACTIVE }}"
-                                    {{ old('status', isset($organization->status) ? $organization->status : null) == \App\Enums\StatusType::INACTIVE ? '' : 'checked' }}>
-                                <label class="form-check-label">Ativo</label>
-                            </div>
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio"
-                                    name="status"
-                                    value="{{ \App\Enums\StatusType::INACTIVE }}"
-                                    {{ old('status', isset($organization->status) ? $organization->status : null) == \App\Enums\StatusType::INACTIVE ? 'checked' : '' }}>
-                                <label class="form-check-label">Inativo</label>
-                            </div>
-
-                            @error('status')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <!-- /.card-body -->
-
-                    <div class="card-footer">
-                        <button type="submit" class="btn btn-success float-right">
-                            <i class="fas fa-save"></i> Salvar
-                        </button>
-                        <a class="btn btn-danger"
-                            href="{{ route('organizations.index') }}">
-                            <i class="fas fa-arrow-left"></i> Cancelar
-                        </a>
-                    </div>
-                </form>
-
-            </div>
-        </div>
+        </x-adminlte-input-file>
     </div>
-@stop
 
-@section('css')
-    <link rel="stylesheet" href="{{ asset('/css/panel.css') }}">
-@stop
+    <div class="row">
+        @php
+            $selectedOrganizationType = old('organization_type_id', $organization->organization_type_id ?? null);
+        @endphp
+        <x-adminlte-select
+            name="organization_type_id"
+            label="Tipo de Instituição"
+            fgroup-class="col-sm-6"
+        >
+            <option></option>
+            @foreach ($organizationTypes as $organizationType)
+                <option
+                    value="{{ $organizationType->id }}"
+                    {{ $selectedOrganizationType == $organizationType->id ? 'selected' : '' }}
+                >
+                    {{ $organizationType->name }}
+                </option>
+            @endforeach
+        </x-adminlte-select>
 
-@section('js')
-    <script src="{{ asset('/js/panel.js') }}"></script><s></s>
-@stop
+        <x-causes-select fgroup-class="col-sm-6" />
+
+    </div>
+
+    <div class="row">
+        <x-adminlte-textarea
+            name="description"
+            label="Descrição"
+            rows="3"
+            fgroup-class="col-sm-12"
+        >
+            {{ old('description', $organization->description ?? '') }}
+        </x-adminlte-textarea>
+    </div>
+
+    <div class="row">
+        <x-email-input
+            fgroup-class="col-md-6"
+            value="{{ old('email', $organization->email ?? '') }}"
+        />
+
+        <x-adminlte-input
+            type="text"
+            name="website"
+            label="Website"
+            fgroup-class="col-sm-6"
+            value="{{ old('name', $organization->website ?? '') }}"
+        />
+    </div>
+
+    @include('address', ['address' => isset($organization->address)?
+    $organization->address : null])
+
+    <div class="row">
+        {{-- phone --}}
+        <x-phone-panel />
+    </div>
+
+    <div class="row">
+
+        {{-- profile --}}
+        <x-form-group label="Status">
+            @php
+
+                $isActive = old('status', $user->status ?? StatusType::ACTIVE) == StatusType::ACTIVE;
+            @endphp
+
+            <x-radio
+                name="status"
+                label="Ativo"
+                value="{{ StatusType::ACTIVE }}"
+                checked="{{ $isActive }}"
+            >
+            </x-radio>
+
+            <x-radio
+                name="status"
+                label="Inativo"
+                value="{{ StatusType::INACTIVE }}"
+                checked="{{ !$isActive }}"
+            >
+            </x-radio>
+
+            @error('status')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </x-form-group>
+    </div>
+
+@endsection
