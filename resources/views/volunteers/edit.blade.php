@@ -19,8 +19,7 @@ use App\Enums\StatusType;
             name="first_name"
             label="Nome"
             fgroup-class="col-sm-4"
-            value="{{ old('first_name', $volunteer->user->first_name ?? '') }}"
-        />
+            value="{{ old('first_name', $volunteer->user->first_name ?? '') }}" />
 
         {{-- last_name --}}
         <x-adminlte-input
@@ -28,8 +27,7 @@ use App\Enums\StatusType;
             name="last_name"
             label="Sobrenome"
             fgroup-class="col-sm-4"
-            value="{{ old('last_name', $volunteer->user->last_name ?? '') }}"
-        />
+            value="{{ old('last_name', $volunteer->user->last_name ?? '') }}" />
 
         {{-- date_of_birth --}}
         <x-adminlte-input
@@ -38,8 +36,7 @@ use App\Enums\StatusType;
             label="Data de Nascimento"
             placeholder="dd/mm/aaaa"
             fgroup-class="col-md-4"
-            value="{{ old('date_of_birth', $volunteer->user->date_of_birth ?? '') }}"
-        >
+            value="{{ old('date_of_birth', $volunteer->user->date_of_birth ?? '') }}">
 
             <x-slot name="prependSlot">
                 <span class="input-group-text">
@@ -52,19 +49,18 @@ use App\Enums\StatusType;
 
     <div class="row">
         {{-- causes --}}
-        <x-causes-select fgroup-class="col-sm-6" />
+        <x-form.causes-select fgroup-class="col-sm-6" />
 
         {{-- skills --}}
-        <x-skills-select fgroup-class="col-sm-6" />
+        <x-form.skills-select fgroup-class="col-sm-6" />
     </div>
 
     <div class="row">
 
         {{-- email --}}
-        <x-email-input
+        <x-form.email-input
             fgroup-class="col-md-4"
-            value="{{ old('email', $volunteer->user->email ?? '') }}"
-        />
+            value="{{ old('email', $volunteer->user->email ?? '') }}" />
 
         {{-- password --}}
         <x-adminlte-input
@@ -72,8 +68,7 @@ use App\Enums\StatusType;
             name="password"
             label="Senha"
             fgroup-class="col-md-4"
-            value="{{ $volunteer->user->password ?? '' }}"
-        >
+            value="{{ $volunteer->user->password ?? '' }}">
 
             <x-slot name="prependSlot">
                 <span class="input-group-text">
@@ -90,8 +85,7 @@ use App\Enums\StatusType;
             label="Confirmação de Senha"
             fgroup-class="col-md-4"
             placeholder="Repita a senha"
-            value="{{ $volunteer->user->password ?? '' }}"
-        >
+            value="{{ $volunteer->user->password ?? '' }}">
 
             <x-slot name="prependSlot">
                 <span class="input-group-text">
@@ -102,42 +96,17 @@ use App\Enums\StatusType;
         </x-adminlte-input>
     </div>
 
-    <!-- status -->
-    <div class="row">
-        <x-form-group label="Status">
-            @php
-
-                $isActive = old('status', $volunteer->user->status ?? StatusType::ACTIVE) == StatusType::ACTIVE;
-            @endphp
-
-            <x-radio
-                name="status"
-                label="Ativo"
-                value="{{ StatusType::ACTIVE }}"
-                checked="{{ $isActive }}"
-            >
-            </x-radio>
-
-            <x-radio
-                name="status"
-                label="Inativo"
-                value="{{ StatusType::INACTIVE }}"
-                checked="{{ !$isActive }}"
-            >
-            </x-radio>
-
-            @error('status')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </x-form-group>
-    </div>
+    {{-- status --}}
+    @php
+    $isActive = old('status', $volunteer->user->status ?? StatusType::ACTIVE) === StatusType::ACTIVE;
+    @endphp
+    <x-form.status-radio-group :isActive="$isActive" />
 @stop
 
 @section('css')
     <link
         rel="stylesheet"
-        href="{{ asset('/css/panel.css') }}"
-    >
+        href="{{ asset('/css/panel.css') }}">
 @stop
 
 @section('js')

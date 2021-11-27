@@ -16,39 +16,34 @@ use App\Enums\StatusType;
             name="name"
             label="Nome"
             fgroup-class="col-sm-6"
-            value="{{ $inputs->name ?? '' }}"
-        />
+            value="{{ $inputs->name ?? '' }}" />
 
         {{-- email --}}
-        <x-email-input
+        <x-form.email-input
             fgroup-class="col-sm-6"
-            value="{{ $inputs->email ?? '' }}"
-        />
+            value="{{ $inputs->email ?? '' }}" />
 
     </div>
 
     <div class="row">
 
         {{-- cause --}}
-        <x-causes-select fgroup-class="col-sm-6" />
+        <x-form.causes-select fgroup-class="col-sm-6" />
 
         {{-- status --}}
         <x-adminlte-select
             name="status"
             label="Status"
-            fgroup-class="col-sm-6"
-        >
+            fgroup-class="col-sm-6">
             <option></option>
             <option
                 value="active"
-                {{ isset($inputs->status) && $inputs->status == StatusType::ACTIVE ? 'selected' : '' }}
-            >
+                {{ isset($inputs->status) && $inputs->status == StatusType::ACTIVE ? 'selected' : '' }}>
                 Ativo
             </option>
             <option
                 value="inactive"
-                {{ isset($inputs->status) && $inputs->status == StatusType::INACTIVE ? 'selected' : '' }}
-            >
+                {{ isset($inputs->status) && $inputs->status == StatusType::INACTIVE ? 'selected' : '' }}>
                 Inativo
             </option>
         </x-adminlte-select>
@@ -68,8 +63,7 @@ use App\Enums\StatusType;
                 @foreach ($organization->causes as $cause)
                     <span
                         class="fa-stack fa-1x"
-                        title="{{ $cause->name }}"
-                    >
+                        title="{{ $cause->name }}">
                         <i class="fa fa-circle fa-stack-2x category-icon-background"></i>
                         <i class="fa fa-stack-1x category-icon"> &#x{{ $cause->fontawesome_icon_unicode }}; </i>
                     </span>
@@ -86,8 +80,7 @@ use App\Enums\StatusType;
             <td>
                 <a
                     class="btn btn-info btn-sm"
-                    href="{{ route('organizations.edit', $organization->id) }}"
-                >
+                    href="{{ route('organizations.edit', $organization->id) }}">
                     <i class="fas fa-pencil-alt"></i> Editar
                 </a>
 
@@ -95,8 +88,7 @@ use App\Enums\StatusType;
                     class="btn btn-danger btn-sm"
                     data-toggle="modal"
                     data-target="#modal-delete"
-                    onclick="deleteData('organizations',{{ $organization->id }})"
-                >
+                    onclick="deleteData('organizations',{{ $organization->id }})">
                     <i class="fas fa-trash"></i> Excluir
                 </button>
             </td>
@@ -106,8 +98,7 @@ use App\Enums\StatusType;
 
     <div
         class="modal fade"
-        id="modal-delete"
-    >
+        id="modal-delete">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -116,8 +107,7 @@ use App\Enums\StatusType;
                         type="button"
                         class="close"
                         data-dismiss="modal"
-                        aria-label="Close"
-                    >
+                        aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -128,19 +118,16 @@ use App\Enums\StatusType;
                     <button
                         type="button"
                         class="btn btn-default"
-                        data-dismiss="modal"
-                    >Cancelar</button>
+                        data-dismiss="modal">Cancelar</button>
                     <form
                         id="form-delete"
                         action=""
-                        method="post"
-                    >
+                        method="post">
                         @csrf
                         @method('DELETE')
                         <button
                             class="btn btn-danger"
-                            type="submit"
-                        >Excluir</button>
+                            type="submit">Excluir</button>
                     </form>
                 </div>
             </div>

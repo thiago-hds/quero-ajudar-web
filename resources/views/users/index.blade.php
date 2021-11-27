@@ -17,63 +17,41 @@ use App\Enums\StatusType;
             name="name"
             label="Nome"
             fgroup-class="col-sm-4"
-            value="{{ $inputs->name ?? '' }}"
-        />
+            value="{{ $inputs->name ?? '' }}" />
 
         {{-- email --}}
-        <x-email-input
+        <x-form.email-input
             fgroup-class="col-sm-4"
-            value="{{ $inputs->email ?? '' }}"
-        />
+            value="{{ $inputs->email ?? '' }}" />
 
         {{-- perfil --}}
-        <x-adminlte-select
-            name="profile"
-            label="Perfil"
+        <x-form.profile-select
             fgroup-class="col-sm-4"
-        >
-            <option></option>
-            <option
-                value="admin"
-                {{ isset($inputs->profile) && $inputs->profile == ProfileType::ADMIN ? 'selected' : '' }}
-            >
-                Administrador
-            </option>
-            <option
-                value="organization"
-                {{ isset($inputs->profile) && $inputs->profile == ProfileType::ORGANIZATION ? 'selected' : '' }}
-            >
-                Instituição
-            </option>
-        </x-adminlte-select>
+            selectedValue="{{ $inputs->profile ?? '' }}" />
 
 
     </div>
     <div class="row">
 
         {{-- organization --}}
-        <x-organization-select
+        <x-form.organization-select
             fgroup-class="col-md-6"
-            :selected="old('organization_id', $inputs->organization_id ?? null)"
-        />
+            :selected="old('organization_id', $inputs->organization_id ?? null)" />
 
         {{-- status --}}
         <x-adminlte-select
             name="status"
             label="Status"
-            fgroup-class="col-sm-6"
-        >
+            fgroup-class="col-sm-6">
             <option></option>
             <option
                 value="active"
-                {{ isset($inputs->status) && $inputs->status == StatusType::ACTIVE ? 'selected' : '' }}
-            >
+                {{ isset($inputs->status) && $inputs->status == StatusType::ACTIVE ? 'selected' : '' }}>
                 Ativo
             </option>
             <option
                 value="inactive"
-                {{ isset($inputs->status) && $inputs->status == StatusType::INACTIVE ? 'selected' : '' }}
-            >
+                {{ isset($inputs->status) && $inputs->status == StatusType::INACTIVE ? 'selected' : '' }}>
                 Inativo
             </option>
         </x-adminlte-select>
@@ -106,8 +84,7 @@ use App\Enums\StatusType;
                 @can('update', $user)
                     <a
                         class="btn btn-info btn-sm"
-                        href="{{ route('users.edit', $user->id) }}"
-                    >
+                        href="{{ route('users.edit', $user->id) }}">
                         <i class="fas fa-pencil-alt"></i>
                         Editar
                     </a>
@@ -117,8 +94,7 @@ use App\Enums\StatusType;
                         class="btn btn-danger btn-sm"
                         data-toggle="modal"
                         data-target="#modal-delete"
-                        onclick="deleteData('users',{{ $user->id }})"
-                    >
+                        onclick="deleteData('users',{{ $user->id }})">
                         <i class="fas fa-trash"></i>
                         Excluir
                     </button>

@@ -1,20 +1,19 @@
 <?php
 
-namespace App\View\Components;
+namespace App\View\Components\Form;
 
-use App\Cause;
+use App\Organization;
 use Illuminate\View\Component;
 
-class CausesSelect extends Component
+class OrganizationSelect extends Component
 {
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(public $selected)
     {
-        //
     }
 
     /**
@@ -25,12 +24,11 @@ class CausesSelect extends Component
     public function render()
     {
         $config = [
-            'placeholder' => 'Selecione as causas...',
+            'placeholder' => 'Selecione uma instituição...',
             'allowClear' => true,
-            'multiple' => true
         ];
-        $causes = Cause::all();
+        $organizations = Organization::all();
 
-        return view('components.causes-select', compact('config', 'causes'));
+        return view('components.form.organization-select', compact('config', 'organizations'));
     }
 }

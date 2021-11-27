@@ -22,8 +22,7 @@ $isAdminSelected = $selectedProfile === ProfileType::ADMIN || !isset($user);
             name="name"
             label="Nome"
             fgroup-class="col-sm-6"
-            value="{{ old('name', $organization->name ?? '') }}"
-        />
+            value="{{ old('name', $organization->name ?? '') }}" />
 
         {{-- logo --}}
         <x-adminlte-input-file
@@ -31,8 +30,7 @@ $isAdminSelected = $selectedProfile === ProfileType::ADMIN || !isset($user);
             label="Logo"
             fgroup-class="col-sm-6"
             placeholder="Escolha um arquivo..."
-            accept=".jpg,.jpeg,.gif,.png"
-        >
+            accept=".jpg,.jpeg,.gif,.png">
 
             <x-slot name="prependSlot">
                 <div class="input-group-text">
@@ -50,20 +48,18 @@ $isAdminSelected = $selectedProfile === ProfileType::ADMIN || !isset($user);
         <x-adminlte-select
             name="organization_type_id"
             label="Tipo de Instituição"
-            fgroup-class="col-sm-6"
-        >
+            fgroup-class="col-sm-6">
             <option></option>
             @foreach ($organizationTypes as $organizationType)
                 <option
                     value="{{ $organizationType->id }}"
-                    {{ $selectedOrganizationType == $organizationType->id ? 'selected' : '' }}
-                >
+                    {{ $selectedOrganizationType == $organizationType->id ? 'selected' : '' }}>
                     {{ $organizationType->name }}
                 </option>
             @endforeach
         </x-adminlte-select>
 
-        <x-causes-select fgroup-class="col-sm-6" />
+        <x-form.causes-select fgroup-class="col-sm-6" />
 
     </div>
 
@@ -72,64 +68,59 @@ $isAdminSelected = $selectedProfile === ProfileType::ADMIN || !isset($user);
             name="description"
             label="Descrição"
             rows="3"
-            fgroup-class="col-sm-12"
-        >
+            fgroup-class="col-sm-12">
             {{ old('description', $organization->description ?? '') }}
         </x-adminlte-textarea>
     </div>
 
     <div class="row">
-        <x-email-input
+        <x-form.email-input
             fgroup-class="col-md-6"
-            value="{{ old('email', $organization->email ?? '') }}"
-        />
+            value="{{ old('email', $organization->email ?? '') }}" />
 
         <x-adminlte-input
             type="text"
             name="website"
             label="Website"
             fgroup-class="col-sm-6"
-            value="{{ old('name', $organization->website ?? '') }}"
-        />
+            value="{{ old('name', $organization->website ?? '') }}" />
     </div>
 
-    @include('address', ['address' => isset($organization->address)?
-    $organization->address : null])
+    @include('address', ['address' => $organization->address ?? null])
 
     <div class="row">
         {{-- phone --}}
-        <x-phone-panel />
+        <x-form.phone-panel />
     </div>
 
     <div class="row">
 
         {{-- profile --}}
-        <x-form-group label="Status">
-            @php
+        @php
+            $isActive = old('status', $user->status ?? StatusType::ACTIVE) == StatusType::ACTIVE;
+        @endphp
+        <x-form.status-radio-group :isActive="$isActive" />
+        {{-- <x-form-group label="Status">
 
-                $isActive = old('status', $user->status ?? StatusType::ACTIVE) == StatusType::ACTIVE;
-            @endphp
 
             <x-radio
                 name="status"
                 label="Ativo"
                 value="{{ StatusType::ACTIVE }}"
-                checked="{{ $isActive }}"
-            >
+                checked="{{ $isActive }}">
             </x-radio>
 
             <x-radio
                 name="status"
                 label="Inativo"
                 value="{{ StatusType::INACTIVE }}"
-                checked="{{ !$isActive }}"
-            >
+                checked="{{ !$isActive }}">
             </x-radio>
 
             @error('status')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
-        </x-form-group>
+        </x-form-group> --}}
     </div>
 
 @endsection

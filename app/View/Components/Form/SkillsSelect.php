@@ -1,19 +1,20 @@
 <?php
 
-namespace App\View\Components;
+namespace App\View\Components\Form;
 
-use App\Organization;
+use App\Skill;
 use Illuminate\View\Component;
 
-class OrganizationSelect extends Component
+class SkillsSelect extends Component
 {
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct(public $selected)
+    public function __construct()
     {
+        //
     }
 
     /**
@@ -24,11 +25,12 @@ class OrganizationSelect extends Component
     public function render()
     {
         $config = [
-            'placeholder' => 'Selecione uma instituição...',
+            'placeholder' => 'Selecione as habilidades...',
             'allowClear' => true,
+            'multiple' => true
         ];
-        $organizations = Organization::all();
+        $skills = Skill::all();
 
-        return view('components.organization-select', compact('config', 'organizations'));
+        return view('components.form.skills-select', compact('config', 'skills'));
     }
 }

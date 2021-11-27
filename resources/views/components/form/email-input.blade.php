@@ -1,6 +1,14 @@
-<x-adminlte-input type="email" name="email" label="E-mail"
+@props([
+    'label' => 'Email',
+    'name' => 'email',
+    'value' => '',
+])
+<x-adminlte-input
+    type="email"
+    :name="$name"
     fgroup-class="{{ $attributes->get('fgroup-class') }}"
-    {{ $attributes->except('fgroup-class') }}>
+    :value="$value"
+    :label="$label">
     <x-slot name="prependSlot">
         <span class="input-group-text">
             <i class="fa fa-envelope"></i>

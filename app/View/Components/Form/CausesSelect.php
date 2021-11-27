@@ -1,11 +1,11 @@
 <?php
 
-namespace App\View\Components;
+namespace App\View\Components\Form;
 
-use App\Skill;
+use App\Cause;
 use Illuminate\View\Component;
 
-class SkillsSelect extends Component
+class CausesSelect extends Component
 {
     /**
      * Create a new component instance.
@@ -25,12 +25,12 @@ class SkillsSelect extends Component
     public function render()
     {
         $config = [
-            'placeholder' => 'Selecione as habilidades...',
+            'placeholder' => 'Selecione as causas...',
             'allowClear' => true,
             'multiple' => true
         ];
-        $skills = Skill::all();
+        $causes = Cause::all();
 
-        return view('components.skills-select', compact('config', 'skills'));
+        return view('components.form.causes-select', compact('config', 'causes'));
     }
 }
