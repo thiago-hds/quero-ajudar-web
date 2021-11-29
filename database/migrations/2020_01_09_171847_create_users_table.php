@@ -18,7 +18,7 @@ class CreateUsersTable extends Migration
             $table->bigInteger('organization_id')->unsigned()->nullable();
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('email'); 
+            $table->string('email');
             $table->string('password');
             $table->tinyInteger('profile')->default(0);
             $table->date('date_of_birth')->nullable();

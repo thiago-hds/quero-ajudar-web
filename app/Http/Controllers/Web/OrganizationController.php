@@ -17,7 +17,7 @@ class OrganizationController extends Controller
 {
 
     public function __construct()
-    {   
+    {
         $this->middleware('auth');
         $this->authorizeResource(\App\Organization::class);
     }
@@ -31,21 +31,20 @@ class OrganizationController extends Controller
     public function index(Request $request)
     {
         // separacao dos campos de filtragem por tipo de comparacao
-        $equalFields    =   ['status']; 
+        $equalFields    =   ['status'];
         $likeFields     =   ['name', 'email'];
 
         $inputs = $request->all();
 
         // definir clausulas where
-        $whereClauses = []; 
+        $whereClauses = [];
 
-        foreach($inputs as $key => $input){
-            if($input && in_array($key, array_merge($equalFields, $likeFields))){
-                if(in_array($key,$equalFields)){
+        foreach ($inputs as $key => $input) {
+            if ($input && in_array($key, array_merge($equalFields, $likeFields))) {
+                if (in_array($key, $equalFields)) {
                     $whereClauses[] = [$key, '=', $input];
-                }
-                else{
-                    $whereClauses[] = [$key, 'like', '%'.$input.'%'];
+                } else {
+                    $whereClauses[] = [$key, 'like', '%' . $input . '%'];
                 }
             }
         }
@@ -53,7 +52,7 @@ class OrganizationController extends Controller
         $organizations = Organization::where($whereClauses);
 
         $cause_id = $request->input('cause_id');
-        if(isset($cause_id) && $cause_id !== ''){
+        if (isset($cause_id) && $cause_id !== '') {
             $organizations = $organizations->whereHas('causes', function (Builder $query) use ($cause_id) {
                 $query->where('id', '=', $cause_id);
             });
@@ -78,7 +77,7 @@ class OrganizationController extends Controller
         $causes = Cause::orderBy('name', 'asc')->get();
         $states = State::orderBy('name', 'asc')->get();
 
-        return view('organizations.edit', compact('organizationTypes','causes', 'states'));
+        return view('organizations.edit', compact('organizationTypes', 'causes', 'states'));
     }
 
     /**
@@ -97,9 +96,9 @@ class OrganizationController extends Controller
             'status'            => $request->input('status')
         ]);
 
-        if($request->hasFile('logo') && $request->file('logo')->isValid()){
+        if ($request->hasFile('logo') && $request->file('logo')->isValid()) {
             $path = $this->saveImage($request->file('logo'));
-            if($path){
+            if ($path) {
                 $organization->logo = $path;
             }
         }
@@ -109,7 +108,7 @@ class OrganizationController extends Controller
 
         $organization->causes()->sync($request->input('causes'));
 
-        
+
         $organization->address()->create([
             'zipcode'           => $request->input('address_zipcode'),
             'street'            => $request->input('address_street'),
@@ -117,8 +116,8 @@ class OrganizationController extends Controller
             'neighborhood'      => $request->input('address_neighborhood'),
             'city_id'           => $request->input('address_city'),
         ]);
-        
-        foreach($request->input('phones') as $number){
+
+        foreach ($request->input('phones') as $number) {
             $number = preg_replace('/[() ]/', '', $number);
             $organization->phones()->save(new Phone(['number' => $number]));
         }
@@ -148,7 +147,7 @@ class OrganizationController extends Controller
         $organizationTypes = OrganizationType::orderBy('name', 'asc')->get();
         $causes = Cause::orderBy('name', 'asc')->get();
         $states = State::orderBy('name', 'asc')->get();
-        return view('organizations.edit', compact('organizationTypes','causes','organization','states')); 
+        return view('organizations.edit', compact('organizationTypes', 'causes', 'organization', 'states'));
     }
 
     /**
@@ -168,9 +167,9 @@ class OrganizationController extends Controller
             'status'            => $request->input('status')
         ]);
 
-        if($request->hasFile('logo') && $request->file('logo')->isValid()){
+        if ($request->hasFile('logo') && $request->file('logo')->isValid()) {
             $path = $this->saveImage($request->file('logo'));
-            if($path){
+            if ($path) {
                 $organization->logo = $path;
                 $organization->save();
             }
@@ -186,9 +185,9 @@ class OrganizationController extends Controller
             'neighborhood'      => $request->input('address_neighborhood'),
             'city_id'           => $request->input('address_city'),
         ]);
-        
+
         $organization->phones()->delete();
-        foreach($request->input('phones') as $number){
+        foreach ($request->input('phones') as $number) {
             $number = preg_replace('/[() ]/', '', $number);
             $organization->phones()->create([
                 'number' => $number
@@ -196,7 +195,6 @@ class OrganizationController extends Controller
         }
 
         return redirect('/organizations')->with('success', 'Instituição atualizada!');
-
     }
 
     /**
@@ -211,7 +209,8 @@ class OrganizationController extends Controller
         return redirect('/organization')->with('success', 'Instituição excluída!');
     }
 
-    private function saveImage(UploadedFile $file){
+    private function saveImage(UploadedFile $file)
+    {
         $name = uniqid(date('HisYmd'));
         $extension = $file->extension();
         $nameFile = "{$name}.{$extension}";

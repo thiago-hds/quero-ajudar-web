@@ -19,7 +19,7 @@ class CreateOrganizationsTable extends Migration
             $table->string('name');
             $table->string('email');
             $table->string('website')->nullable();
-            $table->string('description');
+            $table->text('description');
             $table->string('logo')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->timestamps();

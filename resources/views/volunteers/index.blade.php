@@ -1,214 +1,118 @@
-@extends('adminlte::page')
+@php
+use App\Enums\StatusType;
+@endphp
 
-@section('title', 'Voluntários')
+@extends('layout.index', [
+'title' => "Voluntários",
+'cols' => ['Nome', 'E-mail','Causas','Habilidades', 'Status','Ações'],
+'collection' => $volunteers
+])
 
-@section('content_header')
-    <div class="col-sm-12">
-        @if(session()->get('success'))
-            <div class="alert alert-success">
-            {{ session()->get('success') }}  
-            </div>
-        @endif
+@section('fields')
+    <div class="row">
+        {{-- name --}}
+        <x-adminlte-input
+            type="text"
+            name="name"
+            label="Nome"
+            fgroup-class="col-sm-4"
+            value="{{ $inputs->name ?? '' }}" />
+
+        {{-- email --}}
+        <x-form.email-input
+            fgroup-class="col-sm-4"
+            value="{{ $inputs->email ?? '' }}" />
+
+        {{-- status --}}
+        <x-adminlte-select
+            name="status"
+            label="Status"
+            fgroup-class="col-sm-4">
+            <option></option>
+            <option
+                value="active"
+                {{ isset($inputs->status) && $inputs->status == StatusType::ACTIVE ? 'selected' : '' }}>
+                Ativo
+            </option>
+            <option
+                value="inactive"
+                {{ isset($inputs->status) && $inputs->status == StatusType::INACTIVE ? 'selected' : '' }}>
+                Inativo
+            </option>
+        </x-adminlte-select>
     </div>
-    <h1 class="m-0 text-dark">Voluntários</h1>
-@stop
-
-@section('content')
 
     <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <form action="" method="GET">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="name">Nome</label>
-                                    <input type="text" class="form-control" name="name" value="{{ isset($inputs->name)? $inputs->name : '' }}">
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="email">E-mail</label>
-                                    <input type="text" class="form-control" name="email" value="{{ isset($inputs->email)? $inputs->email : '' }}">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <!-- cause_id -->
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label for="cause_id">Causa</label>
-                                    <select class="form-control select2" data-placeholder="Selecione uma causa" style="width: 100%;" name="cause_id" >
-                                        <option></option>
-                                        @foreach($causes as $cause)
-                                            <option value="{{ $cause->id }}" {{ (isset($inputs->cause_id) && $inputs->cause_id == $cause->id)? 'selected' : '' }}>
-                                                {{ $cause->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
+        {{-- cause --}}
+        <x-form.causes-select fgroup-class="col-sm-6" />
 
-                            <!-- skill_id -->
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label for="skill_id">Habilidade</label>
-                                    <select class="form-control select2" data-placeholder="Selecione uma habilidade" style="width: 100%;" name="skill_id" >
-                                        <option></option>
-                                        @foreach($skills as $skill)
-                                            <option value="{{ $skill->id }}" {{ (isset($inputs->skill_id) && $inputs->skill_id == $skill->id)? 'selected' : '' }}>
-                                                {{ $skill->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label for="status">Status</label>
-                                    <select class="form-control" name="status">
-                                        <option></option>
-                                        <option value="active" {{ (isset($inputs->status) && $inputs->status == \App\Enums\StatusType::ACTIVE)? 'selected' : '' }}>Ativo</option>
-                                        <option value="inactive" {{ (isset($inputs->status) && $inputs->status == \App\Enums\StatusType::INACTIVE)? 'selected' : '' }}>Inativo</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <button type="submit" class="btn btn-primary float-right">
-                            <i class="fas fa-search"></i>  Buscar
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+        {{-- skill --}}
+        <x-form.skills-select fgroup-class="col-sm-6" />
     </div>
-    
+@endsection
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        {{ $volunteers->links() }}
-                    </div>
-                    <div class="row">
-                        <table id="example2" class="table table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>E-mail</th>
-                                    <th>Causas</th>
-                                    <th>Habilidades</th>
-                                    <th>Status</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            @foreach($volunteers as $volunteer)
-                                <tbody>
-                                    <tr>
-                                        <!-- name -->
-                                        <td> {{ $volunteer->user->first_name}}  {{$volunteer->user->last_name }} </td>
+@section('table-rows')
+    @foreach ($volunteers as $volunteer)
 
-                                        <!-- email -->
-                                        <td> {{ $volunteer->user->email }} </td>
+        <tr>
+            <!-- name -->
+            <td>
+                {{ $volunteer->user->first_name }} {{ $volunteer->user->last_name }}
+            </td>
 
-                                        <!-- causes -->
-                                        <td> 
-                                            @foreach($volunteer->causes as $cause)
-                                                <span class="fa-stack fa-1x" title="{{ $cause->name }}">
-                                                    <i class="fa fa-circle fa-stack-2x category-icon-background"></i>
-                                                    <i class="fa fa-stack-1x category-icon"> &#x{{ $cause->fontawesome_icon_unicode }}; </i>
-                                                </span>
-                                            @endforeach
-                                        </td>
-                                        <!-- skils -->
-                                        <td> 
-                                            @foreach($volunteer->skills as $skill)
-                                                <span class="fa-stack fa-1x" title="{{ $skill->name }}">
-                                                    <i class="fa fa-circle fa-stack-2x category-icon-background"></i>
-                                                    <i class="fa fa-stack-1x category-icon"> &#x{{ $skill->fontawesome_icon_unicode }}; </i>
-                                                </span>
-                                            @endforeach
-                                        </td>
+            <!-- email -->
+            <td> {{ $volunteer->user->email }} </td>
 
-                                        <!-- status -->
-                                        <td> 
-                                            <span class="badge badge-{{$volunteer->user->status == \App\Enums\StatusType::ACTIVE? 'success' : 'danger'}}">
-                                                {{ $volunteer->user->status == \App\Enums\StatusType::ACTIVE? 'ativo' : 'inativo'}}
-                                            </span>
-                                        </td>
+            <!-- causes -->
+            <td>
+                @foreach ($volunteer->causes as $cause)
+                    <span
+                        class="fa-stack fa-1x"
+                        title="{{ $cause->name }}">
+                        <i class="fa fa-circle fa-stack-2x category-icon-background"></i>
+                        <i class="fa fa-stack-1x category-icon">
+                            &#x{{ $cause->fontawesome_icon_unicode }}; </i>
+                    </span>
+                @endforeach
+            </td>
+            <!-- skils -->
+            <td>
+                @foreach ($volunteer->skills as $skill)
+                    <span
+                        class="fa-stack fa-1x"
+                        title="{{ $skill->name }}">
+                        <i class="fa fa-circle fa-stack-2x category-icon-background"></i>
+                        <i class="fa fa-stack-1x category-icon">
+                            &#x{{ $skill->fontawesome_icon_unicode }}; </i>
+                    </span>
+                @endforeach
+            </td>
 
-                                        <!-- actions -->
-                                        <td>
-                                            <a class="btn btn-info btn-sm" href="{{ route('volunteers.edit',$volunteer->user->id)}}">
-                                                <i class="fas fa-pencil-alt"></i>  Editar
-                                            </a>
-                                            <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal-delete" onclick="deleteData('volunteers',{{$volunteer->user->id}})" >
-                                                <i class="fas fa-trash"></i> Excluir
-                                            </button>
+            <!-- status -->
+            <td>
+                <span
+                    class="badge badge-{{ $volunteer->user->status == \App\Enums\StatusType::ACTIVE ? 'success' : 'danger' }}">
+                    {{ $volunteer->user->status == \App\Enums\StatusType::ACTIVE ? 'ativo' : 'inativo' }}
+                </span>
+            </td>
 
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            @endforeach
-                                
-                            <tfoot>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>E-mail</th>
-                                    <th>Causas</th>
-                                    <th>Habilidades</th>
-                                    <th>Status</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                    <div class="row">
-                        {{ $volunteers->links() }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+            <!-- actions -->
+            <td>
+                <a
+                    class="btn btn-info btn-sm"
+                    href="{{ route('volunteers.edit', $volunteer->user->id) }}">
+                    <i class="fas fa-pencil-alt"></i> Editar
+                </a>
+                <button
+                    class="btn btn-danger btn-sm"
+                    data-toggle="modal"
+                    data-target="#modal-delete"
+                    onclick="deleteData('volunteers',{{ $volunteer->user->id }})">
+                    <i class="fas fa-trash"></i> Excluir
+                </button>
 
-    <div class="modal fade" id="modal-delete">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Confirmação de Exclusão</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Você tem certeza que deseja excluir o voluntário?</p>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                    <form id="form-delete" action="" method="post">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-danger" type="submit">Excluir</button>
-                    </form>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal -->
-
-
-@stop
-
-@section('css')
-    <link rel="stylesheet" href="{{ asset('/css/panel.css') }}">
-@stop
-
-@section('js')
-    <script src="{{ asset('/js/panel.js') }}"></script><s></s>
-@stop
+            </td>
+        </tr>
+        </tbody>
+    @endforeach
+@endsection

@@ -7,7 +7,6 @@ use App\User;
 use App\Organization;
 use App\Http\Requests\Web\UserRequest;
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +16,7 @@ class UserController extends Controller
 {
 
     public function __construct()
-    {   
+    {
         $this->middleware('auth');
         $this->authorizeResource(\App\User::class);
     }
@@ -30,31 +29,30 @@ class UserController extends Controller
     public function index(Request $request)
     {
         // separacao dos campos de filtragem por tipo de comparacao
-        $equalFields    =   ['profile', 'organization_id', 'status']; 
+        $equalFields    =   ['profile', 'organization_id', 'status'];
         $likeFields     =   ['email'];
-        
+
         $inputs = $request->all();
 
         // definir clausulas where
         $whereClauses = [['profile','!=', ProfileType::VOLUNTEER]];
 
-        if(Auth::user()->profile == ProfileType::ORGANIZATION){
+        if (Auth::user()->profile == ProfileType::ORGANIZATION) {
             $inputs['organization_id'] = Auth::user()->organization_id;
         }
 
-        foreach($inputs as $key => $input){
-            if($input && in_array($key, array_merge($equalFields, $likeFields))){
-                if(in_array($key,$equalFields)){
+        foreach ($inputs as $key => $input) {
+            if ($input && in_array($key, array_merge($equalFields, $likeFields))) {
+                if (in_array($key, $equalFields)) {
                     $whereClauses[] = [$key, '=', $input];
-                }
-                else{
-                    $whereClauses[] = [$key, 'like', '%'.$input.'%'];
+                } else {
+                    $whereClauses[] = [$key, 'like', '%' . $input . '%'];
                 }
             }
         }
         $users = User::where($whereClauses);
 
-        if($name = $request->get('name')){
+        if ($name = $request->get('name')) {
             $users->whereRaw("CONCAT(first_name, ' ', last_name) like '%{$name}%'");
         }
 
@@ -62,7 +60,7 @@ class UserController extends Controller
         $inputs = (object) $inputs;
         $users = $users->orderBy('first_name', 'asc')->paginate(10);
         $organizations = Organization::orderBy('name', 'asc')->get();
-        
+
         return view('users.index', compact('inputs', 'users', 'organizations'));
     }
 
@@ -74,6 +72,7 @@ class UserController extends Controller
     public function create()
     {
         $organizations = Organization::orderBy('name', 'asc')->get();
+        // return view('edit', compact('organizations'));
         return view('users.edit', compact('organizations'));
     }
 
@@ -89,20 +88,19 @@ class UserController extends Controller
             'first_name'        => $request->input('first_name'),
             'last_name'         => $request->input('last_name'),
             'date_of_birth'     => $request->input('date_of_birth'),
-            'profile'           => Auth::user()->isAdmin()? $request->input('profile') : ProfileType::ORGANIZATION,
+            'profile'           => Auth::user()->isAdmin() ? $request->input('profile') : ProfileType::ORGANIZATION,
             'email'             => $request->input('email'),
             'password'          => Hash::make($request->input('password')),
             'status'            => $request->input('status')
         ]);
-        
-        if(!Auth::user()->isAdmin()){
+
+        if (!Auth::user()->isAdmin()) {
             $organization = Organization::find(Auth::user()->organization_id);
-        }
-        elseif($user->profile == ProfileType::ORGANIZATION){
+        } elseif ($user->profile == ProfileType::ORGANIZATION) {
             $organization = Organization::find($request->input('organization_id'));
         }
 
-        if(isset($organization)){
+        if (isset($organization)) {
             $user->organization()->associate($organization);
         }
 
@@ -119,7 +117,7 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $organizations = Organization::all();
-        return view('users.edit', compact('user','organizations'));   
+        return view('users.edit', compact('user', 'organizations'));
     }
 
     /**
@@ -132,7 +130,7 @@ class UserController extends Controller
     {
         $user = Auth::user();
         $organizations = Organization::all();
-        return view('users.edit', compact('user','organizations'));   
+        return view('users.edit', compact('user', 'organizations'));
     }
 
     /**
@@ -143,28 +141,27 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(UserRequest $request, User $user)
-    {   
+    {
         $user->update([
             'first_name'        => $request->input('first_name'),
             'last_name'         => $request->input('last_name'),
             'date_of_birth'     => $request->input('date_of_birth'),
-            'profile'           => Auth::user()->isAdmin()? $request->input('profile') : ProfileType::ORGANIZATION,
+            'profile'           => Auth::user()->isAdmin() ? $request->input('profile') : ProfileType::ORGANIZATION,
             'email'             => $request->input('email'),
             'status'            => $request->input('status')
         ]);
-        
-        if(!Auth::user()->isAdmin()){
+
+        if (!Auth::user()->isAdmin()) {
             $organization = Organization::find(Auth::user()->organization_id);
-        }
-        elseif($user->profile == ProfileType::ORGANIZATION){
+        } elseif ($user->profile == ProfileType::ORGANIZATION) {
             $organization = Organization::find($request->input('organization_id'));
         }
 
-        if(isset($organization)){
+        if (isset($organization)) {
             $user->organization()->associate($organization);
         }
-        
-        if($request->input('password') != $user->password){
+
+        if ($request->input('password') != $user->password) {
             $user->password = Hash::make($request->input('password'));
         }
         $user->save();
