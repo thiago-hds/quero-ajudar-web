@@ -6,6 +6,6 @@ use BenSampo\Enum\Enum;
 
 final class StatusType extends Enum
 {
-    const INACTIVE  =   0;
-    const ACTIVE    =   1;
+    public const INACTIVE  =   0;
+    public const ACTIVE    =   1;
 }

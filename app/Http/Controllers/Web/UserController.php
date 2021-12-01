@@ -56,9 +56,14 @@ class UserController extends Controller
             $users->whereRaw("CONCAT(first_name, ' ', last_name) like '%{$name}%'");
         }
 
+        // TODO test
+        $users = User::latest()
+            ->filter(request(['name','email','profile', 'organization_id', 'status']))
+            ->paginate(10);
+
         // retornar view com dados
         $inputs = (object) $inputs;
-        $users = $users->orderBy('first_name', 'asc')->paginate(10);
+        // $users = $users->orderBy('first_name', 'asc')->paginate(10);
         $organizations = Organization::orderBy('name', 'asc')->get();
 
         return view('users.index', compact('inputs', 'users', 'organizations'));

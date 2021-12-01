@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(StatesTableSeeder::class);
         $this->call(CitiesTableSeeder::class);
-        $this->call(OrganizationsTableSeeder::class);
+        $this->call(OrganizationsSeeder::class);
         //$this->call(VacanciesTableSeeder::class);
     }
 }

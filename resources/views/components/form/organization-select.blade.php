@@ -7,11 +7,10 @@
             <i class="fas fa-fw fa-building "></i>
         </span>
     </x-slot>
-
     <option></option>
     @foreach ($organizations as $organization)
         <option value="{{ $organization->id }}"
-            {{ $organization->id === $selected ? 'selected' : '' }}>
+            {{ $organization->id == $selected ? 'selected' : '' }}>
             {{ $organization->name }}
         </option>
     @endforeach

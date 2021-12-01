@@ -4,7 +4,7 @@
     'value' => '',
 ])
 <x-adminlte-input
-    type="email"
+    type="text"
     :name="$name"
     fgroup-class="{{ $attributes->get('fgroup-class') }}"
     :value="$value"
