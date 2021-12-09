@@ -1,6 +1,23 @@
 var cityId = null;
 
 $(document).ready(function () {
+    // Index page
+
+    // inclui a rota correta de remoção no modal de confirmação
+    //ao clicar no botão deletar de algum item da tabela
+    function updateDeleteConfirmationModal(resource, id) {
+        const url = `/${resource}/${id}`;
+        $("#form-delete").attr("action", url);
+    }
+
+    $(".btn-delete").on("click", function () {
+        console.log("delete");
+        const { resource, id } = this.dataset;
+        console.log(resource, id);
+        if (!resource || !id) return;
+        updateDeleteConfirmationModal(resource, id);
+    });
+
     // $(".select2").select2({ allowClear: true });
     $(".date-input").inputmask("99/99/9999");
     $(".phone-input").inputmask("(99) 99999999[9]");
@@ -10,7 +27,7 @@ $(document).ready(function () {
 
     // controle de exibição select de instituições no cadastro de usuários
     $("input[name=profile]").change(function () {
-        if (this.value == "1") {
+        if (this.value == "organization") {
             $(".organization-container").show(300);
         } else {
             $(".organization-container").hide(300);
@@ -109,17 +126,6 @@ $(document).ready(function () {
         }
     );
 });
-
-// inclui a rota correta de remoção no modal de confirmação
-//ao clicar no botão deletar de algum item da tabela
-function deleteData(resource, id) {
-    var url = "/:resource/:id";
-
-    url = url.replace(":resource", resource);
-    url = url.replace(":id", id);
-
-    $("#form-delete").attr("action", url);
-}
 
 // adiciona um novo input de telefone no form
 function addNewPhoneInput() {

@@ -3,6 +3,7 @@
 namespace App\View\Components\Form;
 
 use App\Organization;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Component;
 
 class OrganizationSelect extends Component
@@ -26,6 +27,7 @@ class OrganizationSelect extends Component
         $config = [
             'placeholder' => 'Selecione uma instituição...',
             'allowClear' => true,
+            'disabled' => Auth::user()->isOrganization(),
         ];
         $organizations = Organization::all();
 

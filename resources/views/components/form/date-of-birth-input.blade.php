@@ -8,7 +8,8 @@
     :label="$label"
     fgroup-class="{{ $attributes->get('fgroup-class') }}"
     placeholder='dd/mm/aaaa'
-    :value="$value">
+    :value="$value"
+    class="date-input">
 
     <x-slot name="prependSlot">
         <span class="input-group-text">

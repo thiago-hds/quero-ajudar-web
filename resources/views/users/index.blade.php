@@ -27,7 +27,9 @@ use App\Enums\StatusType;
         {{-- profile --}}
         <x-form.profile-select
             fgroup-class="col-sm-4"
-            selectedValue="{{ request('profile') ?? '' }}" />
+            selectedValue="{{ request()->user()->isOrganization()
+                ? ProfileType::ORGANIZATION
+                : request('profile') }}" />
 
     </div>
     <div class="row">
@@ -35,7 +37,7 @@ use App\Enums\StatusType;
         {{-- organization --}}
         <x-form.organization-select
             fgroup-class="col-md-6"
-            :selected="request('organization_id')" />
+            :selected="request()->user()->isOrganization() ? request()->user()->organization_id : request('organization_id')" />
 
         {{-- status --}}
         <x-form.status-select fgroup-class="col-md-6"
@@ -72,10 +74,11 @@ use App\Enums\StatusType;
                 @endcan
                 @can('delete', $user)
                     <button
-                        class="btn btn-danger btn-sm"
+                        class="btn btn-danger btn-sm btn-delete"
                         data-toggle="modal"
                         data-target="#modal-delete"
-                        onclick="deleteData('users',{{ $user->id }})">
+                        data-resource="users"
+                        data-id="{{ $user->id }}">
                         <i class="fas fa-trash"></i>
                         Excluir
                     </button>
