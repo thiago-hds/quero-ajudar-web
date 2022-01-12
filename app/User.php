@@ -6,7 +6,6 @@ use App\Enums\ProfileType;
 use Carbon\Carbon;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -23,7 +22,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'first_name', 'last_name', 'status', 'email',
-         'password', 'profile', 'date_of_birth', 'organization_id'
+        'password', 'profile', 'date_of_birth', 'organization_id'
     ];
 
     /**
@@ -76,47 +75,6 @@ class User extends Authenticatable
         }
     }
 
-    // public function index()
-    // {
-    //     $posts = Post::latest()
-    //         ->filter(request(['search', 'category', 'author']))
-    //         ->with('category', 'author')
-    //         ->paginate(6)->withQueryString();
-
-    //     return view('posts.index', [
-    //         'posts' => $posts
-    //     ]);
-    // }
-
-    // public function scopeFilter($query, $filters)
-    // {
-
-    //     $query->when($filters['search'] ?? false, fn($query, $search) =>
-    //         $query->where(fn($query) =>
-    //             $query
-    //                 ->where('title', 'like', '%' . $search . '%')
-    //                 ->orWhere('body', 'like', '%' . $search . '%')));
-
-    //     // uma forma de implementar o filtro de categorias é a seguinte
-    //     // $query->when($filters['category'] ?? false, function($query, $category){
-    //     //     $query->whereExists(fn($query) =>
-    //     //         $query->from('categories')
-    //     //             ->whereColumn('categories.id','posts.category_id')
-    //     //             ->where('categories.slug', $category));
-    //     // });
-
-    //     // outra forma de implementar o filtro de categorias
-    //     $query->when($filters['category'] ?? false, function ($query, $category) {
-    //         $query->whereHas('category', fn($query) =>
-    //             $query->where('slug', $category));
-    //     });
-
-    //     $query->when($filters['author'] ?? false, function ($query, $author) {
-    //         $query->whereHas('author', fn($query) =>
-    //             $query->where('username', $author));
-    //     });
-    // }
-
     /**
      * Checks if user is admin
      *
@@ -127,16 +85,29 @@ class User extends Authenticatable
         return $this->attributes['profile'] === ProfileType::ADMIN;
     }
 
+    /**
+     * Checks if user is volunteer
+     *
+     * @return boolean
+     */
     public function isVolunteer()
     {
         return $this->attributes['profile'] === ProfileType::VOLUNTEER;
     }
 
+    /**
+     * Checks if user is organization
+     *
+     * @return boolean
+     */
     public function isOrganization()
     {
         return $this->attributes['profile'] === ProfileType::ORGANIZATION;
     }
 
+    /**
+     * Get the volunteer model related with this user
+     */
     public function volunteer()
     {
         return $this->hasOne('App\Volunteer', 'user_id');
@@ -150,22 +121,25 @@ class User extends Authenticatable
         return $this->belongsTo('App\Organization');
     }
 
-    public function phones()
-    {
-        return $this->morphMany('App\Phone', 'owner');
-    }
-
+    /**
+     * Get the user's complete name
+     */
     public function getCompleteNameAttribute($value)
     {
         return sprintf("%s %s", $this->first_name, $this->last_name);
     }
 
-
+    /**
+     * Get the user's date of birth formatted
+     */
     public function getDateOfBirthAttribute($value)
     {
         return Carbon::parse($value)->format('d/m/Y');
     }
 
+    /**
+     * Set the user's date of birth
+     */
     public function setDateOfBirthAttribute($value)
     {
         $this->attributes['date_of_birth'] = Carbon::createFromFormat('d/m/Y', $value)->toDateString();
