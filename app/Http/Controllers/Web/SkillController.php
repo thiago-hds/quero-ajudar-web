@@ -11,7 +11,7 @@ class SkillController extends Controller
 {
 
     public function __construct()
-    {   
+    {
         $this->middleware('auth');
         $this->authorizeResource(\App\Skill::class);
     }
@@ -22,14 +22,14 @@ class SkillController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {   
+    {
         $inputs = (object) $request->all();
-        if(!isset($inputs->name)){
+        if (!isset($inputs->name)) {
             $inputs->name = '';
         }
         $type = 'skills';
-        $categories = Skill::where('name','like', '%'. $inputs->name.'%')->orderBy('name', 'asc')->paginate(10);
-        return view('categories.index', compact('type','categories', 'inputs'));
+        $categories = Skill::where('name', 'like', '%' . $inputs->name . '%')->orderBy('name', 'asc')->paginate(10);
+        return view('categories.index', compact('type', 'categories', 'inputs'));
     }
 
     /**

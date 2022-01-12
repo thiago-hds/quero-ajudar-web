@@ -11,16 +11,14 @@
     <div class="card">
         <form
             action=""
-            method="GET"
-        >
+            method="GET">
             <div class="card-body">
                 @yield('fields')
             </div>
             <div class="card-footer">
                 <button
                     type="submit"
-                    class="btn btn-primary float-right"
-                >
+                    class="btn btn-primary float-right">
                     <i class="fas fa-search"></i> Buscar
                 </button>
             </div>
@@ -60,16 +58,15 @@
         </div>
     </div>
 
-
+    <x-modal-confirm-delete />
 @endsection
 
 @section('css')
     <link
         rel="stylesheet"
-        href="{{ asset('/css/panel.css') }}"
-    />
+        href="{{ asset('/css/style.css') }}" />
 @endsection
 
 @section('js')
-    <script src="{{ asset('/js/panel.js') }}"></script>
+    <script src="{{ asset('/js/script.js') }}"></script>
 @endsection

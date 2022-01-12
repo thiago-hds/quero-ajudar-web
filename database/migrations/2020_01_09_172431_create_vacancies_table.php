@@ -37,7 +37,7 @@ class CreateVacanciesTable extends Migration
             $table->date('promotion_end_date')->nullable();
             $table->integer('application_limit')->nullable();
             $table->string('image')->nullable();
-            $table->tinyInteger('status')->default(1);
+            $table->boolean('status')->default(\App\Enums\StatusType::ACTIVE);
             $table->timestamps();
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('restrict');
         });

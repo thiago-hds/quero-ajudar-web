@@ -4,18 +4,18 @@
     'selectedValue' => null,
 ])
 <x-adminlte-select
-    name="profile"
-    label="Perfil"
+    name="{{ $name }}"
+    label="{{ $label }}"
     fgroup-class="{{ $attributes->get('fgroup-class') }}">
     <option></option>
     <option
         value="{{ \App\Enums\ProfileType::ADMIN }}"
-        {{ $selectedValue ?? '' === \App\Enums\ProfileType::ADMIN ? 'selected' : '' }}>
+        {{ ($selectedValue ?? '') === \App\Enums\ProfileType::ADMIN ? 'selected' : '' }}>
         Administrador
     </option>
     <option
         value="{{ \App\Enums\ProfileType::ORGANIZATION }}"
-        {{ $selectedValue ?? '' === \App\Enums\ProfileType::ORGANIZATION ? 'selected' : '' }}>
+        {{ ($selectedValue ?? '') === \App\Enums\ProfileType::ORGANIZATION ? 'selected' : '' }}>
         Instituição
     </option>
 </x-adminlte-select>

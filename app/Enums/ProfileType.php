@@ -2,7 +2,6 @@
 
 namespace App\Enums;
 
-use App\Organization;
 use BenSampo\Enum\Enum;
 
 /**
@@ -12,7 +11,7 @@ use BenSampo\Enum\Enum;
  */
 final class ProfileType extends Enum
 {
-    const ADMIN =   0;
-    const ORGANIZATION =   1;
-    const VOLUNTEER = 2;
+    public const ADMIN =   'admin';
+    public const ORGANIZATION =   'organization';
+    public const VOLUNTEER = 'volunteer';
 }

@@ -17,18 +17,19 @@ use App\Enums\StatusType;
             name="name"
             label="Nome"
             fgroup-class="col-sm-4"
-            value="{{ $inputs->name ?? '' }}" />
+            value="{{ request('name') ?? '' }}" />
 
         {{-- email --}}
         <x-form.email-input
             fgroup-class="col-sm-4"
-            value="{{ $inputs->email ?? '' }}" />
+            value="{{ request('email') ?? '' }}" />
 
-        {{-- perfil --}}
+        {{-- profile --}}
         <x-form.profile-select
             fgroup-class="col-sm-4"
-            selectedValue="{{ $inputs->profile ?? '' }}" />
-
+            selectedValue="{{ request()->user()->isOrganization()
+                ? ProfileType::ORGANIZATION
+                : request('profile') }}" />
 
     </div>
     <div class="row">
@@ -36,25 +37,11 @@ use App\Enums\StatusType;
         {{-- organization --}}
         <x-form.organization-select
             fgroup-class="col-md-6"
-            :selected="old('organization_id', $inputs->organization_id ?? null)" />
+            :selected="request()->user()->isOrganization() ? request()->user()->organization_id : request('organization_id')" />
 
         {{-- status --}}
-        <x-adminlte-select
-            name="status"
-            label="Status"
-            fgroup-class="col-sm-6">
-            <option></option>
-            <option
-                value="active"
-                {{ isset($inputs->status) && $inputs->status == StatusType::ACTIVE ? 'selected' : '' }}>
-                Ativo
-            </option>
-            <option
-                value="inactive"
-                {{ isset($inputs->status) && $inputs->status == StatusType::INACTIVE ? 'selected' : '' }}>
-                Inativo
-            </option>
-        </x-adminlte-select>
+        <x-form.status-select fgroup-class="col-md-6"
+            :selectedValue="request('status')" />
     </div>
 @endsection
 {{-- ['Nome', 'E-mail', 'Perfil', 'Instituição',
@@ -68,17 +55,13 @@ use App\Enums\StatusType;
             </td>
             <td>{{ $user->email }}</td>
             <td>
-                <span class="badge badge-{{ $user->profile == ProfileType::ORGANIZATION ? 'info' : 'warning' }}">
-                    {{ $user->profile == ProfileType::ORGANIZATION ? 'instituição' : 'administrador' }}
-                </span>
+                <x-profile-badge :profile="$user->profile" />
             </td>
             <td>
-                {{ $user->profile == ProfileType::ORGANIZATION && isset($user->organization) ? $user->organization->name : 'N/A' }}
+                {{ $user->organization->name ?? 'N/A' }}
             </td>
             <td>
-                <span class="badge badge-{{ $user->status == StatusType::ACTIVE ? 'success' : 'danger' }}">
-                    {{ $user->status == StatusType::ACTIVE ? 'ativo' : 'inativo' }}
-                </span>
+                <x-status-badge :status="$user->status" />
             </td>
             <td>
                 @can('update', $user)
@@ -91,10 +74,11 @@ use App\Enums\StatusType;
                 @endcan
                 @can('delete', $user)
                     <button
-                        class="btn btn-danger btn-sm"
+                        class="btn btn-danger btn-sm btn-delete"
                         data-toggle="modal"
                         data-target="#modal-delete"
-                        onclick="deleteData('users',{{ $user->id }})">
+                        data-resource="users"
+                        data-id="{{ $user->id }}">
                         <i class="fas fa-trash"></i>
                         Excluir
                     </button>

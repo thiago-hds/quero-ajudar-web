@@ -12,8 +12,7 @@
     <x-edit-form
         :model="$model"
         :action="$action"
-        :cancelUrl="$cancelUrl"
-    >
+        :cancelUrl="$cancelUrl">
         @yield('fields')
     </x-edit-form>
 @endsection
@@ -21,10 +20,9 @@
 @section('css')
     <link
         rel="stylesheet"
-        href="{{ asset('/css/panel.css') }}"
-    >
+        href="{{ asset('/css/style.css') }}">
 @endsection
 
 @section('js')
-    <script src="{{ asset('/js/panel.js') }}"></script>
+    <script src="{{ asset('/js/script.js') }}"></script>
 @endsection
