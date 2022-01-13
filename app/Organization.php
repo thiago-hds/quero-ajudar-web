@@ -15,9 +15,15 @@ class Organization extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'website', 'description', 'logo', 'email', 'status'
+        'name', 'website', 'description', 'logo', 'email', 'status', 'organization_type_id'
     ];
 
+    /**
+     * Scope a query to filter users.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeFilter($query, $filters)
     {
         $query->when(
@@ -32,11 +38,20 @@ class Organization extends Model
             }
         );
 
-        // $query->when(
-        //     $filters['name'] ?? false, function ($query, $name) {
-        //         $query->where('name', 'like', "%{$name}%");
-        //     }
-        // );
+        // can't use conditional clause here because it doesn't run when status = 0
+        if (isset($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+
+        $query->when(
+            $filters['cause_id'] ?? false, function ($query, $causeId) {
+                $query->whereHas(
+                    'causes', function ($query) use ($causeId) {
+                        $query->where('id', $causeId);
+                    }
+                );
+            }
+        );
     }
 
     /**

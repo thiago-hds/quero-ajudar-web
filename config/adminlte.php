@@ -474,13 +474,13 @@ return [
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
-                    'location' => asset('vendor/inputmask/inputmask.min.js'),
+                    'asset' => true,
+                    'location' => 'vendor/inputmask/inputmask.min.js',
                 ],
                 [
                     'type' => 'js',
-                    'asset' => false,
-                    'location' => asset('vendor/inputmask/jquery.inputmask.min.js'),
+                    'asset' => true,
+                    'location' => 'vendor/inputmask/jquery.inputmask.min.js',
                 ]
             ],
         ],

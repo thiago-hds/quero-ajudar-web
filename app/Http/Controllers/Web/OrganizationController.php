@@ -10,7 +10,6 @@ use App\State;
 use App\Http\Requests\Web\OrganizationRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\UploadedFile;
 
 class OrganizationController extends Controller
@@ -30,50 +29,10 @@ class OrganizationController extends Controller
      */
     public function index(Request $request)
     {
-        // separacao dos campos de filtragem por tipo de comparacao
-        $equalFields    =   ['status'];
-        $likeFields     =   ['name', 'email'];
-
-        $filters = request(['name', 'email', 'status']);
-
-        $organizations = Organization::latest()
-            ->filter($filters)
-            ->paginate(10);
+        $filters = request(['name', 'email', 'status', 'cause_id']);
+        $organizations = Organization::latest()->filter($filters)->paginate(10);
 
         return view('organizations.index', compact('organizations'));
-
-        $inputs = $request->all();
-
-        // definir clausulas where
-        $whereClauses = [];
-
-        foreach ($inputs as $key => $input) {
-            if ($input && in_array($key, array_merge($equalFields, $likeFields))) {
-                if (in_array($key, $equalFields)) {
-                    $whereClauses[] = [$key, '=', $input];
-                } else {
-                    $whereClauses[] = [$key, 'like', '%' . $input . '%'];
-                }
-            }
-        }
-
-        $organizations = Organization::where($whereClauses);
-
-        $cause_id = $request->input('cause_id');
-        if (isset($cause_id) && $cause_id !== '') {
-            $organizations = $organizations->whereHas(
-                'causes', function (Builder $query) use ($cause_id) {
-                    $query->where('id', '=', $cause_id);
-                }
-            );
-        }
-
-        // retornar view com dados
-        $inputs = (object) $inputs;
-        $organizations = $organizations->orderBy('name', 'asc')->paginate(10);
-        $causes = Cause::orderBy('name', 'asc')->get();
-
-        return view('organizations.index', compact('inputs', 'organizations', 'causes'));
     }
 
     /**
@@ -84,10 +43,9 @@ class OrganizationController extends Controller
     public function create()
     {
         $organizationTypes = OrganizationType::orderBy('name', 'asc')->get();
-        $causes = Cause::orderBy('name', 'asc')->get();
         $states = State::orderBy('name', 'asc')->get();
 
-        return view('organizations.edit', compact('organizationTypes', 'causes', 'states'));
+        return view('organizations.edit', compact('organizationTypes', 'states'));
     }
 
     /**
@@ -98,38 +56,41 @@ class OrganizationController extends Controller
      */
     public function store(OrganizationRequest $request)
     {
-        $organization = new Organization(
+
+        $organizationAttributes = $request->only(
             [
-            'name'              => $request->input('name'),
-            'website'           => $request->input('website'),
-            'description'       => $request->input('description'),
-            'email'             => $request->input('email'),
-            'status'            => $request->input('status')
+            'name',
+            'website',
+            'description',
+            'email',
+            'status',
+            'organization_type_id'
             ]
         );
+
 
         if ($request->hasFile('logo') && $request->file('logo')->isValid()) {
             $path = $this->saveImage($request->file('logo'));
             if ($path) {
-                $organization->logo = $path;
+                $organizationAttributes['logo'] = $path;
             }
         }
 
-        $organization->organizationType()->associate($request->input('organization_type_id'));
-        $organization->save();
+        $organization = Organization::create($organizationAttributes);
 
-        $organization->causes()->sync($request->input('causes'));
+        $organization->causes()->sync($request->causes);
+
+        $addressAttributes = [
+            'zipcode' => $request->address_zipcode ,
+            'street' => $request->address_street ,
+            'number' => $request->address_number ,
+            'neighborhood' => $request->address_neighborhood ,
+            'city_id' => $request->address_city
+        ];
 
 
-        $organization->address()->create(
-            [
-            'zipcode'           => $request->input('address_zipcode'),
-            'street'            => $request->input('address_street'),
-            'number'            => $request->input('address_number'),
-            'neighborhood'      => $request->input('address_neighborhood'),
-            'city_id'           => $request->input('address_city'),
-            ]
-        );
+        $organization->address()->create($addressAttributes);
+
 
         foreach ($request->input('phones') as $number) {
             $number = preg_replace('/[() ]/', '', $number);
@@ -137,17 +98,6 @@ class OrganizationController extends Controller
         }
 
         return redirect('/organizations')->with('success', 'Instituição Salva!');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -159,9 +109,8 @@ class OrganizationController extends Controller
     public function edit(Organization $organization)
     {
         $organizationTypes = OrganizationType::orderBy('name', 'asc')->get();
-        $causes = Cause::orderBy('name', 'asc')->get();
         $states = State::orderBy('name', 'asc')->get();
-        return view('organizations.edit', compact('organizationTypes', 'causes', 'organization', 'states'));
+        return view('organizations.edit', compact('organizationTypes', 'organization', 'states'));
     }
 
     /**
@@ -173,15 +122,19 @@ class OrganizationController extends Controller
      */
     public function update(OrganizationRequest $request, Organization $organization)
     {
-        $organization->update(
+
+        $organizationAttributes = $request->only(
             [
-            'name'              => $request->input('name'),
-            'website'           => $request->input('website'),
-            'description'       => $request->input('description'),
-            'email'             => $request->input('email'),
-            'status'            => $request->input('status')
+            'name',
+            'website',
+            'description',
+            'email',
+            'status',
+            'organization_type_id'
             ]
         );
+
+        $organization->update($organizationAttributes);
 
         if ($request->hasFile('logo') && $request->file('logo')->isValid()) {
             $path = $this->saveImage($request->file('logo'));
@@ -191,18 +144,17 @@ class OrganizationController extends Controller
             }
         }
 
-        $organization->organizationType()->associate($request->input('organization_type_id'));
         $organization->causes()->sync($request->input('causes'));
 
-        $organization->address()->updateOrCreate(
-            [
-            'zipcode'           => $request->input('address_zipcode'),
-            'street'            => $request->input('address_street'),
-            'number'            => $request->input('address_number'),
-            'neighborhood'      => $request->input('address_neighborhood'),
-            'city_id'           => $request->input('address_city'),
-            ]
-        );
+        $addressAttributes = [
+            'zipcode' => $request->address_zipcode ,
+            'street' => $request->address_street ,
+            'number' => $request->address_number ,
+            'neighborhood' => $request->address_neighborhood ,
+            'city_id' => $request->address_city
+        ];
+
+        $organization->address()->updateOrCreate($addressAttributes);
 
         $organization->phones()->delete();
         foreach ($request->input('phones') as $number) {
@@ -226,7 +178,7 @@ class OrganizationController extends Controller
     public function destroy(Organization $organization)
     {
         $organization->delete();
-        return redirect('/organization')->with('success', 'Instituição excluída!');
+        return redirect('/organizations')->with('success', 'Instituição excluída!');
     }
 
     private function saveImage(UploadedFile $file)

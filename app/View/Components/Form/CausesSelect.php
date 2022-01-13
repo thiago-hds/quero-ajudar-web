@@ -12,7 +12,7 @@ class CausesSelect extends Component
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(public $selectedValue = null, public $multiple = true)
     {
         //
     }
@@ -25,9 +25,9 @@ class CausesSelect extends Component
     public function render()
     {
         $config = [
-            'placeholder' => 'Selecione as causas...',
+            'placeholder' => $this->multiple ? 'Selecione as causas...' : 'Selecione uma causa',
             'allowClear' => true,
-            'multiple' => true
+            'multiple' => $this->multiple
         ];
         $causes = Cause::all();
 
