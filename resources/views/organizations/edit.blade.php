@@ -6,13 +6,14 @@ $selectedProfile = old('profile', $organization->profile ?? '');
 $isAdminSelected = $selectedProfile === ProfileType::ADMIN || !isset($user);
 @endphp
 
+
 @extends('layout.edit', [
 'model' => $organization ?? null,
 'title' => sprintf("%s %s", isset($organization) ? 'Editar' : 'Nova', "Instituição"),
 'action' => isset($organization) ? route('organizations.update', $organization->id) : route('organizations.store'),
 'cancelUrl' => route('organizations.index')
 ])
-
+@section('plugins.BsCustomFileInput', true)
 @section('fields')
     <div class="row">
 

@@ -11,6 +11,7 @@
         "php": "^8.0",
         "bensampo/laravel-enum": "^3.1",
         "canducci/cep": "^3.0",
+        "cloudinary-labs/cloudinary-laravel": "^1.0",
         "doctrine/dbal": "^2.10",
         "fideloper/proxy": "^4.0",
         "jeroennoten/laravel-adminlte": "^3.0",

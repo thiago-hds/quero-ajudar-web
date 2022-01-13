@@ -57,17 +57,14 @@ class OrganizationController extends Controller
     public function store(OrganizationRequest $request)
     {
 
-        $organizationAttributes = $request->only(
-            [
+        $organizationAttributes = $request->only([
             'name',
             'website',
             'description',
             'email',
             'status',
             'organization_type_id'
-            ]
-        );
-
+        ]);
 
         if ($request->hasFile('logo') && $request->file('logo')->isValid()) {
             $path = $this->saveImage($request->file('logo'));
@@ -77,7 +74,6 @@ class OrganizationController extends Controller
         }
 
         $organization = Organization::create($organizationAttributes);
-
         $organization->causes()->sync($request->causes);
 
         $addressAttributes = [
@@ -87,10 +83,7 @@ class OrganizationController extends Controller
             'neighborhood' => $request->address_neighborhood ,
             'city_id' => $request->address_city
         ];
-
-
         $organization->address()->create($addressAttributes);
-
 
         foreach ($request->input('phones') as $number) {
             $number = preg_replace('/[() ]/', '', $number);
@@ -123,21 +116,26 @@ class OrganizationController extends Controller
     public function update(OrganizationRequest $request, Organization $organization)
     {
 
-        $organizationAttributes = $request->only(
-            [
+        $organizationAttributes = $request->only([
             'name',
             'website',
             'description',
             'email',
             'status',
             'organization_type_id'
-            ]
-        );
+        ]);
 
         $organization->update($organizationAttributes);
 
         if ($request->hasFile('logo') && $request->file('logo')->isValid()) {
-            $path = $this->saveImage($request->file('logo'));
+            // $path = $this->saveImage($request->file('logo'));
+
+            // TODO add try/catch
+            $path = cloudinary()
+                    ->upload($request->file('logo')
+                    ->getRealPath())
+                    ->getSecurePath();
+
             if ($path) {
                 $organization->logo = $path;
                 $organization->save();
