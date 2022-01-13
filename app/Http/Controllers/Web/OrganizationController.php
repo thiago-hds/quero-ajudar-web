@@ -25,7 +25,7 @@ class OrganizationController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
@@ -33,6 +33,14 @@ class OrganizationController extends Controller
         // separacao dos campos de filtragem por tipo de comparacao
         $equalFields    =   ['status'];
         $likeFields     =   ['name', 'email'];
+
+        $filters = request(['name', 'email', 'status']);
+
+        $organizations = Organization::latest()
+            ->filter($filters)
+            ->paginate(10);
+
+        return view('organizations.index', compact('organizations'));
 
         $inputs = $request->all();
 
@@ -53,9 +61,11 @@ class OrganizationController extends Controller
 
         $cause_id = $request->input('cause_id');
         if (isset($cause_id) && $cause_id !== '') {
-            $organizations = $organizations->whereHas('causes', function (Builder $query) use ($cause_id) {
-                $query->where('id', '=', $cause_id);
-            });
+            $organizations = $organizations->whereHas(
+                'causes', function (Builder $query) use ($cause_id) {
+                    $query->where('id', '=', $cause_id);
+                }
+            );
         }
 
         // retornar view com dados
@@ -83,18 +93,20 @@ class OrganizationController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\OrganizationRequest  $request
+     * @param  \App\Http\Requests\OrganizationRequest $request
      * @return \Illuminate\Http\Response
      */
     public function store(OrganizationRequest $request)
     {
-        $organization = new Organization([
+        $organization = new Organization(
+            [
             'name'              => $request->input('name'),
             'website'           => $request->input('website'),
             'description'       => $request->input('description'),
             'email'             => $request->input('email'),
             'status'            => $request->input('status')
-        ]);
+            ]
+        );
 
         if ($request->hasFile('logo') && $request->file('logo')->isValid()) {
             $path = $this->saveImage($request->file('logo'));
@@ -109,13 +121,15 @@ class OrganizationController extends Controller
         $organization->causes()->sync($request->input('causes'));
 
 
-        $organization->address()->create([
+        $organization->address()->create(
+            [
             'zipcode'           => $request->input('address_zipcode'),
             'street'            => $request->input('address_street'),
             'number'            => $request->input('address_number'),
             'neighborhood'      => $request->input('address_neighborhood'),
             'city_id'           => $request->input('address_city'),
-        ]);
+            ]
+        );
 
         foreach ($request->input('phones') as $number) {
             $number = preg_replace('/[() ]/', '', $number);
@@ -128,7 +142,7 @@ class OrganizationController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -139,7 +153,7 @@ class OrganizationController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Organization  $organization
+     * @param  \App\Organization $organization
      * @return \Illuminate\Http\Response
      */
     public function edit(Organization $organization)
@@ -153,19 +167,21 @@ class OrganizationController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\OrganizationRequest  $request
-     * @param  \App\Organization $organization
+     * @param  \App\Http\Requests\OrganizationRequest $request
+     * @param  \App\Organization                      $organization
      * @return \Illuminate\Http\Response
      */
     public function update(OrganizationRequest $request, Organization $organization)
     {
-        $organization->update([
+        $organization->update(
+            [
             'name'              => $request->input('name'),
             'website'           => $request->input('website'),
             'description'       => $request->input('description'),
             'email'             => $request->input('email'),
             'status'            => $request->input('status')
-        ]);
+            ]
+        );
 
         if ($request->hasFile('logo') && $request->file('logo')->isValid()) {
             $path = $this->saveImage($request->file('logo'));
@@ -178,20 +194,24 @@ class OrganizationController extends Controller
         $organization->organizationType()->associate($request->input('organization_type_id'));
         $organization->causes()->sync($request->input('causes'));
 
-        $organization->address()->updateOrCreate([
+        $organization->address()->updateOrCreate(
+            [
             'zipcode'           => $request->input('address_zipcode'),
             'street'            => $request->input('address_street'),
             'number'            => $request->input('address_number'),
             'neighborhood'      => $request->input('address_neighborhood'),
             'city_id'           => $request->input('address_city'),
-        ]);
+            ]
+        );
 
         $organization->phones()->delete();
         foreach ($request->input('phones') as $number) {
             $number = preg_replace('/[() ]/', '', $number);
-            $organization->phones()->create([
+            $organization->phones()->create(
+                [
                 'number' => $number
-            ]);
+                ]
+            );
         }
 
         return redirect('/organizations')->with('success', 'Instituição atualizada!');

@@ -18,6 +18,26 @@ class Organization extends Model
         'name', 'website', 'description', 'logo', 'email', 'status'
     ];
 
+    public function scopeFilter($query, $filters)
+    {
+        $query->when(
+            $filters['name'] ?? false, function ($query, $name) {
+                $query->where('name', 'like', "%{$name}%");
+            }
+        );
+
+        $query->when(
+            $filters['email'] ?? false, function ($query, $email) {
+                $query->where('email', 'like', "%{$email}%");
+            }
+        );
+
+        // $query->when(
+        //     $filters['name'] ?? false, function ($query, $name) {
+        //         $query->where('name', 'like', "%{$name}%");
+        //     }
+        // );
+    }
 
     /**
      * Get the users for the organization.
@@ -27,18 +47,24 @@ class Organization extends Model
         return $this->hasMany('App\User');
     }
 
+    /**
+     * Get the address for the organization.
+     */
     public function address()
     {
         return $this->morphOne('App\Address', 'addressable');
     }
 
+    /**
+     * Get the favorites for the organization.
+     */
     public function favorites()
     {
         return $this->morphMany('App\Favorite', 'favoritable');
     }
 
     /**
-     * Get the users for the organization.
+     * Get the vacancies for the organization.
      */
     public function vacancies()
     {
@@ -46,18 +72,24 @@ class Organization extends Model
     }
 
     /**
-     * Get the .
+     * Get the organization type
      */
     public function organizationType()
     {
         return $this->belongsTo('App\OrganizationType');
     }
 
+    /**
+     * Get the organization phones
+     */
     public function phones()
     {
         return $this->morphMany('App\Phone', 'owner');
     }
 
+    /**
+     * Get the organization causes
+     */
     public function causes()
     {
         return $this->morphToMany('App\Cause', 'causeable');

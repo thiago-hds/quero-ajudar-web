@@ -16,12 +16,12 @@ use App\Enums\StatusType;
             name="name"
             label="Nome"
             fgroup-class="col-sm-6"
-            value="{{ $inputs->name ?? '' }}" />
+            value="{{ request('name') }}" />
 
         {{-- email --}}
         <x-form.email-input
             fgroup-class="col-sm-6"
-            value="{{ $inputs->email ?? '' }}" />
+            value="{{ request('email') }}" />
 
     </div>
 

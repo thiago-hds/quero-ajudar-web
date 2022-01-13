@@ -47,27 +47,36 @@ class User extends Authenticatable
     /**
      * Scope a query to filter users.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @param  array                                 $filters
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeFilter($query, $filters)
     {
 
-        $query->when($filters['name'] ?? false, function ($query, $name) {
-            $query->whereRaw("CONCAT(first_name, ' ', last_name) like '%{$name}%'");
-        });
+        $query->when(
+            $filters['name'] ?? false, function ($query, $name) {
+                $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE '%{$name}%'");
+            }
+        );
 
-        $query->when($filters['email'] ?? false, function ($query, $email) {
-            $query->where('email', 'like', "%{$email}%");
-        });
+        $query->when(
+            $filters['email'] ?? false, function ($query, $email) {
+                $query->where('email', 'like', "%{$email}%");
+            }
+        );
 
-        $query->when($filters['profile'] ?? false, function ($query, $profile) {
-            $query->where('profile', $profile);
-        });
+        $query->when(
+            $filters['profile'] ?? false, function ($query, $profile) {
+                $query->where('profile', $profile);
+            }
+        );
 
-        $query->when($filters['organization_id'] ?? false, function ($query, $organization_id) {
-            $query->where('organization_id', $organization_id);
-        });
+        $query->when(
+            $filters['organization_id'] ?? false, function ($query, $organization_id) {
+                $query->where('organization_id', $organization_id);
+            }
+        );
 
         // can't use conditional clause here because it doesn't run when status = 0
         if (isset($filters['status'])) {
