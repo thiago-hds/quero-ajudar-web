@@ -25,7 +25,7 @@ class OrganizationRequest extends FormRequest
     {
         return [
             'name'                  => 'required',
-            // 'logo'                  => 'file|image|nullable',
+            'logo'                  => 'file|image|nullable',
             'organization_type_id'  => 'required',
             'causes'                => 'required|min:1',
             'description'           => 'required',

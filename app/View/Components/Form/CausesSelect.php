@@ -12,7 +12,7 @@ class CausesSelect extends Component
      *
      * @return void
      */
-    public function __construct(public $selectedValue = null, public $multiple = true)
+    public function __construct(public $selectedValues = [], public $multiple = true)
     {
         //
     }

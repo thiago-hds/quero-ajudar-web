@@ -9,8 +9,10 @@ use App\Phone;
 use App\State;
 use App\Http\Requests\Web\OrganizationRequest;
 use App\Http\Controllers\Controller;
+use App\Services\ImageUploader;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 
 class OrganizationController extends Controller
 {
@@ -24,10 +26,9 @@ class OrganizationController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
         $filters = request(['name', 'email', 'status', 'cause_id']);
         $organizations = Organization::latest()->filter($filters)->paginate(10);
@@ -54,10 +55,10 @@ class OrganizationController extends Controller
      * @param  \App\Http\Requests\OrganizationRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(OrganizationRequest $request)
+    public function store(OrganizationRequest $request, ImageUploader $imageUploader)
     {
 
-        $organizationAttributes = $request->only([
+        $organizationAttributes = request()->only([
             'name',
             'website',
             'description',
@@ -67,7 +68,9 @@ class OrganizationController extends Controller
         ]);
 
         if ($request->hasFile('logo') && $request->file('logo')->isValid()) {
-            $path = $this->saveImage($request->file('logo'));
+            $path = $imageUploader->upload(
+                $request->file('logo')->getRealPath()
+            );
             if ($path) {
                 $organizationAttributes['logo'] = $path;
             }
@@ -113,10 +116,10 @@ class OrganizationController extends Controller
      * @param  \App\Organization                      $organization
      * @return \Illuminate\Http\Response
      */
-    public function update(OrganizationRequest $request, Organization $organization)
+    public function update(OrganizationRequest $request, Organization $organization, ImageUploader $imageUploader)
     {
 
-        $organizationAttributes = $request->only([
+        $organizationAttributes = request()->only([
             'name',
             'website',
             'description',
@@ -125,46 +128,43 @@ class OrganizationController extends Controller
             'organization_type_id'
         ]);
 
-        $organization->update($organizationAttributes);
-
-        if ($request->hasFile('logo') && $request->file('logo')->isValid()) {
-            // $path = $this->saveImage($request->file('logo'));
-
-            // TODO add try/catch
-            $path = cloudinary()
-                    ->upload($request->file('logo')
-                    ->getRealPath())
-                    ->getSecurePath();
-
-            if ($path) {
-                $organization->logo = $path;
-                $organization->save();
+        if (request()->hasFile('logo')) {
+            try {
+                $path = $imageUploader->upload(
+                    request()->file('logo')->getRealPath()
+                );
+                $organizationAttributes['logo'] = $path;
+            } catch (\Exception $ex) {
+                return response()->with('error', 'Não foi possível fazer upload da imagem');
             }
         }
 
+        $organization->update($organizationAttributes);
         $organization->causes()->sync($request->input('causes'));
 
-        $addressAttributes = [
-            'zipcode' => $request->address_zipcode ,
-            'street' => $request->address_street ,
-            'number' => $request->address_number ,
-            'neighborhood' => $request->address_neighborhood ,
-            'city_id' => $request->address_city
-        ];
+        // save organization addresses
 
+        $addressAttributes = request()->only([
+            'address_zipcode',
+            'address_street',
+            'address_number',
+            'address_neighborhood',
+            'address_city'
+        ]);
         $organization->address()->updateOrCreate($addressAttributes);
+
+        // save organization phones
 
         $organization->phones()->delete();
         foreach ($request->input('phones') as $number) {
             $number = preg_replace('/[() ]/', '', $number);
-            $organization->phones()->create(
-                [
+            $organization->phones()->create([
                 'number' => $number
-                ]
-            );
+            ]);
         }
 
-        return redirect('/organizations')->with('success', 'Instituição atualizada!');
+        return redirect('/organizations')
+            ->with('success', 'Instituição atualizada!');
     }
 
     /**
@@ -179,12 +179,12 @@ class OrganizationController extends Controller
         return redirect('/organizations')->with('success', 'Instituição excluída!');
     }
 
-    private function saveImage(UploadedFile $file)
-    {
-        $name = uniqid(date('HisYmd'));
-        $extension = $file->extension();
-        $nameFile = "{$name}.{$extension}";
+    // private function saveImage(UploadedFile $file)
+    // {
+    //     $name = uniqid(date('HisYmd'));
+    //     $extension = $file->extension();
+    //     $nameFile = "{$name}.{$extension}";
 
-        return $file->storeAs('vacancy_image', $nameFile);
-    }
+    //     return $file->storeAs('vacancy_image', $nameFile);
+    // }
 }

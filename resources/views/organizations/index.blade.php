@@ -31,7 +31,7 @@ use App\Enums\StatusType;
         <x-form.causes-select
             fgroup-class="col-sm-6"
             name="cause_id"
-            :selectedValue="request('cause_id')"
+            :selectedValues="[request('cause_id')]"
             :multiple="false" />
 
         {{-- status --}}

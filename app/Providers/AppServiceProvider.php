@@ -29,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::componentNamespace('App\\View\\Components\\Form', 'form.organization-select');
         Blade::componentNamespace('App\\View\\Components\\Form', 'form.causes-select');
         Blade::componentNamespace('App\\View\\Components\\Form', 'form.skills-select');
+        Blade::componentNamespace('App\\View\\Components\\Form', 'form.address-panel');
 
         // configure paginator
         Paginator::useBootstrap();

@@ -4,7 +4,7 @@
     name="{{ $attributes->get('name') }}"
     label="Causas"
     :config="$config"
-    enable-old-support
+    enable-old-support="true"
     fgroup-class="{{ $attributes->get('fgroup-class') }}">
 
     <x-slot name="prependSlot">
@@ -17,7 +17,7 @@
     @foreach ($causes as $cause)
         {{-- @dd($selectedValue); --}}
         <option></option>
-        <option value="{{ $cause->id }}" {{ $cause->id == $selectedValue ? 'selected' : '' }}>
+        <option value="{{ $cause->id }}" {{ in_array($cause->id, $selectedValues) ? 'selected' : '' }}>
             {{ $cause->name }}
         </option>
     @endforeach

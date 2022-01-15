@@ -4,13 +4,14 @@ use App\Enums\StatusType;
 
 $selectedProfile = old('profile', $organization->profile ?? '');
 $isAdminSelected = $selectedProfile === ProfileType::ADMIN || !isset($user);
+$action = isset($organization) ? route('organizations.update', $organization->id) : route('organizations.store');
 @endphp
 
 
 @extends('layout.edit', [
 'model' => $organization ?? null,
 'title' => sprintf("%s %s", isset($organization) ? 'Editar' : 'Nova', "Instituição"),
-'action' => isset($organization) ? route('organizations.update', $organization->id) : route('organizations.store'),
+'action' => $action,
 'cancelUrl' => route('organizations.index')
 ])
 @section('plugins.BsCustomFileInput', true)
@@ -29,8 +30,9 @@ $isAdminSelected = $selectedProfile === ProfileType::ADMIN || !isset($user);
         <x-adminlte-input-file
             name="logo"
             label="Logo"
-            fgroup-class="col-sm-6"
-            placeholder="Escolha um arquivo..."
+            fgroup-class="col-sm-4"
+
+            placeholder="Escolha uma imagem..."
             accept=".jpg,.jpeg,.gif,.png">
 
             <x-slot name="prependSlot">
@@ -40,6 +42,12 @@ $isAdminSelected = $selectedProfile === ProfileType::ADMIN || !isset($user);
             </x-slot>
 
         </x-adminlte-input-file>
+
+        @if (isset($organization->logo))
+            <div class="col-sm-2">
+                <img class="img-thumbnail" src="{{ $organization->logo }}" alt="" />
+            </div>
+        @endif
     </div>
 
     <div class="row">
@@ -60,7 +68,11 @@ $isAdminSelected = $selectedProfile === ProfileType::ADMIN || !isset($user);
             @endforeach
         </x-adminlte-select>
 
-        <x-form.causes-select fgroup-class="col-sm-6" />
+        @php
+            $selectedValues = old('causes[]', isset($organization) ? $organization->causes->modelKeys() : []);
+        @endphp
+        <x-form.causes-select name="causes[]" fgroup-class="col-sm-6"
+            :selectedValues="$selectedValues" />
 
     </div>
 
@@ -87,7 +99,7 @@ $isAdminSelected = $selectedProfile === ProfileType::ADMIN || !isset($user);
             value="{{ old('name', $organization->website ?? '') }}" />
     </div>
 
-    @include('address', ['address' => $organization->address ?? null])
+    <x-form.address-panel :address="$organization->address ?? null" />
 
     <div class="row">
         {{-- phone --}}
@@ -101,27 +113,7 @@ $isAdminSelected = $selectedProfile === ProfileType::ADMIN || !isset($user);
             $isActive = old('status', $user->status ?? StatusType::ACTIVE) == StatusType::ACTIVE;
         @endphp
         <x-form.status-radio-group :isActive="$isActive" />
-        {{-- <x-form-group label="Status">
 
-
-            <x-radio
-                name="status"
-                label="Ativo"
-                value="{{ StatusType::ACTIVE }}"
-                checked="{{ $isActive }}">
-            </x-radio>
-
-            <x-radio
-                name="status"
-                label="Inativo"
-                value="{{ StatusType::INACTIVE }}"
-                checked="{{ !$isActive }}">
-            </x-radio>
-
-            @error('status')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </x-form-group> --}}
     </div>
 
 @endsection
