@@ -115,7 +115,6 @@ class VolunteerController extends Controller
      */
     public function destroy(Volunteer $volunteer)
     {
-
         $volunteer->causes()->detach();
         $volunteer->skills()->detach();
         $volunteer->user->delete();
