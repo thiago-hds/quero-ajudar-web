@@ -27,7 +27,8 @@ class CausesSelect extends Component
         $config = [
             'placeholder' => $this->multiple ? 'Selecione as causas...' : 'Selecione uma causa',
             'allowClear' => true,
-            'multiple' => $this->multiple
+            'multiple' => $this->multiple,
+            'tags' => true,
         ];
         $causes = Cause::all();
 

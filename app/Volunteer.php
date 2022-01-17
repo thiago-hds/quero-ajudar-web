@@ -94,41 +94,4 @@ class Volunteer extends Model
     {
         return $this->hasMany('App\Favorite');
     }
-
-
-
-    // public function getVacancyRecommendations()
-    // {
-    //     $process = new Process(
-    //         ["./virtualenv/bin/python", "recommender.py", "recommend", $this->user_id]
-    //     );
-    //     $process->setWorkingDirectory(base_path() . "/recommender");
-    //     $process->run();
-
-    //     // executes after the command finishes
-    //     if (!$process->isSuccessful()) {
-    //         throw new ProcessFailedException($process);
-    //     }
-
-    //     $recommendations =  $process->getOutput();
-    //     return $recommendations;
-    // }
-
-
-    // public function updateRecommendations()
-    // {
-    //     $process = new Process(
-    //         ["./virtualenv/bin/python", "recommender.py", "recommend", $this->user_id, '&']
-    //     );
-    //     $process->setWorkingDirectory(base_path() . "/recommender");
-    //     $process->run();
-
-    //     // executes after the command finishes
-    //     if (!$process->isSuccessful()) {
-    //         throw new ProcessFailedException($process);
-    //     }
-
-
-    //     return true;
-    // }
 }

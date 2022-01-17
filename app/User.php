@@ -55,25 +55,29 @@ class User extends Authenticatable
     {
 
         $query->when(
-            $filters['name'] ?? false, function ($query, $name) {
+            $filters['name'] ?? false,
+            function ($query, $name) {
                 $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE '%{$name}%'");
             }
         );
 
         $query->when(
-            $filters['email'] ?? false, function ($query, $email) {
+            $filters['email'] ?? false,
+            function ($query, $email) {
                 $query->where('email', 'like', "%{$email}%");
             }
         );
 
         $query->when(
-            $filters['profile'] ?? false, function ($query, $profile) {
+            $filters['profile'] ?? false,
+            function ($query, $profile) {
                 $query->where('profile', $profile);
             }
         );
 
         $query->when(
-            $filters['organization_id'] ?? false, function ($query, $organization_id) {
+            $filters['organization_id'] ?? false,
+            function ($query, $organization_id) {
                 $query->where('organization_id', $organization_id);
             }
         );

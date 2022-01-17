@@ -10,9 +10,7 @@ use App\User;
 use App\Http\Requests\Web\VolunteerRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Eloquent\Builder;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
 
 class VolunteerController extends Controller
 {
@@ -30,7 +28,7 @@ class VolunteerController extends Controller
      */
     public function index(Request $request)
     {
-        $filters = request(['name', 'email', 'status', 'cause_id', 'status_id']);
+        $filters = $request->all();
         $volunteers = Volunteer::latest()->filter($filters)->paginate(10);
 
         return view('volunteers.index', compact('volunteers'));
@@ -78,9 +76,7 @@ class VolunteerController extends Controller
      */
     public function edit(Volunteer $volunteer)
     {
-        $causes = Cause::orderBy('name', 'asc')->get();
-        $skills = Skill::orderBy('name', 'asc')->get();
-        return view('volunteers.edit', compact('volunteer', 'causes', 'skills'));
+        return view('volunteers.edit', compact('volunteer'));
     }
 
     /**
@@ -101,8 +97,8 @@ class VolunteerController extends Controller
 
         $user->update($attributes);
 
-        $volunteer->causes()->sync($request->input('causes'));
-        $volunteer->skills()->sync($request->input('skills'));
+        $volunteer->causes()->sync($request->causes);
+        $volunteer->skills()->sync($request->skills);
 
         return redirect('/volunteers')->with('success', 'Voluntário atualizado!');
     }
