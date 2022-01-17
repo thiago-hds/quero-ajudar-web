@@ -15,9 +15,15 @@
 
 
     @foreach ($causes as $cause)
-        {{-- @dd($selectedValue); --}}
-        <option></option>
-        <option value="{{ $cause->id }}" {{ in_array($cause->id, $selectedValues) ? 'selected' : '' }}>
+
+        {{-- if select2 is does't allow multiple it has to have an empty option --}}
+        @unless($config['multiple'])
+            <option></option>
+        @endunless ()
+
+        <option
+            value="{{ $cause->id }}"
+            {{ in_array($cause->id, $selectedValues) ? 'selected=selected' : '' }}>
             {{ $cause->name }}
         </option>
     @endforeach
