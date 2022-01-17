@@ -4,15 +4,11 @@ namespace App\Http\Controllers\Web;
 
 use App\Organization;
 use App\OrganizationType;
-use App\Cause;
 use App\Phone;
 use App\State;
 use App\Http\Requests\Web\OrganizationRequest;
 use App\Http\Controllers\Controller;
 use App\Services\ImageUploader;
-use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Log;
 
 class OrganizationController extends Controller
 {
@@ -178,13 +174,4 @@ class OrganizationController extends Controller
         $organization->delete();
         return redirect('/organizations')->with('success', 'Instituição excluída!');
     }
-
-    // private function saveImage(UploadedFile $file)
-    // {
-    //     $name = uniqid(date('HisYmd'));
-    //     $extension = $file->extension();
-    //     $nameFile = "{$name}.{$extension}";
-
-    //     return $file->storeAs('vacancy_image', $nameFile);
-    // }
 }
