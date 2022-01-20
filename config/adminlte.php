@@ -474,14 +474,24 @@ return [
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
-                    'location' => asset('vendor/inputmask/inputmask.min.js'),
+                    'asset' => true,
+                    'location' => 'vendor/inputmask/inputmask.min.js',
                 ],
                 [
                     'type' => 'js',
-                    'asset' => false,
-                    'location' => asset('vendor/inputmask/jquery.inputmask.min.js'),
+                    'asset' => true,
+                    'location' => 'vendor/inputmask/jquery.inputmask.min.js',
                 ]
+            ],
+        ],
+        'BsCustomFileInput' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/bs-custom-file-input/bs-custom-file-input.min.js',
+                ],
             ],
         ],
     ],

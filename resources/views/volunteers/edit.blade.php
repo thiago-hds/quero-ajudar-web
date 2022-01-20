@@ -6,7 +6,7 @@ use App\Enums\StatusType;
 @extends('layout.edit', [
 'model' => $volunteer ?? null,
 'title' => sprintf("%s %s", isset($volunteer) ? 'Editar' : 'Novo', "Voluntário"),
-'action' => isset($volunteer) ? route('volunteers.update', $volunteer->id) : route('volunteers.store'),
+'action' => isset($volunteer) ? route('volunteers.update', $volunteer->user_id) : route('volunteers.store'),
 'cancelUrl' => route('volunteers.index')
 ])
 
@@ -30,29 +30,22 @@ use App\Enums\StatusType;
             value="{{ old('last_name', $volunteer->user->last_name ?? '') }}" />
 
         {{-- date_of_birth --}}
-        <x-adminlte-input
-            type="text"
-            name="date_of_birth"
-            label="Data de Nascimento"
-            placeholder="dd/mm/aaaa"
+        <x-form.date-of-birth-input
             fgroup-class="col-md-4"
-            value="{{ old('date_of_birth', $volunteer->user->date_of_birth ?? '') }}">
-
-            <x-slot name="prependSlot">
-                <span class="input-group-text">
-                    <i class="far fa-calendar-alt"></i>
-                </span>
-            </x-slot>
-        </x-adminlte-input>
+            value="{{ old('date_of_birth', $volunteer->user->date_of_birth ?? '') }}" />
 
     </div>
 
     <div class="row">
         {{-- causes --}}
-        <x-form.causes-select fgroup-class="col-sm-6" />
+        @php
+            $selectedCauses = old('causes[]', isset($volunteer) ? $volunteer->causes->modelKeys() : []);
+        @endphp
+        <x-form.causes-select name="causes[]" fgroup-class="col-sm-6" :multiple="true"
+            :selectedValues="$selectedCauses" />
 
         {{-- skills --}}
-        <x-form.skills-select fgroup-class="col-sm-6" />
+        <x-form.skills-select name="skills[]" fgroup-class="col-sm-6" />
     </div>
 
     <div class="row">
@@ -101,14 +94,4 @@ use App\Enums\StatusType;
     $isActive = old('status', $volunteer->user->status ?? StatusType::ACTIVE) === StatusType::ACTIVE;
     @endphp
     <x-form.status-radio-group :isActive="$isActive" />
-@stop
-
-@section('css')
-    <link
-        rel="stylesheet"
-        href="{{ asset('/css/panel.css') }}">
-@stop
-
-@section('js')
-    <script src="{{ asset('/js/panel.js') }}"></script><s></s>
-@stop
+@endsection

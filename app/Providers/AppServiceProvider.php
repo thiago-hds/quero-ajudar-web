@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\ImageUploader;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -15,7 +16,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
     }
 
     /**
@@ -29,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::componentNamespace('App\\View\\Components\\Form', 'form.organization-select');
         Blade::componentNamespace('App\\View\\Components\\Form', 'form.causes-select');
         Blade::componentNamespace('App\\View\\Components\\Form', 'form.skills-select');
+        Blade::componentNamespace('App\\View\\Components\\Form', 'form.address-panel');
 
         // configure paginator
         Paginator::useBootstrap();

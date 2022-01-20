@@ -1,5 +1,6 @@
-@props(['model', 'action', 'cancelUrl'])
-<form method="post" class="card" action="{{ $action }}">
+@props(['model', 'action', 'cancelUrl', 'enctype' => 'application/x-www-form-urlencoded'])
+
+<form method="post" class="card" action="{{ $action }}" enctype="{{ $enctype }}">
     <div class="card-body">
         @if (isset($model))
             @method('PATCH')

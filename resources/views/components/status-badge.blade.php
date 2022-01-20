@@ -1,13 +1,17 @@
+@php
+use App\Enums\StatusType;
+@endphp
+
 @props([
-'status' => \App\Enums\StatusType::ACTIVE,
-'class' => [
-\App\Enums\StatusType::ACTIVE => 'success',
-\App\Enums\StatusType::INACTIVE => 'danger'
-],
-'text' => [
-\App\Enums\StatusType::ACTIVE => 'ativo',
-\App\Enums\StatusType::INACTIVE => 'inativo'
-]
+    'status' => StatusType::ACTIVE,
+    'class' => [
+        StatusType::ACTIVE => 'success',
+        StatusType::INACTIVE => 'danger',
+    ],
+    'text' => [
+        StatusType::ACTIVE => 'ativo',
+        StatusType::INACTIVE => 'inativo',
+    ],
 ])
 <span class="badge badge-{{ $class[$status] }}">
     {{ $text[$status] }}

@@ -16,30 +16,16 @@ use App\Enums\StatusType;
             name="name"
             label="Nome"
             fgroup-class="col-sm-4"
-            value="{{ $inputs->name ?? '' }}" />
+            value="{{ request('name') }}" />
 
         {{-- email --}}
         <x-form.email-input
             fgroup-class="col-sm-4"
-            value="{{ $inputs->email ?? '' }}" />
+            value="{{ request('email') }}" />
 
         {{-- status --}}
-        <x-adminlte-select
-            name="status"
-            label="Status"
-            fgroup-class="col-sm-4">
-            <option></option>
-            <option
-                value="active"
-                {{ isset($inputs->status) && $inputs->status == StatusType::ACTIVE ? 'selected' : '' }}>
-                Ativo
-            </option>
-            <option
-                value="inactive"
-                {{ isset($inputs->status) && $inputs->status == StatusType::INACTIVE ? 'selected' : '' }}>
-                Inativo
-            </option>
-        </x-adminlte-select>
+        <x-form.status-select fgroup-class="col-md-4"
+            :selectedValue="request('status')" />
     </div>
 
     <div class="row">
@@ -66,25 +52,13 @@ use App\Enums\StatusType;
             <!-- causes -->
             <td>
                 @foreach ($volunteer->causes as $cause)
-                    <span
-                        class="fa-stack fa-1x"
-                        title="{{ $cause->name }}">
-                        <i class="fa fa-circle fa-stack-2x category-icon-background"></i>
-                        <i class="fa fa-stack-1x category-icon">
-                            &#x{{ $cause->fontawesome_icon_unicode }}; </i>
-                    </span>
+                    <x-category-badge :category="$cause" />
                 @endforeach
             </td>
             <!-- skils -->
             <td>
                 @foreach ($volunteer->skills as $skill)
-                    <span
-                        class="fa-stack fa-1x"
-                        title="{{ $skill->name }}">
-                        <i class="fa fa-circle fa-stack-2x category-icon-background"></i>
-                        <i class="fa fa-stack-1x category-icon">
-                            &#x{{ $skill->fontawesome_icon_unicode }}; </i>
-                    </span>
+                    <x-category-badge :category="$skill" />
                 @endforeach
             </td>
 
@@ -98,19 +72,25 @@ use App\Enums\StatusType;
 
             <!-- actions -->
             <td>
-                <a
-                    class="btn btn-info btn-sm"
-                    href="{{ route('volunteers.edit', $volunteer->user->id) }}">
-                    <i class="fas fa-pencil-alt"></i> Editar
-                </a>
-                <button
-                    class="btn btn-danger btn-sm"
-                    data-toggle="modal"
-                    data-target="#modal-delete"
-                    onclick="deleteData('volunteers',{{ $volunteer->user->id }})">
-                    <i class="fas fa-trash"></i> Excluir
-                </button>
-
+                @can('update', $volunteer)
+                    <a
+                        class="btn btn-info btn-sm"
+                        href="{{ route('users.edit', $volunteer->user_id) }}">
+                        <i class="fas fa-pencil-alt"></i>
+                        Editar
+                    </a>
+                @endcan
+                @can('delete', $volunteer)
+                    <button
+                        class="btn btn-danger btn-sm btn-delete"
+                        data-toggle="modal"
+                        data-target="#modal-delete"
+                        data-resource="volunteers"
+                        data-id="{{ $volunteer->user_id }}">
+                        <i class="fas fa-trash"></i>
+                        Excluir
+                    </button>
+                @endcan
             </td>
         </tr>
         </tbody>

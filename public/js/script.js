@@ -52,39 +52,26 @@ $(document).ready(function () {
 
     // controle de select dinamico de cidades
     $("select[name=address_state]").on("change", function (event) {
-        var selected = $(this).find(":selected").attr("value");
-        console.log(selected);
-        $(".loading").css("display", "block");
+        const selectedStateAbbr = $(this).find(":selected").attr("value");
+        // $(".loading").css("display", "block");
         $.ajax({
-            url: "/state/" + selected + "/cities/",
+            url: `/state/${selectedStateAbbr}/cities/`,
             type: "GET",
             dataType: "json",
         }).done(function (data) {
-            var select = $("select[name=address_city]");
-            select.empty();
-            select.append(
+            const citySelect = $("select[name=address_city]");
+            citySelect.empty();
+            citySelect.append(
                 '<option value="0" >Por favor selecione uma cidade</option>'
             );
+
             $.each(data, function (key, value) {
-                if (cityId != null && cityId == value.id) {
-                    select.append(
-                        "<option value=" +
-                            value.id +
-                            " selected>" +
-                            value.name +
-                            "</option>"
-                    );
-                } else {
-                    select.append(
-                        "<option value=" +
-                            value.id +
-                            ">" +
-                            value.name +
-                            "</option>"
-                    );
-                }
+                citySelect.append(
+                    `<option value=${value.id} ${cityId === value.id}>${
+                        value.name
+                    }</option>`
+                );
             });
-            console.log("success_cities");
             $(".loading").css("display", "none");
         });
     });
@@ -150,3 +137,12 @@ function addNewPhoneInput() {
         $(".btn-add-phone").prop("disabled", true);
     }
 }
+
+function initSelect2(id, value = "") {
+    $(document).ready(function () {
+        console.log(id);
+        $(`#${id}`).val(value);
+        $(`#${id}`).trigger("change");
+    });
+}
+
