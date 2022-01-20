@@ -1,10 +1,10 @@
 @section('plugins.Select2', true)
+
 <x-adminlte-select2
     id="causes"
     name="{{ $attributes->get('name') }}"
     label="Causas"
     :config="$config"
-    enable-old-support="true"
     fgroup-class="{{ $attributes->get('fgroup-class') }}">
 
     <x-slot name="prependSlot">
@@ -13,18 +13,27 @@
         </span>
     </x-slot>
 
-
     @foreach ($causes as $cause)
 
         {{-- if select2 is does't allow multiple it has to have an empty option --}}
         @unless($config['multiple'])
             <option></option>
-        @endunless ()
+        @endunless
 
-        <option
+        {{-- <option
             value="{{ $cause->id }}"
             {{ in_array($cause->id, $selectedValues) ? 'selected=selected' : '' }}>
+            {{ $cause->name }}
+        </option> --}}
+        <option value="{{ $cause->id }}">
             {{ $cause->name }}
         </option>
     @endforeach
 </x-adminlte-select2>
+
+@push('scripts')
+    <script>
+        // console.log(selectedCauses);
+        initSelect2('causes', "");
+    </script>
+@endpush

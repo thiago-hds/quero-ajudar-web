@@ -28,7 +28,9 @@ class SkillController extends Controller
             $inputs->name = '';
         }
         $type = 'skills';
-        $categories = Skill::where('name', 'like', '%' . $inputs->name . '%')->orderBy('name', 'asc')->paginate(10);
+        $categories = Skill::where('name', 'like', '%' . $inputs->name . '%')
+            ->orderBy('name', 'asc')
+            ->paginate(10);
         return view('categories.index', compact('type', 'categories', 'inputs'));
     }
 
