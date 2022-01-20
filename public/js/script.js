@@ -145,3 +145,4 @@ function initSelect2(id, value = "") {
         $(`#${id}`).trigger("change");
     });
 }
+

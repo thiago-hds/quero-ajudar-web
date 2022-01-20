@@ -53,7 +53,6 @@ class User extends Authenticatable
      */
     public function scopeFilter($query, $filters)
     {
-
         $query->when(
             $filters['name'] ?? false,
             function ($query, $name) {
