@@ -15,8 +15,7 @@ use App\Enums\StatusType;
         name="name"
         label="Nome"
         fgroup-class="col-sm-12"
-        value="{{ $inputs->name ?? '' }}"
-    />
+        value="{{ request('name') }}" />
 @endsection
 
 @section('table-rows')
@@ -36,19 +35,19 @@ use App\Enums\StatusType;
                 @can('update', $category)
                     <a
                         class="btn btn-info btn-sm"
-                        href="{{ $type == 'causes' ? route('causes.edit', $category->id) : route('skills.edit', $category->id) }}"
-                    >
+                        href="{{ $type == 'causes' ? route('causes.edit', $category->id) : route('skills.edit', $category->id) }}">
                         <i class="fas fa-pencil-alt"></i> Editar
                     </a>
                 @endcan
                 @can('delete', $category)
                     <button
-                        class="btn btn-danger btn-sm"
+                        class="btn btn-danger btn-sm btn-delete"
                         data-toggle="modal"
                         data-target="#modal-delete"
-                        onclick="deleteData('{{ $type }}',{{ $category->id }})"
-                    >
-                        <i class="fas fa-trash"></i> Excluir
+                        data-resource="{{ $type }}"
+                        data-id="{{ $category->id }}">
+                        <i class="fas fa-trash"></i>
+                        Excluir
                     </button>
                 @endcan
             </td>

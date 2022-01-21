@@ -11,7 +11,7 @@ class CauseController extends Controller
 {
 
     public function __construct()
-    {   
+    {
         $this->middleware('auth');
         $this->authorizeResource(\App\Cause::class);
     }
@@ -22,14 +22,12 @@ class CauseController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {   
-        $inputs = (object) $request->all();
-        if(!isset($inputs->name)){
-            $inputs->name = '';
-        }
+    {
         $type = 'causes';
-        $categories = Cause::where('name','like', '%'. $inputs->name.'%')->orderBy('name', 'asc')->paginate(10);
-        return view('categories.index', compact('type','categories', 'inputs'));
+        $categories = Cause::where('name', 'like', "%{$request->name}%")
+            ->orderBy('name', 'asc')
+            ->paginate(10);
+        return view('categories.index', compact('type', 'categories'));
     }
 
     /**
@@ -52,8 +50,8 @@ class CauseController extends Controller
     public function store(CategoryRequest $request)
     {
         $cause = new Cause([
-            'name'                          => $request->input('name'),
-            'fontawesome_icon_unicode'      => $request->input('fontawesome_icon_unicode')
+            'name'                          => $request->name,
+            'fontawesome_icon_unicode'      => $request->fontawesome_icon_unicode
         ]);
         $cause->save();
         return redirect('/causes')->with('success', 'Causa Salva!');
@@ -82,8 +80,8 @@ class CauseController extends Controller
     public function update(CategoryRequest $request, Cause $cause)
     {
         $cause->update([
-            'name'                          => $request->input('name'),
-            'fontawesome_icon_unicode'      => $request->input('fontawesome_icon_unicode')
+            'name'                          => $request->name,
+            'fontawesome_icon_unicode'      => $request->fontawesome_icon_unicode
         ]);
 
         return redirect('/causes')->with('success', 'Causa atualizada!');
