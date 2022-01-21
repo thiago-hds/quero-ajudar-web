@@ -65,7 +65,9 @@ class VolunteerController extends Controller
         $volunteer->causes()->sync($request->causes);
         $volunteer->skills()->sync($request->skills);
 
-        return redirect('/volunteers')->with('success', 'Voluntário salvo!');
+        return redirect()
+            ->route('volunteers.index')
+            ->with('success', 'Voluntário salvo!');
     }
 
     /**
@@ -100,7 +102,9 @@ class VolunteerController extends Controller
         $volunteer->causes()->sync($request->causes);
         $volunteer->skills()->sync($request->skills);
 
-        return redirect('/volunteers')->with('success', 'Voluntário atualizado!');
+        return redirect()
+            ->route('volunteers.index')
+            ->with('success', 'Voluntário atualizado!');
     }
 
     /**
@@ -115,6 +119,9 @@ class VolunteerController extends Controller
         $volunteer->skills()->detach();
         $volunteer->user->delete();
         $volunteer->delete();
-        return redirect('/volunteers')->with('success', 'Voluntário excluído!');
+
+        return redirect()
+            ->route('volunteers.index')
+            ->with('success', 'Voluntário excluído!');
     }
 }

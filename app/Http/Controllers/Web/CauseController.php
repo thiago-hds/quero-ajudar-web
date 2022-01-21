@@ -54,7 +54,9 @@ class CauseController extends Controller
             'fontawesome_icon_unicode'      => $request->fontawesome_icon_unicode
         ]);
         $cause->save();
-        return redirect('/causes')->with('success', 'Causa Salva!');
+        return redirect()
+            ->route('applications.index')
+            ->with('success', 'Causa Salva!');
     }
 
     /**
@@ -84,7 +86,7 @@ class CauseController extends Controller
             'fontawesome_icon_unicode'      => $request->fontawesome_icon_unicode
         ]);
 
-        return redirect('/causes')->with('success', 'Causa atualizada!');
+        return redirect()->route('causes.index')->with('success', 'Causa atualizada!');
     }
 
     /**
@@ -96,6 +98,6 @@ class CauseController extends Controller
     public function destroy(Cause $cause)
     {
         $cause->delete();
-        return redirect('/causes')->with('success', 'Causa excluída!');
+        return redirect()->route('causes.index')->with('success', 'Causa excluída!');
     }
 }

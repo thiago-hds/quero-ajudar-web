@@ -69,7 +69,7 @@ class UserController extends Controller
 
         User::create($attributes);
 
-        return redirect('/users')->with('success', 'Usuário Salvo!');
+        return redirect()->route('users.index')->with('success', 'Usuário Salvo!');
     }
 
     /**
@@ -119,7 +119,9 @@ class UserController extends Controller
 
         $user->update($attributes);
 
-        return redirect('/users')->with('success', 'Usuário atualizado!');
+        return redirect()
+            ->route('users.index')
+            ->with('success', 'Usuário atualizado!');
     }
 
     /**
@@ -131,6 +133,8 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        return redirect('/users')->with('success', 'Usuário excluído!');
+        return redirect()
+            ->route('users.index')
+            ->with('success', 'Usuário excluído!');
     }
 }

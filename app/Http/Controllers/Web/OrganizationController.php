@@ -89,7 +89,9 @@ class OrganizationController extends Controller
             $organization->phones()->save(new Phone(['number' => $number]));
         }
 
-        return redirect('/organizations')->with('success', 'Instituição Salva!');
+        return redirect()
+            ->route('organizations.index')
+            ->with('success', 'Instituição Salva!');
     }
 
     /**
@@ -159,7 +161,8 @@ class OrganizationController extends Controller
             ]);
         }
 
-        return redirect('/organizations')
+        return redirect()
+            ->route('organizations.index')
             ->with('success', 'Instituição atualizada!');
     }
 
@@ -172,6 +175,8 @@ class OrganizationController extends Controller
     public function destroy(Organization $organization)
     {
         $organization->delete();
-        return redirect('/organizations')->with('success', 'Instituição excluída!');
+        return redirect()
+            ->route('organizations.index')
+            ->with('success', 'Instituição excluída!');
     }
 }

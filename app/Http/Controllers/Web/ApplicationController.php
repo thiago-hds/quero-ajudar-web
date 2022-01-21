@@ -75,9 +75,11 @@ class ApplicationController extends Controller
         $application->volunteer()->associate($volunteer);
         $application->save();
 
-        $volunteer->updateRecommendations();
+        // $volunteer->updateRecommendations();
 
-        return redirect('/applications')->with('success', 'Inscrição salva!');
+        return redirect()
+            ->route('applications.index')
+            ->with('success', 'Inscrição salva!');
     }
 
     /**

@@ -15,25 +15,28 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect('/login');
+    return redirect('/admin/login');
 });
 
-Auth::routes();
+Route::prefix('admin')->group(function () {
 
-Route::get('/home', 'Web\HomeController@index')->name('home');
-Route::get('state/{abbr}/cities', 'Web\AddressController@getCitiesByStateAbbr');
-Route::get('users/profile', 'Web\UserController@profile');
+    Auth::routes();
 
-Route::resources([
-    'users'         => 'Web\UserController',
-    'organizations' => 'Web\OrganizationController',
-    'vacancies'     => 'Web\VacancyController',
-    'volunteers'    => 'Web\VolunteerController',
-    'applications'   => 'Web\ApplicationController',
-    'causes'        => 'Web\CauseController',
-    'skills'        => 'Web\SkillController'
-]);
+    Route::get('/dashboard', 'Web\HomeController@index')->name('dashboard');
+    Route::get('state/{abbr}/cities', 'Web\AddressController@getCitiesByStateAbbr');
+    Route::get('users/profile', 'Web\UserController@profile');
 
+    Route::resources([
+        'users'         => 'Web\UserController',
+        'organizations' => 'Web\OrganizationController',
+        'vacancies'     => 'Web\VacancyController',
+        'volunteers'    => 'Web\VolunteerController',
+        'applications'  => 'Web\ApplicationController',
+        'causes'        => 'Web\CauseController',
+        'skills'        => 'Web\SkillController'
+    ]);
 
-
-Route::resource('applications', 'Web\ApplicationController')->except(['show', 'edit', 'update']);
+    Route::resource('applications', 'Web\ApplicationController')->except([
+        'show', 'edit', 'update'
+    ]);
+});

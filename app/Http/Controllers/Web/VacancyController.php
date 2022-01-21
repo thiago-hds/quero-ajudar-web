@@ -139,7 +139,7 @@ class VacancyController extends Controller
             $vacancy->address()->create($addressAttributes);
         }
 
-        return redirect('/vacancies')->with('success', 'Vaga salva!');
+        return redirect()->route('vacancies.index')->with('success', 'Vaga salva!');
     }
 
     /**
@@ -219,7 +219,7 @@ class VacancyController extends Controller
         $vacancy->causes()->sync($request->input('causes'));
         $vacancy->skills()->sync($request->input('skills'));
 
-        return redirect('/vacancies')->with('success', 'Vaga atualizada!');
+        return redirect()->route('vacancies.index')->with('success', 'Vaga atualizada!');
     }
 
     /**
@@ -232,14 +232,5 @@ class VacancyController extends Controller
     {
         $vacancy->delete();
         return redirect('/vacancies')->with('success', 'Vaga excluída!');
-    }
-
-    private function saveImage(UploadedFile $file)
-    {
-        $name = uniqid(date('HisYmd'));
-        $extension = $file->extension();
-        $nameFile = "{$name}.{$extension}";
-
-        return $file->storeAs('vacancy_image', $nameFile);
     }
 }

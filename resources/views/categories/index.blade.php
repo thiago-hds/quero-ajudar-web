@@ -44,8 +44,7 @@ use App\Enums\StatusType;
                         class="btn btn-danger btn-sm btn-delete"
                         data-toggle="modal"
                         data-target="#modal-delete"
-                        data-resource="{{ $type }}"
-                        data-id="{{ $category->id }}">
+                        data-url={{ route('categories.destroy', $category->id) }}>
                         <i class="fas fa-trash"></i>
                         Excluir
                     </button>

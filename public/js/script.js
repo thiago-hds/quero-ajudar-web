@@ -1,22 +1,38 @@
 var cityId = null;
 
+// inclui a rota correta de remoção no modal de confirmação
+//ao clicar no botão deletar de algum item da tabela
+function updateDeleteConfirmationModal(url) {
+    $("#form-delete").attr("action", url);
+}
+
+function initSelect2(id, value = "") {
+    $(document).ready(function () {
+        console.log(id);
+        $(`#${id}`).val(value);
+        $(`#${id}`).trigger("change");
+    });
+}
+
+$(".btn-delete").on("click", function () {
+    console.log("delete");
+    const { url } = this.dataset;
+    if (!url) return;
+    console.log(url);
+    updateDeleteConfirmationModal(url);
+});
+
+// controle de exibição select de instituições no cadastro de usuários
+$("input[name=profile]").change(function () {
+    if (this.value == "organization") {
+        $(".organization-container").show(300);
+    } else {
+        $(".organization-container").hide(300);
+    }
+});
+
 $(document).ready(function () {
     // Index page
-
-    // inclui a rota correta de remoção no modal de confirmação
-    //ao clicar no botão deletar de algum item da tabela
-    function updateDeleteConfirmationModal(resource, id) {
-        const url = `/${resource}/${id}`;
-        $("#form-delete").attr("action", url);
-    }
-
-    $(".btn-delete").on("click", function () {
-        console.log("delete");
-        const { resource, id } = this.dataset;
-        console.log(resource, id);
-        if (!resource || !id) return;
-        updateDeleteConfirmationModal(resource, id);
-    });
 
     // $(".select2").select2({ allowClear: true });
     $(".date-input").inputmask("99/99/9999");
@@ -24,15 +40,6 @@ $(document).ready(function () {
     $(".hour-input").inputmask("99:99");
     // $('.image-dropzone').dropzone();
     $('[data-toggle="tooltip"]').tooltip();
-
-    // controle de exibição select de instituições no cadastro de usuários
-    $("input[name=profile]").change(function () {
-        if (this.value == "organization") {
-            $(".organization-container").show(300);
-        } else {
-            $(".organization-container").hide(300);
-        }
-    });
 
     // controle de multiplos telefones
     $(document.body).on("click", ".btn-remove-phone", function () {
@@ -137,12 +144,3 @@ function addNewPhoneInput() {
         $(".btn-add-phone").prop("disabled", true);
     }
 }
-
-function initSelect2(id, value = "") {
-    $(document).ready(function () {
-        console.log(id);
-        $(`#${id}`).val(value);
-        $(`#${id}`).trigger("change");
-    });
-}
-

@@ -188,12 +188,12 @@ return [
     */
 
     'use_route_url' => false,
-    'dashboard_url' => 'home',
-    'logout_url' => 'logout',
-    'login_url' => 'login',
-    'register_url' => 'register',
-    'password_reset_url' => 'password/reset',
-    'password_email_url' => 'password/email',
+    'dashboard_url' => 'admin/dashboard',
+    'logout_url' => 'admin/logout',
+    'login_url' => 'admin/login',
+    'register_url' => 'admin/register',
+    'password_reset_url' => 'admin/password/reset',
+    'password_email_url' => 'admin/password/email',
     'profile_url' => false,
 
     /*
@@ -234,12 +234,12 @@ return [
                 [
                     'text' => 'Novo',
                     'icon' => 'fas fa-fw fa-plus-circle',
-                    'url'  => 'users/create',
+                    'url'  => 'admin/users/create',
                 ],
                 [
                     'text' => 'Listar',
                     'icon' => 'fas fa-fw fa-list',
-                    'url'  => 'users',
+                    'url'  => 'admin/users',
                 ]
             ]
         ],
@@ -252,12 +252,12 @@ return [
                 [
                     'text' => 'Nova',
                     'icon' => 'fas fa-fw fa-plus-circle',
-                    'url'  => 'organizations/create',
+                    'url'  => 'admin/organizations/create',
                 ],
                 [
                     'text' => 'Listar',
                     'icon' => 'fas fa-fw fa-list',
-                    'url'  => 'organizations',
+                    'url'  => 'admin/organizations',
                 ]
             ]
         ],
@@ -269,12 +269,12 @@ return [
                 [
                     'text' => 'Nova',
                     'icon' => 'fas fa-fw fa-plus-circle',
-                    'url'  => 'vacancies/create',
+                    'url'  => 'admin/vacancies/create',
                 ],
                 [
                     'text' => 'Listar',
                     'icon' => 'fas fa-fw fa-list',
-                    'url'  => 'vacancies',
+                    'url'  => 'admin/vacancies',
                 ]
             ]
         ],
@@ -287,12 +287,12 @@ return [
                 [
                     'text' => 'Novo',
                     'icon' => 'fas fa-fw fa-plus-circle',
-                    'url'  => 'volunteers/create',
+                    'url'  => 'admin/volunteers/create',
                 ],
                 [
                     'text' => 'Listar',
                     'icon' => 'fas fa-fw fa-list',
-                    'url'  => 'volunteers',
+                    'url'  => 'admin/volunteers',
                 ]
             ]
         ],
@@ -304,13 +304,13 @@ return [
                 [
                     'text' => 'Nova',
                     'icon' => 'fas fa-fw fa-plus-circle',
-                    'url'  => 'applications/create',
+                    'url'  => 'admin/applications/create',
                     'can'  => 'create-applications',
                 ],
                 [
                     'text' => 'Listar',
                     'icon' => 'fas fa-fw fa-list',
-                    'url'  => 'applications',
+                    'url'  => 'admin/applications',
                 ]
             ]
         ],
@@ -323,12 +323,12 @@ return [
                 [
                     'text' => 'Nova',
                     'icon' => 'fas fa-fw fa-plus-circle',
-                    'url'  => 'causes/create',
+                    'url'  => 'admin/causes/create',
                 ],
                 [
                     'text' => 'Listar',
                     'icon' => 'fas fa-fw fa-list',
-                    'url'  => 'causes',
+                    'url'  => 'admin/causes',
                 ]
             ]
         ],
@@ -341,19 +341,19 @@ return [
                 [
                     'text' => 'Nova',
                     'icon' => 'fas fa-fw fa-plus-circle',
-                    'url'  => 'skills/create',
+                    'url'  => 'admin/skills/create',
                 ],
                 [
                     'text' => 'Listar',
                     'icon' => 'fas fa-fw fa-list',
-                    'url'  => 'skills',
+                    'url'  => 'admin/skills',
                 ]
             ]
         ],
         ['header' => 'account_settings'],
         [
             'text' => 'profile',
-            'url'  => 'users/profile',
+            'url'  => 'admin/users/profile',
             'icon' => 'fas fa-fw fa-user',
         ],
     ],

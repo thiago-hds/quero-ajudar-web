@@ -85,8 +85,7 @@ use App\Enums\StatusType;
                         class="btn btn-danger btn-sm btn-delete"
                         data-toggle="modal"
                         data-target="#modal-delete"
-                        data-resource="volunteers"
-                        data-id="{{ $volunteer->user_id }}">
+                        data-url={{ route('volunteers.destroy', $volunteer->user_id) }}>
                         <i class="fas fa-trash"></i>
                         Excluir
                     </button>
