@@ -12,12 +12,11 @@ use App\Http\Requests\Web\ApplicationRequest as WebApplicationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 
-
 class ApplicationController extends Controller
 {
 
     public function __construct()
-    {   
+    {
         $this->middleware('auth');
         $this->authorizeResource(\App\Application::class);
     }
@@ -29,24 +28,21 @@ class ApplicationController extends Controller
      */
     public function index(Request $request)
     {
-        
         $inputs = $request->all();
 
-        // definir clausulas where
         $whereClauses = [];
-        foreach($inputs as $key => $input){
-            if($input && in_array($key, ['volunteer_user_id', 'vacancy_id'])){
+        foreach ($inputs as $key => $input) {
+            if ($input && in_array($key, ['volunteer_user_id', 'vacancy_id'])) {
                 $whereClauses[] = [$key, '=', $input];
             }
         }
 
         // retornar view com dados
-        $inputs = (object) $inputs;
         $applications = Application::where($whereClauses)->paginate(10);
         $vacancies  = Vacancy::orderBy('name')->get();
         $volunteers = Volunteer::all();
 
-        return view('applications.index', compact('inputs', 'applications', 'vacancies', 'volunteers'));
+        return view('applications.index', compact('applications', 'vacancies', 'volunteers'));
     }
 
     /**
@@ -56,7 +52,7 @@ class ApplicationController extends Controller
      */
     public function create()
     {
-        $vacancies = Vacancy::where('status',StatusType::ACTIVE)->orderBy('name')->get();
+        $vacancies = Vacancy::where('status', StatusType::ACTIVE)->orderBy('name')->get();
         $volunteers = Volunteer::whereHas('user', function (Builder $query) {
             $query->where('status', StatusType::ACTIVE);
         })->get();
@@ -74,14 +70,16 @@ class ApplicationController extends Controller
     {
         $volunteer = Volunteer::find($request->input('volunteer_user_id'));
 
-        $application = new Application;
+        $application = new Application();
         $application->vacancy()->associate(Vacancy::find($request->input('vacancy_id')));
         $application->volunteer()->associate($volunteer);
         $application->save();
 
-        $volunteer->updateRecommendations();
+        // $volunteer->updateRecommendations();
 
-        return redirect('/applications')->with('success', 'Inscrição salva!');
+        return redirect()
+            ->route('applications.index')
+            ->with('success', 'Inscrição salva!');
     }
 
     /**

@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-<div class="loading"> 
+<div class="loading">
     <div class="spinner-border text-light" role="status">
     <span class="sr-only"></span>
     </div>
@@ -9,7 +9,7 @@
 @section('title', (isset($vacancy)? 'Editar' : 'Nova') . ' Vaga')
 
 @section('content_header')
-    
+
     @if (config('app.debug') && $errors->any())
       <div class="alert alert-danger">
         <ul>
@@ -19,25 +19,25 @@
         </ul>
       </div><br />
     @endif
-    
+
     <h1 class="m-0 text-dark">{{ (isset($vacancy)? 'Editar' : 'Nova') . ' Vaga' }}</h1>
 @stop
 
-@section('content')    
+@section('content')
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <!-- form start -->
                 <form role="form" method="post" enctype="multipart/form-data" action="{{ isset($vacancy->id)? route('vacancies.update', $vacancy->id) : route('vacancies.store') }}">
                     @if(isset($vacancy))
-                        @method('PATCH') 
+                        @method('PATCH')
                     @endif
                     @csrf
                     <div class="card-body">
                         <!-- organization -->
                         <div class="form-group">
                             <label for="organization_id">Instituição</label>
-                            
+
                             @if(Auth::user()->isAdmin())
                                 <select class="form-control select2  @error('organization_id') is-invalid @enderror" data-placeholder="Selecione uma instituição" style="width: 100%;" name="organization_id">
                                     <option></option>
@@ -69,8 +69,8 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                            </div>  
-                            
+                            </div>
+
                             <!-- image -->
                             <div class="col-sm-6">
                                 <div class="form-group">
@@ -80,11 +80,11 @@
                                     @error('image')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
-                                    
-                                </div>  
+
+                                </div>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <!-- causes -->
                             <div class="col-sm-6">
@@ -126,7 +126,7 @@
 
 
                         <div class="row">
-                            
+
                             <div class="col-sm-6">
                                 <!-- description -->
                                 <div class="form-group">
@@ -149,7 +149,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- status -->
                         <div class="form-group">
                             <label for="status">Status</label>
@@ -164,10 +164,10 @@
                                     name="status" value="{{\App\Enums\StatusType::INACTIVE}}" {{ old('status', isset($vacancy->status)? $vacancy->status : null) == \App\Enums\StatusType::INACTIVE? 'checked' : '' }}>
                                 <label class="form-check-label">Inativo</label>
                             </div>
-                    
+
 
                             @error('status')
-                                {{ $message }} 
+                                {{ $message }}
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -188,16 +188,16 @@
                             </div>
 
                             @error('type')
-                                {{ $message }} 
+                                {{ $message }}
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <div id="frequency_div" style="display:{{(isset($vacancy) && $vacancy->type == \App\Enums\RecurrenceType::UNIQUE_EVENT)? 'none' : 'block'}};">
+                        {{-- <div id="frequency_div" style="display:{{(isset($vacancy) && $vacancy->type == \App\Enums\RecurrenceType::UNIQUE_EVENT)? 'none' : 'block'}};">
                             <hr>
 
                             <h5>Frequência</h5> <br/>
-                            
+
                             <!-- frequency_negotiable -->
                             <div class="form-group">
                                 <label for="frequency_negotiable">À combinar</label>
@@ -205,17 +205,17 @@
                                     <input class="form-check-input" type="radio"
                                         name="frequency_negotiable" value="no" {{ old('frequency_negotiable', (isset($vacancy) && !isset($vacancy->periodicity))? 'yes' : 'no') == 'no'? 'checked' : '' }}>
                                     <label class="form-check-label">Não</label>
-                                </div> 
+                                </div>
 
                                 <div class="form-check">
-                                
+
                                     <input class="form-check-input" type="radio"
                                         name="frequency_negotiable" value="yes" {{ old('frequency_negotiable', (isset($vacancy) && !isset($vacancy->periodicity))? 'yes' : 'no') == 'yes'? 'checked' : '' }}>
                                     <label class="form-check-label">Sim</label>
                                 </div>
-                        
+
                                 @error('frequency_negotiable')
-                                    {{ $message }} 
+                                    {{ $message }}
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -251,8 +251,8 @@
                                         @enderror
                                     </div>
                                 </div>
-                            
-                        
+
+
                                 <!-- amount_per_period -->
                                 <div class="col-sm-4">
                                     <div class="form-group">
@@ -265,7 +265,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <hr>
                         <h5>Horário</h5> <br/>
                         <!-- hours_negotiable -->
@@ -275,17 +275,17 @@
                                 <input class="form-check-input" type="radio"
                                     name="hours_negotiable" value="no" {{ old('hours_negotiable', (isset($vacancy) && !isset($vacancy->time))? 'yes' : 'no') == 'no'? 'checked' : '' }}>
                                 <label class="form-check-label">Não</label>
-                            </div> 
+                            </div>
 
                             <div class="form-check">
                                 <input class="form-check-input" type="radio"
                                     name="hours_negotiable" value="yes" {{ old('hours_negotiable', (isset($vacancy) && !isset($vacancy->time))? 'yes' : 'no') == 'yes'? 'checked' : '' }}>
                                 <label class="form-check-label">Sim</label>
                             </div>
-                    
+
 
                             @error('hours_negotiable')
-                                {{ $message }} 
+                                {{ $message }}
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -312,7 +312,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="time">Hora</label>
-                                
+
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="far fa-clock"></i></span>
@@ -326,9 +326,9 @@
                             </div>
                         </div>
 
-                        <hr>
+                        <hr> --}}
                         <h5>Local</h5> <br/>
-                        
+
                         <!-- location_type -->
                         <div class="form-group">
                             <label for="location_type">Tipo de Local</label>
@@ -357,7 +357,7 @@
                             </div>
 
                             @error('location_type')
-                                {{ $message }} 
+                                {{ $message }}
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -385,7 +385,7 @@
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                </div> 
+                                </div>
                             </div>
                             <!-- promotion_end_date -->
                             <div class="col-sm-4">
@@ -400,7 +400,7 @@
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                </div> 
+                                </div>
                             </div>
 
                             <!-- application_limit -->
@@ -411,7 +411,7 @@
                                     @error('application_limit')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
-                                </div>  
+                                </div>
                             </div>
                         </div>
 
@@ -424,7 +424,7 @@
                     </button>
                     <a class="btn btn-danger" href="{{ route('vacancies.index')}}">
                         <i class="fas fa-arrow-left"></i>  Cancelar
-                    </a>    
+                    </a>
                     </div>
                 </form>
 

@@ -14,9 +14,9 @@ return [
     |
     */
 
-    'title' => 'Quero Ajudar!',
+    'title' => 'AdminLTE 3',
     'title_prefix' => '',
-    'title_postfix' => ' - Painel Administrativo',
+    'title_postfix' => '',
 
     /*
     |--------------------------------------------------------------------------
@@ -45,12 +45,12 @@ return [
     |
     */
 
-    'logo' => '<b>Quero Ajudar!</b>',
-    'logo_img' => 'logo.png',
+    'logo' => '<b>Admin</b>LTE',
+    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'Quero Ajudar!',
+    'logo_img_alt' => 'AdminLTE',
 
     /*
     |--------------------------------------------------------------------------
@@ -188,12 +188,12 @@ return [
     */
 
     'use_route_url' => false,
-    'dashboard_url' => 'home',
-    'logout_url' => 'logout',
-    'login_url' => 'login',
-    'register_url' => 'register',
-    'password_reset_url' => 'password/reset',
-    'password_email_url' => 'password/email',
+    'dashboard_url' => 'admin/dashboard',
+    'logout_url' => 'admin/logout',
+    'login_url' => 'admin/login',
+    'register_url' => 'admin/register',
+    'password_reset_url' => 'admin/password/reset',
+    'password_email_url' => 'admin/password/email',
     'profile_url' => false,
 
     /*
@@ -234,12 +234,12 @@ return [
                 [
                     'text' => 'Novo',
                     'icon' => 'fas fa-fw fa-plus-circle',
-                    'url'  => 'users/create',
+                    'url'  => 'admin/users/create',
                 ],
                 [
                     'text' => 'Listar',
                     'icon' => 'fas fa-fw fa-list',
-                    'url'  => 'users',
+                    'url'  => 'admin/users',
                 ]
             ]
         ],
@@ -252,12 +252,12 @@ return [
                 [
                     'text' => 'Nova',
                     'icon' => 'fas fa-fw fa-plus-circle',
-                    'url'  => 'organizations/create',
+                    'url'  => 'admin/organizations/create',
                 ],
                 [
                     'text' => 'Listar',
                     'icon' => 'fas fa-fw fa-list',
-                    'url'  => 'organizations',
+                    'url'  => 'admin/organizations',
                 ]
             ]
         ],
@@ -269,12 +269,12 @@ return [
                 [
                     'text' => 'Nova',
                     'icon' => 'fas fa-fw fa-plus-circle',
-                    'url'  => 'vacancies/create',
+                    'url'  => 'admin/vacancies/create',
                 ],
                 [
                     'text' => 'Listar',
                     'icon' => 'fas fa-fw fa-list',
-                    'url'  => 'vacancies',
+                    'url'  => 'admin/vacancies',
                 ]
             ]
         ],
@@ -287,12 +287,12 @@ return [
                 [
                     'text' => 'Novo',
                     'icon' => 'fas fa-fw fa-plus-circle',
-                    'url'  => 'volunteers/create',
+                    'url'  => 'admin/volunteers/create',
                 ],
                 [
                     'text' => 'Listar',
                     'icon' => 'fas fa-fw fa-list',
-                    'url'  => 'volunteers',
+                    'url'  => 'admin/volunteers',
                 ]
             ]
         ],
@@ -304,13 +304,13 @@ return [
                 [
                     'text' => 'Nova',
                     'icon' => 'fas fa-fw fa-plus-circle',
-                    'url'  => 'applications/create',
+                    'url'  => 'admin/applications/create',
                     'can'  => 'create-applications',
                 ],
                 [
                     'text' => 'Listar',
                     'icon' => 'fas fa-fw fa-list',
-                    'url'  => 'applications',
+                    'url'  => 'admin/applications',
                 ]
             ]
         ],
@@ -323,12 +323,12 @@ return [
                 [
                     'text' => 'Nova',
                     'icon' => 'fas fa-fw fa-plus-circle',
-                    'url'  => 'causes/create',
+                    'url'  => 'admin/causes/create',
                 ],
                 [
                     'text' => 'Listar',
                     'icon' => 'fas fa-fw fa-list',
-                    'url'  => 'causes',
+                    'url'  => 'admin/causes',
                 ]
             ]
         ],
@@ -341,22 +341,23 @@ return [
                 [
                     'text' => 'Nova',
                     'icon' => 'fas fa-fw fa-plus-circle',
-                    'url'  => 'skills/create',
+                    'url'  => 'admin/skills/create',
                 ],
                 [
                     'text' => 'Listar',
                     'icon' => 'fas fa-fw fa-list',
-                    'url'  => 'skills',
+                    'url'  => 'admin/skills',
                 ]
             ]
         ],
         ['header' => 'account_settings'],
         [
             'text' => 'profile',
-            'url'  => 'users/profile',
+            'url'  => 'admin/users/profile',
             'icon' => 'fas fa-fw fa-user',
         ],
     ],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -414,17 +415,22 @@ return [
             ],
         ],
         'Select2' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js',
+                    'asset' => true,
+                    'location' => 'vendor/select2/js/select2.full.min.js',
                 ],
                 [
                     'type' => 'css',
-                    'asset' => false,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css',
+                    'asset' => true,
+                    'location' => 'vendor/select2/css/select2.min.css',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/select2-bootstrap4-theme/select2-bootstrap4.min.css',
                 ],
             ],
         ],
@@ -463,6 +469,64 @@ return [
                 ],
             ],
         ],
+        'InputMask' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/inputmask/inputmask.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/inputmask/jquery.inputmask.min.js',
+                ]
+            ],
+        ],
+        'BsCustomFileInput' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/bs-custom-file-input/bs-custom-file-input.min.js',
+                ],
+            ],
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | IFrame
+    |--------------------------------------------------------------------------
+    |
+    | Here we change the IFrame mode configuration. Note these changes will
+    | only apply to the view that extends and enable the IFrame mode.
+    |
+    | For detailed instructions you can look the iframe mode section here:
+    | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/IFrame-Mode-Configuration
+    |
+    */
+
+    'iframe' => [
+        'default_tab' => [
+            'url' => null,
+            'title' => null,
+        ],
+        'buttons' => [
+            'close' => true,
+            'close_all' => true,
+            'close_all_other' => true,
+            'scroll_left' => true,
+            'scroll_right' => true,
+            'fullscreen' => true,
+        ],
+        'options' => [
+            'loading_screen' => 1000,
+            'auto_show_new_tab' => true,
+            'use_navbar_items' => true,
+        ],
     ],
 
     /*
@@ -474,6 +538,7 @@ return [
     |
     | For detailed instructions you can look the livewire here:
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Other-Configuration
+    |
     */
 
     'livewire' => false,

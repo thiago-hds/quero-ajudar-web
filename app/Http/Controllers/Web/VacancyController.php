@@ -19,13 +19,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\UploadedFile;
 use App\Http\Controllers\Controller;
+use App\Services\ImageUploader;
 use App\User;
 
 class VacancyController extends Controller
 {
 
     public function __construct()
-    {   
+    {
         $this->middleware('auth');
         $this->authorizeResource(\App\Vacancy::class);
     }
@@ -36,72 +37,15 @@ class VacancyController extends Controller
      */
     public function index(Request $request)
     {
-        // separacao dos campos de filtragem por tipo de comparacao
-        $equalFields    =   ['status','type']; 
-        $likeFields     =   ['name'];
+        $filters = $request->all();
+        $vacancies = Vacancy::latest()->filter($filters)->paginate(10);
 
-        $inputs = $request->all();
-
-        if(Auth::user()->profile == ProfileType::ORGANIZATION){
-            $inputs['organization_id'] = Auth::user()->organization_id;
-        }
-        
-        // definir clausulas where
-        $whereClauses = [];
-        
-        foreach($inputs as $key => $input){
-            if($input && in_array($key, array_merge($equalFields, $likeFields))){
-                if(in_array($key,$equalFields)){
-                    $whereClauses[] = [$key, '=', $input];
-                }
-                else{
-                    $whereClauses[] = [$key, 'like', '%'.$input.'%'];
-                }
-            }
-        }
-
-        $vacancies = Vacancy::where($whereClauses);
-
-        
-        $cause_id = $request->input('cause_id');
-        if(isset($cause_id) && $cause_id !== ''){
-            $vacancies = $vacancies->whereHas('causes', function (Builder $query) use ($cause_id) {
-                $query->where('id', '=', $cause_id);
-            });
-        }
-
-        $skill_id = $request->input('skill_id');
-        if(isset($skill_id) && $skill_id !== ''){
-            $vacancies = $vacancies->whereHas('skills', function (Builder $query) use ($skill_id) {
-                $query->where('id', '=', $skill_id);
-            });
-        }
-        
-        
-        $state_abbr = $request->input('address_state');
-        if(isset($state_abbr) && $state_abbr !== ''){
-            $vacancies = $vacancies->whereHas('address.city.state', function (Builder $query) use ($state_abbr) {
-                $query->where('abbr', '=', $state_abbr);
-            }); 
-        }
-        
-        $city_id = $request->input('address_city');
-        if(isset($city_id) && $city_id !== '0'){
-            $vacancies = $vacancies->whereHas('address.city', function (Builder $query) use ($city_id) {
-                $query->where('id', '=', $city_id);
-            }); 
-        }
-       
-
-        // retornar view com dados
-        $inputs = (object) $inputs;
-        $vacancies      = $vacancies->orderBy('name', 'asc')->paginate(10);
         $organizations  = Organization::orderBy('name', 'asc')->get();
         $causes         = Cause::orderBy('name', 'asc')->get();
         $skills         = Skill::orderBy('name', 'asc')->get();
         $states         = State::orderBy('name', 'asc')->get();
 
-        return view('vacancies.index', compact('inputs', 'vacancies', 'organizations', 'causes', 'skills', 'states'));
+        return view('vacancies.index', compact('vacancies', 'organizations', 'causes', 'skills', 'states'));
     }
 
     /**
@@ -125,75 +69,77 @@ class VacancyController extends Controller
      * @param  \App\Http\Requests\VacancyRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(VacancyRequest $request)
+    public function store(VacancyRequest $request, ImageUploader $imageUploader)
     {
 
-        $vacancy = new Vacancy([
-            'name'                  => $request->input('name'),
-            'description'           => $request->input('description'),
-            'tasks'                 => $request->input('tasks'),
-            'status'                => $request->input('status'),
-            'type'                  => $request->input('type'),
-            'promotion_start_date'  => $request->input('promotion_start_date'),
-            'promotion_end_date'    => $request->input('promotion_end_date'),
-            'application_limit'      => $request->input('application_limit'),
-            'location_type'         => $request->input('location_type')
+        $attributes = $request->only([
+            'name', 'description', 'tasks', 'status', 'type',
+            'promotion_start_date', 'promotion_end_date',
+            'application_limit', 'location_type'
         ]);
 
-
-
-        if($request->hasFile('image') && $request->file('image')->isValid()){
-            $path = $this->saveImage($request->file('image'));
-            if($path){
-                $vacancy->image = $path;
+        if ($request->hasFile('image') && $request->file('image')->isValid()) {
+            $path = $imageUploader->upload(
+                $request->file('image')->getRealPath()
+            );
+            if ($path) {
+                $attributes['image'] = $path;
             }
         }
 
-        if(!Auth::user()->isAdmin()){
-            $organization = Organization::find(Auth::user()->organization_id);
-        }
-        else{
-            $organization = Organization::find($request->input('organization_id'));
+        $vacancy = new Vacancy($attributes);
+
+
+
+        if (!$request->user()->isAdmin()) {
+            $organization = Organization::find($request->user()->organization_id);
+        } else {
+            $organization = Organization::find($request->organization_id);
         }
 
-        if(isset($organization)){
+        if (isset($organization)) {
             $vacancy->organization()->associate($organization);
-        }  
-
-        if($vacancy->type == RecurrenceType::RECURRENT && 
-            $request->input('frequency_negotiable') == 'no'){
-
-                $vacancy->periodicity       = $request->input('periodicity');
-                $vacancy->unit_per_period   = $request->input('unit_per_period');
-                $vacancy->amount_per_period = $request->input('amount_per_period');
         }
 
-        if($vacancy->type == RecurrenceType::UNIQUE_EVENT &&
-            $request->input('hours_negotiable') == 'no'){
-                $vacancy->date = $request->input('date');
-                $vacancy->time = $request->input('time');
-        }
-        else if($vacancy->type == RecurrenceType::RECURRENT &&
-            $request->input('hours_negotiable') == 'no'){
-                $vacancy->time = $request->input('time');
-        }
+        // if (
+        //     $vacancy->type == RecurrenceType::RECURRENT &&
+        //     $request->frequency_negotiable == 'no'
+        // ) {
+        //         $vacancy->periodicity       = $request->periodicity;
+        //         $vacancy->unit_per_period   = $request->unit_per_period;
+        //         $vacancy->amount_per_period = $request->amount_per_period;
+        // }
+
+        // if (
+        //     $vacancy->type == RecurrenceType::UNIQUE_EVENT &&
+        //     $request->hours_negotiable == 'no'
+        // ) {
+        //         $vacancy->date = $request->date;
+        //         $vacancy->time = $request->time;
+        // } elseif (
+        //     $vacancy->type == RecurrenceType::RECURRENT &&
+        //     $request->hours_negotiable == 'no'
+        // ) {
+        //         $vacancy->time = $request->time;
+        // }
 
         $vacancy->save();
 
         $vacancy->causes()->sync($request->input('causes'));
         $vacancy->skills()->sync($request->input('skills'));
 
-        if($vacancy->location_type == LocationType::SPECIFIC_ADDRESS){
-            $vacancy->address()->create([
-                'zipcode'           => $request->input('address_zipcode'),
-                'street'            => $request->input('address_street'),
-                'number'            => $request->input('address_number'),
-                'neighborhood'      => $request->input('address_neighborhood'),
-                'city_id'           => $request->input('address_city'),
+        if ($vacancy->location_type == LocationType::SPECIFIC_ADDRESS) {
+            $addressAttributes = $request->only([
+                'address_zipcode',
+                'address_street',
+                'address_number',
+                'address_neighborhood',
+                'address_city',
             ]);
+            $vacancy->address()->create($addressAttributes);
         }
 
-        return redirect('/vacancies')->with('success', 'Vaga salva!');
+        return redirect()->route('vacancies.index')->with('success', 'Vaga salva!');
     }
 
     /**
@@ -219,90 +165,61 @@ class VacancyController extends Controller
      * @param  \App\Vacancy  $vacancy
      * @return \Illuminate\Http\Response
      */
-    public function update(VacancyRequest $request, Vacancy $vacancy)
+    public function update(VacancyRequest $request, Vacancy $vacancy, ImageUploader $imageUploader)
     {
-        //return $request;
-        $vacancy->update([
-            'name'                  => $request->input('name'),
-            'description'           => $request->input('description'),
-            'tasks'                 => $request->input('tasks'),
-            'status'                => $request->input('status'),
-            'type'                  => $request->input('type'),
-            'promotion_start_date'  => $request->input('promotion_start_date'),
-            'promotion_end_date'    => $request->input('promotion_end_date'),
-            'application_limit'     => $request->input('application_limit'),
-            'location_type'         => $request->input('location_type'),
+        $attributes = $request->only([
+            'name',
+            'description',
+            'tasks',
+            'status',
+            'type',
+            'promotion_start_date',
+            'promotion_end_date',
+            'application_limit',
+            'location_type',
         ]);
 
-        if(!Auth::user()->isAdmin()){
-            $organization = Organization::find(Auth::user()->organization_id);
-        }
-        else{
-            $organization = Organization::find($request->input('organization_id'));
-        }
-
-        if(isset($organization)){
-            $vacancy->organization()->associate($organization);
-        }   
-
-        if($request->hasFile('image') && $request->file('image')->isValid()){
-            $path = $this->saveImage($request->file('image'));
-            if($path){
-                $vacancy->image = $path;
+        if ($request->hasFile('image') && $request->file('image')->isValid()) {
+            $path = $imageUploader->upload(
+                $request->file('image')->getRealPath()
+            );
+            if ($path) {
+                $attributes['image'] = $path;
             }
         }
-        
-        // FREQUENCIA
-        if($vacancy->type == RecurrenceType::RECURRENT && 
-            $request->input('frequency_negotiable') == 'no'){
 
-                $vacancy->periodicity       = $request->input('periodicity');
-                $vacancy->unit_per_period   = $request->input('unit_per_period');
-                $vacancy->amount_per_period = $request->input('amount_per_period');
-        }
-        else{
-            $vacancy->periodicity       = null;
-            $vacancy->unit_per_period   = null;
-            $vacancy->amount_per_period = null;
+        $vacancy->update($attributes);
+
+        if (!$request->user()->isAdmin()) {
+            $organization = Organization::find(Auth::user()->organization_id);
+        } else {
+            $organization = Organization::find($request->organization_id);
         }
 
-        // HORARIO
-        if($vacancy->type == RecurrenceType::UNIQUE_EVENT &&
-            $request->input('hours_negotiable') == 'no'){  
-
-                $vacancy->date = $request->input('date');
-                $vacancy->time = $request->input('time');
-        }
-        else if($vacancy->type == RecurrenceType::RECURRENT &&
-            $request->input('hours_negotiable') == 'no'){
-                $vacancy->date = null;
-                $vacancy->time = $request->input('time');
-        }
-        else{
-            $vacancy->date = null;
-            $vacancy->time = null;
+        if (isset($organization)) {
+            $vacancy->organization()->associate($organization);
         }
 
         $vacancy->save();
-        
+
         // LOCAL
-        if($vacancy->location_type == LocationType::SPECIFIC_ADDRESS){
-            $vacancy->address()->updateOrCreate([
-                'zipcode'           => $request->input('address_zipcode'),
-                'street'            => $request->input('address_street'),
-                'number'            => $request->input('address_number'),
-                'neighborhood'      => $request->input('address_neighborhood'),
-                'city_id'           => $request->input('address_city'),
+        if ($vacancy->location_type == LocationType::SPECIFIC_ADDRESS) {
+            $addressAttributes = $request->only([
+                'address_zipcode',
+                'address_street',
+                'address_number',
+                'address_neighborhood',
+                'address_city',
             ]);
-        }
-        else{
+            $vacancy->address()->updateOrCreate($addressAttributes);
+        } else {
             $vacancy->address()->delete();
         }
 
         $vacancy->causes()->sync($request->input('causes'));
         $vacancy->skills()->sync($request->input('skills'));
-        
-        return redirect('/vacancies')->with('success', 'Vaga atualizada!');
+
+        return redirect()->route('vacancies.index')->with('success', 'Vaga atualizada!');
     }
 
     /**
@@ -315,13 +232,5 @@ class VacancyController extends Controller
     {
         $vacancy->delete();
         return redirect('/vacancies')->with('success', 'Vaga excluída!');
-    }
-
-    private function saveImage(UploadedFile $file){
-        $name = uniqid(date('HisYmd'));
-        $extension = $file->extension();
-        $nameFile = "{$name}.{$extension}";
-
-        return $file->storeAs('vacancy_image', $nameFile);
     }
 }

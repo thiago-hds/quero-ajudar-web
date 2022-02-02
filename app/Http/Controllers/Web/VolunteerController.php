@@ -10,15 +10,13 @@ use App\User;
 use App\Http\Requests\Web\VolunteerRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Eloquent\Builder;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
 
 class VolunteerController extends Controller
 {
 
     public function __construct()
-    {   
+    {
         $this->middleware('auth');
         $this->authorizeResource(\App\Volunteer::class);
     }
@@ -30,58 +28,10 @@ class VolunteerController extends Controller
      */
     public function index(Request $request)
     {
-        // separacao dos campos de filtragem por tipo de comparacao
-        $equalFields    =   ['status']; 
-        $likeFields     =   ['email'];
+        $filters = $request->all();
+        $volunteers = Volunteer::latest()->filter($filters)->paginate(10);
 
-        // definir clausulas where
-        $whereClauses = [];
-
-        $inputs = $request->all();
-        foreach($inputs as $key => $input){
-            if($input && in_array($key, array_merge($equalFields, $likeFields))){
-                if(in_array($key,$equalFields)){
-                    $whereClauses[] = [$key, '=', $input];
-                }
-                else{
-                    $whereClauses[] = [$key, 'like', '%'.$input.'%'];
-                }
-            }
-        }
-        
-        $volunteers = Volunteer::whereHas('user', function (Builder $query) use ($whereClauses) {
-            $query->where($whereClauses);
-        });
-
-        if($request->has('name')){
-            $name = $request->input('name');
-            $volunteers = $volunteers
-                ->whereHas('user', function (Builder $query) use ($name) {
-                    return $query->whereRaw("CONCAT(first_name, ' ', last_name) like '%{$name}%'");
-                });
-        }
-        
-        $cause_id = $request->input('cause_id');
-        if(isset($cause_id) && $cause_id !== ''){
-            $volunteers = $volunteers->whereHas('causes', function (Builder $query) use ($cause_id) {
-                $query->where('id', '=', $cause_id);
-            });
-        }
-
-        $skill_id = $request->input('skill_id');
-        if(isset($skill_id) && $skill_id !== ''){
-            $volunteers = $volunteers->whereHas('skills', function (Builder $query) use ($skill_id) {
-                $query->where('id', '=', $skill_id);
-            });
-        }
-
-        // retornar view com dados
-        $inputs = (object) $inputs;
-        $volunteers = $volunteers->paginate(10);
-        $causes = Cause::orderBy('name', 'asc')->get();
-        $skills = Skill::orderBy('name', 'asc')->get();
-
-        return view('volunteers.index', compact('inputs', 'volunteers', 'causes', 'skills'));
+        return view('volunteers.index', compact('volunteers'));
     }
 
     /**
@@ -91,9 +41,7 @@ class VolunteerController extends Controller
      */
     public function create()
     {
-        $causes = Cause::orderBy('name', 'asc')->get();
-        $skills = Skill::orderBy('name', 'asc')->get();
-        return view('volunteers.edit', compact('causes', 'skills'));
+        return view('volunteers.edit');
     }
 
     /**
@@ -104,36 +52,22 @@ class VolunteerController extends Controller
      */
     public function store(VolunteerRequest $request)
     {
-        $user = new User([
-            'first_name'        => $request->input('first_name'),
-            'last_name'         => $request->input('last_name'),
-            'date_of_birth'     => $request->input('date_of_birth'),
-            'profile'           => ProfileType::VOLUNTEER,
-            'email'             => $request->input('email'),
-            'password'          => Hash::make($request->input('password')),
-            'status'            => $request->input('status')
-        ]);
-        $user->save();
-        
-        $volunteer = new Volunteer;
+        $attributes = $request->all();
+        $attributes['profile'] = ProfileType::VOLUNTEER;
+        $attributes['password'] = Hash::make($request->password);
+
+        $user = User::create($attributes);
+
+        $volunteer = new Volunteer();
         $volunteer->user()->associate($user);
         $volunteer->save();
 
-        $volunteer->causes()->sync($request->input('causes'));
-        $volunteer->skills()->sync($request->input('skills'));
+        $volunteer->causes()->sync($request->causes);
+        $volunteer->skills()->sync($request->skills);
 
-        return redirect('/volunteers')->with('success', 'Voluntário salvo!');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Volunteer  $volunteer
-     * @return \Illuminate\Http\Response
-     */
-    public function show($volunteer)
-    {
-        //
+        return redirect()
+            ->route('volunteers.index')
+            ->with('success', 'Voluntário salvo!');
     }
 
     /**
@@ -144,9 +78,7 @@ class VolunteerController extends Controller
      */
     public function edit(Volunteer $volunteer)
     {
-        $causes = Cause::orderBy('name', 'asc')->get();
-        $skills = Skill::orderBy('name', 'asc')->get();
-        return view('volunteers.edit', compact('volunteer','causes', 'skills'));   
+        return view('volunteers.edit', compact('volunteer'));
     }
 
     /**
@@ -159,22 +91,20 @@ class VolunteerController extends Controller
     public function update(VolunteerRequest $request, Volunteer $volunteer)
     {
         $user = User::find($volunteer->user_id);
-        $user->update([
-            'first_name'        => $request->input('first_name'),
-            'last_name'         => $request->input('last_name'),
-            'date_of_birth'     => $request->input('date_of_birth'),
-            'email'             => $request->input('email'),
-            'status'            => $request->input('status')
-        ]);
 
-        if($request->input('password') != $user->password){
-            $user->password = Hash::make($request->input('password'));
+        $attributes = $request->all();
+        if ($request->password != $user->password) {
+            $attributes['password'] = Hash::make($request->password);
         }
 
-        $volunteer->causes()->sync($request->input('causes'));
-        $volunteer->skills()->sync($request->input('skills'));
+        $user->update($attributes);
 
-        return redirect('/volunteers')->with('success', 'Voluntário atualizado!');
+        $volunteer->causes()->sync($request->causes);
+        $volunteer->skills()->sync($request->skills);
+
+        return redirect()
+            ->route('volunteers.index')
+            ->with('success', 'Voluntário atualizado!');
     }
 
     /**
@@ -185,11 +115,13 @@ class VolunteerController extends Controller
      */
     public function destroy(Volunteer $volunteer)
     {
-        
         $volunteer->causes()->detach();
         $volunteer->skills()->detach();
         $volunteer->user->delete();
         $volunteer->delete();
-        return redirect('/volunteers')->with('success', 'Voluntário excluído!');
+
+        return redirect()
+            ->route('volunteers.index')
+            ->with('success', 'Voluntário excluído!');
     }
 }
