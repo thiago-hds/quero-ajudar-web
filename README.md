@@ -1,5 +1,7 @@
 # Quero Ajudar
 
+![](https://res.cloudinary.com/dxhlfgnss/image/upload/v1643811029/readmes/quero-ajudar-admin_spptbp.gif)
+
 ## 💻 Sobre
 
 O Quero Ajudar! é um sistema que tem o objetivo de intermediar a comunicação entre instituições que oferecem vagas de trabalho voluntário e possíveis candidatos a essas vagas.
