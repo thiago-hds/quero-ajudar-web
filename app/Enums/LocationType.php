@@ -6,8 +6,8 @@ use BenSampo\Enum\Enum;
 
 final class LocationType extends Enum
 {
-    const ORGANIZATION_ADDRESS   = 0;
-    const SPECIFIC_ADDRESS       = 1;
-    const REMOTE                 = 2;
-    const NEGOTIABLE             = 3;
+    public const ORGANIZATION_ADDRESS   = 'organization_address';
+    public const SPECIFIC_ADDRESS       = 'specific_address';
+    public const REMOTE                 = 'remote';
+    public const NEGOTIABLE             = 'negotiable';
 }

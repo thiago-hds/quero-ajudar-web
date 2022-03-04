@@ -24,12 +24,12 @@ use App\User;
 
 class VacancyController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('auth');
         $this->authorizeResource(\App\Vacancy::class);
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -55,12 +55,7 @@ class VacancyController extends Controller
      */
     public function create()
     {
-        $organizations = Organization::orderBy('name', 'asc')->get();
-        $causes = Cause::orderBy('name', 'asc')->get();
-        $skills = Skill::orderBy('name', 'asc')->get();
-        $states = State::orderBy('name', 'asc')->get();
-
-        return view('vacancies.edit', compact('organizations', 'causes', 'skills', 'states'));
+        return view('vacancies.edit');
     }
 
     /**
@@ -71,11 +66,9 @@ class VacancyController extends Controller
      */
     public function store(VacancyRequest $request, ImageUploader $imageUploader)
     {
-
         $attributes = $request->only([
-            'name', 'description', 'tasks', 'status', 'type',
-            'promotion_start_date', 'promotion_end_date',
-            'application_limit', 'location_type'
+            'name', 'description', 'tasks', 'status', 'type', 'location_type',
+            'date', 'start_time', 'end_time'
         ]);
 
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
@@ -89,10 +82,10 @@ class VacancyController extends Controller
 
         $vacancy = new Vacancy($attributes);
 
-
-
         if (!$request->user()->isAdmin()) {
-            $organization = Organization::find($request->user()->organization_id);
+            $organization = Organization::find(
+                $request->user()->organization_id
+            );
         } else {
             $organization = Organization::find($request->organization_id);
         }
@@ -101,45 +94,25 @@ class VacancyController extends Controller
             $vacancy->organization()->associate($organization);
         }
 
-        // if (
-        //     $vacancy->type == RecurrenceType::RECURRENT &&
-        //     $request->frequency_negotiable == 'no'
-        // ) {
-        //         $vacancy->periodicity       = $request->periodicity;
-        //         $vacancy->unit_per_period   = $request->unit_per_period;
-        //         $vacancy->amount_per_period = $request->amount_per_period;
-        // }
-
-        // if (
-        //     $vacancy->type == RecurrenceType::UNIQUE_EVENT &&
-        //     $request->hours_negotiable == 'no'
-        // ) {
-        //         $vacancy->date = $request->date;
-        //         $vacancy->time = $request->time;
-        // } elseif (
-        //     $vacancy->type == RecurrenceType::RECURRENT &&
-        //     $request->hours_negotiable == 'no'
-        // ) {
-        //         $vacancy->time = $request->time;
-        // }
-
         $vacancy->save();
 
         $vacancy->causes()->sync($request->input('causes'));
         $vacancy->skills()->sync($request->input('skills'));
 
         if ($vacancy->location_type == LocationType::SPECIFIC_ADDRESS) {
-            $addressAttributes = $request->only([
-                'address_zipcode',
-                'address_street',
-                'address_number',
-                'address_neighborhood',
-                'address_city',
-            ]);
+            $addressAttributes = [
+                'zipcode' => $request->address_zipcode,
+                'street' => $request->address_street,
+                'number' => $request->address_number,
+                'neighborhood' => $request->address_neighborhood,
+                'city_id' => $request->address_city,
+            ];
             $vacancy->address()->create($addressAttributes);
         }
 
-        return redirect()->route('vacancies.index')->with('success', 'Vaga salva!');
+        return redirect()
+            ->route('vacancies.index')
+            ->with('success', 'Vaga salva!');
     }
 
     /**
@@ -150,12 +123,7 @@ class VacancyController extends Controller
      */
     public function edit(Vacancy $vacancy)
     {
-        $organizations = Organization::orderBy('name', 'asc')->get();
-        $causes = Cause::orderBy('name', 'asc')->get();
-        $skills = Skill::orderBy('name', 'asc')->get();
-        $states = State::orderBy('name', 'asc')->get();
-
-        return view('vacancies.edit', compact('vacancy', 'organizations', 'causes', 'skills', 'states'));
+        return view('vacancies.edit');
     }
 
     /**
@@ -173,10 +141,10 @@ class VacancyController extends Controller
             'tasks',
             'status',
             'type',
-            'promotion_start_date',
-            'promotion_end_date',
-            'application_limit',
             'location_type',
+            'date',
+            'start_time',
+            'end_time'
         ]);
 
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
@@ -204,13 +172,14 @@ class VacancyController extends Controller
 
         // LOCAL
         if ($vacancy->location_type == LocationType::SPECIFIC_ADDRESS) {
-            $addressAttributes = $request->only([
-                'address_zipcode',
-                'address_street',
-                'address_number',
-                'address_neighborhood',
-                'address_city',
-            ]);
+            $addressAttributes = [
+                'zipcode' => $request->address_zipcode,
+                'street' => $request->address_street,
+                'number' => $request->address_number,
+                'neighborhood' => $request->address_neighborhood,
+                'city_id' => $request->address_city,
+
+            ];
             $vacancy->address()->updateOrCreate($addressAttributes);
         } else {
             $vacancy->address()->delete();
@@ -219,7 +188,9 @@ class VacancyController extends Controller
         $vacancy->causes()->sync($request->input('causes'));
         $vacancy->skills()->sync($request->input('skills'));
 
-        return redirect()->route('vacancies.index')->with('success', 'Vaga atualizada!');
+        return redirect()
+            ->route('vacancies.index')
+            ->with('success', 'Vaga atualizada!');
     }
 
     /**

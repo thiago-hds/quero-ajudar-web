@@ -33,7 +33,7 @@ return [
     'confirmed'            => 'O campo :attribute de confirmação não confere.',
     'date'                 => 'O campo :attribute não é uma data válida.',
     'date_equals'          => 'O campo :attribute deve ser uma data igual a :date.',
-    'date_format'          => 'O campo :attribute não corresponde ao formato :format.',
+    'date_format'          => 'O campo :attribute contém um valor inválido',
     'different'            => 'Os campos :attribute e :other devem ser diferentes.',
     'digits'               => 'O campo :attribute deve ter :digits dígitos.',
     'digits_between'       => 'O campo :attribute deve ter entre :min e :max dígitos.',
@@ -156,15 +156,17 @@ return [
         'amount_per_period'         => 'quantidade de tempo por periodo',
         'causes'                    => 'causas',
         'date'                      => 'data',
-        'date_of_birth'             => 'data de nascimento', 
-        'description'               => 'descrição',   
+        'date_of_birth'             => 'data de nascimento',
+        'description'               => 'descrição',
         'email'                     => 'e-mail',
         'first_name'                => 'nome',
         'fontawesome_icon_unicode'  => 'icone FontAwesome (unicode)',
         'image'                     => 'imagem',
         'last_name'                 => 'sobrenome',
+        'location_type'             => 'tipo de local',
         'name'                      => 'nome',
         'organization'              => 'instituição',
+        'organization_id'           => 'instituição',
         'organization_type_id'      => 'tipo de instituição',
         'password_confirm'          => 'confirmação de senha',
         'password'                  => 'senha',
@@ -183,7 +185,13 @@ return [
         'unique_event'              => 'evento único',
         'unit_per_period'           => 'unidade de tempo por período',
         'vacancy_id'                => 'vaga',
-        'volunteer_user_id'         => 'voluntário'
+        'volunteer_user_id'         => 'voluntário',
+    ],
+
+    'values' => [
+        'location_type' => [
+            'specific_address' => 'endereço específico'
+        ],
     ],
 
 ];

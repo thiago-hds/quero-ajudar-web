@@ -6,7 +6,7 @@ function updateDeleteConfirmationModal(url) {
     $("#form-delete").attr("action", url);
 }
 
-function initSelect2(id, value = "") {
+function initSelect2(id, value = []) {
     $(document).ready(function () {
         console.log(id);
         $(`#${id}`).val(value);
@@ -28,6 +28,16 @@ $("input[name=profile]").change(function () {
         $(".organization-container").show(300);
     } else {
         $(".organization-container").hide(300);
+    }
+});
+/**
+ * vacancies.edit
+ */
+$("input[name=location_type]").change(function () {
+    if (this.value == "specific_address") {
+        $("#address-panel").removeClass("d-none");
+    } else {
+        $("#address-panel").addClass("d-none");
     }
 });
 

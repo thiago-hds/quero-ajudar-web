@@ -5,8 +5,7 @@
     label="Habilidades"
     :config="$config"
     enable-old-support
-    fgroup-class="{{ $attributes->get('fgroup-class') }}"
->
+    fgroup-class="{{ $attributes->get('fgroup-class') }}">
     <x-slot name="prependSlot">
         <span class="input-group-text">
             <i class="fas fa-fw fa-wrench "></i>
@@ -19,3 +18,9 @@
         </option>
     @endforeach
 </x-adminlte-select2>
+@push('scripts')
+    <script>
+        const selectedSkills = {{ \Illuminate\Support\Js::from($selectedValues) }};
+        initSelect2('skills', selectedSkills);
+    </script>
+@endpush

@@ -14,32 +14,28 @@ class CreateVacanciesTable extends Migration
     public function up()
     {
         Schema::create('vacancies', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->bigInteger('organization_id')->unsigned();
+            $table->id();
+
+            $table->foreignId('organization_id')
+                ->constrained()
+                ->restrictOnDelete();
+
             $table->string('name');
             $table->text('description');
             $table->tinyInteger('type');
-            $table->string('tasks')->nullable();
+            $table->string('tasks')->nullable()->default(null);
+            $table->string('image')->nullable()->default(null);
+            $table->boolean('status')->default(\App\Enums\StatusType::ACTIVE);
 
-            // periodicity
-            $table->tinyInteger('periodicity')->nullable();
-            $table->integer('amount_per_period')->nullable();
-            $table->tinyInteger('unit_per_period')->nullable();
-
-            // time schedule
-            $table->date('date')->nullable();
-            $table->time('time')->nullable();
+            // hours
+            $table->date('date')->nullable()->default(null);
+            $table->time('start_time')->nullable()->default(null);
+            $table->time('end_time')->nullable()->default(null);
 
             // location
-            $table->tinyInteger('location_type');
+            $table->string('location_type');
 
-            $table->date('promotion_start_date')->nullable();
-            $table->date('promotion_end_date')->nullable();
-            $table->integer('application_limit')->nullable();
-            $table->string('image')->nullable();
-            $table->boolean('status')->default(\App\Enums\StatusType::ACTIVE);
             $table->timestamps();
-            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('restrict');
         });
     }
 

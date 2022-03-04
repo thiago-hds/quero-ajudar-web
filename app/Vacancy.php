@@ -9,9 +9,11 @@ use App\Enums\UnitPerPeriodType;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Vacancy extends Model
 {
+    use HasFactory;
 
     /**
      * The table associated with the model.
@@ -26,10 +28,9 @@ class Vacancy extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'description', 'type', 'tasks', 'start_time',
-        'promotion_start_date', 'promotion_end_date', 'application_limit',
-        'image', 'status', 'periodicity', 'unit_per_period', 'amount_per_period',
-        'location_type'
+        'name', 'description', 'type', 'tasks',
+        'image', 'status','location_type',
+        'date', 'start_time', 'end_time'
     ];
 
     public function scopeFilter($query, $filters)
@@ -86,7 +87,7 @@ class Vacancy extends Model
 
     public function address()
     {
-        return $this->morphOne('App\Address', 'addressable');
+        return $this->morphOne(Address::class, 'addressable');
     }
 
     public function favorites()
@@ -109,51 +110,11 @@ class Vacancy extends Model
         return $this->hasMany('App\Application');
     }
 
-    public function getPromotionStartDateAttribute($value)
-    {
-        if ($value !== null) {
-            return Carbon::parse($value)->format('d/m/Y');
-        }
-        return null;
-    }
-
-    public function setPromotionStartDateAttribute($value)
-    {
-        $this->attributes['promotion_start_date'] = null;
-        if ($value !== null) {
-            $this->attributes['promotion_start_date'] = Carbon::createFromFormat('d/m/Y', $value)->toDateString();
-        }
-    }
-
-    public function getPromotionEndDateAttribute($value)
-    {
-        if ($value !== null) {
-            return Carbon::parse($value)->format('d/m/Y');
-        }
-        return null;
-    }
-
-    public function setPromotionEndDateAttribute($value)
-    {
-        $this->attributes['promotion_end_date'] = null;
-        if ($value !== null) {
-            $this->attributes['promotion_end_date'] = Carbon::createFromFormat('d/m/Y', $value)->toDateString();
-        }
-    }
-
     public function setDateAttribute($value)
     {
         $this->attributes['date'] = null;
         if ($value !== null) {
             $this->attributes['date'] = Carbon::createFromFormat('d/m/Y', $value)->toDateTimeString();
-        }
-    }
-
-    public function setTimeAttribute($value)
-    {
-        $this->attributes['time'] = null;
-        if ($value !== null) {
-            $this->attributes['time'] = Carbon::createFromFormat('H:i', $value)->toDateTimeString();
         }
     }
 
@@ -165,10 +126,34 @@ class Vacancy extends Model
         return null;
     }
 
-    public function getTimeAttribute()
+    public function setStartTimeAttribute($value)
     {
-        if ($this->attributes['time'] !== null) {
-            return Carbon::parse($this->attributes['time'])->format('H:i');
+        $this->attributes['start_time'] = null;
+        if ($value !== null) {
+            $this->attributes['start_time'] = Carbon::createFromFormat('H:i', $value)->toDateTimeString();
+        }
+    }
+
+    public function getStartTimeAttribute()
+    {
+        if ($this->attributes['start_time'] !== null) {
+            return Carbon::parse($this->attributes['start_time'])->format('H:i');
+        }
+        return null;
+    }
+
+    public function setEndTimeAttribute($value)
+    {
+        $this->attributes['end_time'] = null;
+        if ($value !== null) {
+            $this->attributes['end_time'] = Carbon::createFromFormat('H:i', $value)->toDateTimeString();
+        }
+    }
+
+    public function getEndTimeAttribute()
+    {
+        if ($this->attributes['end_time'] !== null) {
+            return Carbon::parse($this->attributes['end_time'])->format('H:i');
         }
         return null;
     }

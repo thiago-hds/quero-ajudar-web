@@ -14,26 +14,19 @@
     </x-slot>
 
     @foreach ($causes as $cause)
-
-        {{-- if select2 is does't allow multiple it has to have an empty option --}}
+        {{-- if select2 does't allow multiple it has to have an empty option --}}
         @unless($config['multiple'])
             <option></option>
         @endunless
 
-        {{-- <option
-            value="{{ $cause->id }}"
-            {{ in_array($cause->id, $selectedValues) ? 'selected=selected' : '' }}>
-            {{ $cause->name }}
-        </option> --}}
         <option value="{{ $cause->id }}">
             {{ $cause->name }}
         </option>
     @endforeach
 </x-adminlte-select2>
-
 @push('scripts')
     <script>
-        // console.log(selectedCauses);
-        initSelect2('causes', "");
+        const selectedCauses = {{ \Illuminate\Support\Js::from($selectedValues) }};
+        initSelect2('causes', selectedCauses);
     </script>
 @endpush
