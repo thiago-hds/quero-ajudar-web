@@ -40,12 +40,12 @@ class VacancyController extends Controller
         $filters = $request->all();
         $vacancies = Vacancy::latest()->filter($filters)->paginate(10);
 
-        $organizations  = Organization::orderBy('name', 'asc')->get();
-        $causes         = Cause::orderBy('name', 'asc')->get();
-        $skills         = Skill::orderBy('name', 'asc')->get();
         $states         = State::orderBy('name', 'asc')->get();
+        $selectedState  = State::where('abbr', $filters['address_state'] ?? null)
+            ->with('cities')
+            ->first();
 
-        return view('vacancies.index', compact('vacancies', 'organizations', 'causes', 'skills', 'states'));
+        return view('vacancies.index', compact('vacancies', 'states', 'selectedState'));
     }
 
     /**
@@ -123,7 +123,7 @@ class VacancyController extends Controller
      */
     public function edit(Vacancy $vacancy)
     {
-        return view('vacancies.edit');
+        return view('vacancies.edit', ['vacancy' => $vacancy]);
     }
 
     /**

@@ -65,7 +65,7 @@ use App\State;
         <option></option>
         @if ($selectedStateAbbr)
             @php
-                $state = State::first('abbr', $selectedStateAbbr)
+                $state = State::where('abbr', $selectedStateAbbr)
                     ->with('cities')
                     ->first();
                 $selectedCity = old('address_city', $address->city->id ?? '');

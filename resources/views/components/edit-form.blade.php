@@ -1,6 +1,6 @@
 @props(['model', 'action', 'cancelUrl', 'enctype' => 'application/x-www-form-urlencoded'])
 
-<form method="post" class="card" action="{{ $action }}" enctype="{{ $enctype }}">
+<form method="post" class="card position-relative" action="{{ $action }}" enctype="{{ $enctype }}">
     <div class="card-body">
         @if (isset($model))
             @method('PATCH')
@@ -17,5 +17,11 @@
         <a class="btn btn-danger" href="{{ $cancelUrl }}">
             <i class="fas fa-arrow-left"></i> Cancelar
         </a>
+    </div>
+    <div class="loading d-none">
+        <div class="spinner-border text-light"
+            role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
     </div>
 </form>

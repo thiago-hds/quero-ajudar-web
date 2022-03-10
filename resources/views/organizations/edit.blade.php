@@ -108,7 +108,7 @@ $action = isset($organization) ? route('organizations.update', $organization->id
 
     <div class="row">
 
-        {{-- profile --}}
+        {{-- status --}}
         @php
             $isActive = old('status', $user->status ?? StatusType::ACTIVE) == StatusType::ACTIVE;
         @endphp

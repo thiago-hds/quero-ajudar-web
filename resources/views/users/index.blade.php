@@ -84,6 +84,5 @@ use App\Enums\StatusType;
                 @endcan
             </td>
         </tr>
-
     @endforeach
 @endsection

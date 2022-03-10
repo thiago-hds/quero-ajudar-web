@@ -1,4 +1,4 @@
-var cityId = null;
+let cityId = null;
 
 // inclui a rota correta de remoção no modal de confirmação
 //ao clicar no botão deletar de algum item da tabela
@@ -41,6 +41,60 @@ $("input[name=location_type]").change(function () {
     }
 });
 
+// controle de select dinamico de cidades
+$("select[name=address_state]").on("change", function (event) {
+    const selectedStateAbbr = $(this).find(":selected").attr("value");
+    // $(".loading").css("display", "block");
+    $.ajax({
+        url: `/state/${selectedStateAbbr}/cities/`,
+        type: "GET",
+        dataType: "json",
+    }).done(function (data) {
+        const citySelect = $("select[name=address_city]");
+        citySelect.empty();
+        citySelect.append(
+            '<option value="0" >Por favor selecione uma cidade</option>'
+        );
+
+        $.each(data, function (key, value) {
+            citySelect.append(
+                `<option value=${value.id} ${cityId == value.id ? 'selected' : ''}>${
+                    value.name
+                }</option>`
+            );
+        });
+        $(".loading").css("display", "none");
+    });
+});
+
+$("input[name=address_zipcode]").on("change", function () {
+    var selected = $(this).val();
+    console.log(selected);
+    $(".loading").removeClass("d-none");
+    $.ajax({
+        url: "http://viacep.com.br/ws/" + selected + "/json/",
+        type: "GET",
+        dataType: "json",
+    })
+        .done(function (data) {
+            console.log(data);
+            cityId = data.ibge;
+
+            $("input[name=address_street]").val(data.logradouro);
+            $("input[name=address_neighborhood]").val(data.bairro);
+            $("select[name=address_state]").val(data.uf).change();
+            $(".loading").addClass("d-none");
+        })
+        .fail(function (jqXHR, textStatus, errorThrown) {
+            // Request failed. Show error message to user.
+            // errorThrown has error message.
+            cityId = null;
+            console.log("erro");
+            console.log(errorThrown);
+            $(".loading").addClass("d-none");
+        });
+});
+
 $(document).ready(function () {
     // Index page
 
@@ -66,58 +120,6 @@ $(document).ready(function () {
     if ($(".phone-input-group").length > 4) {
         $(".btn-add-phone").prop("disabled", true);
     }
-
-    // controle de select dinamico de cidades
-    $("select[name=address_state]").on("change", function (event) {
-        const selectedStateAbbr = $(this).find(":selected").attr("value");
-        // $(".loading").css("display", "block");
-        $.ajax({
-            url: `/state/${selectedStateAbbr}/cities/`,
-            type: "GET",
-            dataType: "json",
-        }).done(function (data) {
-            const citySelect = $("select[name=address_city]");
-            citySelect.empty();
-            citySelect.append(
-                '<option value="0" >Por favor selecione uma cidade</option>'
-            );
-
-            $.each(data, function (key, value) {
-                citySelect.append(
-                    `<option value=${value.id} ${cityId === value.id}>${
-                        value.name
-                    }</option>`
-                );
-            });
-            $(".loading").css("display", "none");
-        });
-    });
-
-    $("input[name=address_zipcode]").on("change", function () {
-        var selected = $(this).val();
-        console.log(selected);
-        $(".loading").css("display", "block");
-        $.ajax({
-            url: "http://viacep.com.br/ws/" + selected + "/json/",
-            type: "GET",
-            dataType: "json",
-        })
-            .done(function (data) {
-                cityId = data.ibge;
-
-                $("input[name=address_street]").val(data.logradouro);
-                $("input[name=address_neighborhood]").val(data.bairro);
-                $("select[name=address_state]").val(data.uf).change();
-            })
-            .fail(function (jqXHR, textStatus, errorThrown) {
-                // Request failed. Show error message to user.
-                // errorThrown has error message.
-                cityId = null;
-                console.log("erro");
-                console.log(errorThrown);
-                $(".loading").css("display", "none");
-            });
-    });
 
     $("input[name=fontawesome_icon_unicode]").on(
         "change paste keyup",

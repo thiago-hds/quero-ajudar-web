@@ -12,7 +12,6 @@ use App\Services\ImageUploader;
 
 class OrganizationController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('auth');
@@ -142,13 +141,13 @@ class OrganizationController extends Controller
 
         // save organization addresses
 
-        $addressAttributes = request()->only([
-            'address_zipcode',
-            'address_street',
-            'address_number',
-            'address_neighborhood',
-            'address_city'
-        ]);
+        $addressAttributes = [
+            'zipcode' => $request->address_zipcode ,
+            'street' => $request->address_street ,
+            'number' => $request->address_number ,
+            'neighborhood' => $request->address_neighborhood ,
+            'city_id' => $request->address_city
+        ];
         $organization->address()->updateOrCreate($addressAttributes);
 
         // save organization phones

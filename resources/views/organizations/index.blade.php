@@ -43,7 +43,6 @@ use App\Enums\StatusType;
     'Status', 'Ações'] --}}
 @section('table-rows')
     @foreach ($organizations as $organization)
-
         <tr>
             <td>
                 {{ $organization->name }}
@@ -77,6 +76,5 @@ use App\Enums\StatusType;
                 </button>
             </td>
         </tr>
-
     @endforeach
 @endsection

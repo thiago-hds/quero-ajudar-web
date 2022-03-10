@@ -27,6 +27,8 @@
         enctype="multipart/form-data">
         @yield('fields')
     </x-edit-form>
+
+
 @endsection
 
 @section('css')

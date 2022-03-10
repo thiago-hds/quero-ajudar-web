@@ -40,7 +40,7 @@ $isAdminSelected = $selectedProfile === ProfileType::ADMIN || !isset($user); */
 
         {{-- image --}}
 
-        @if ($vacancy && $vacancy->image)
+        @if (isset($vacancy) && $vacancy->image)
             <div class="col-md-2">
                 <img class="img-fluid" src="{{ $vacancy->image }}" alt="" />
             </div>
@@ -75,10 +75,10 @@ $isAdminSelected = $selectedProfile === ProfileType::ADMIN || !isset($user); */
         $selectedSkills = old('skills[]', isset($vacancy) ? $vacancy->skills->modelKeys() : []);
     @endphp
 
-    <x-form.causes-select name="causes[]" fgroup-class="col-sm-6"
+    <x-form.causes-select name="causes[]" fgroup-class="col-sm-6" :multiple="true"
         :selectedValues="$selectedCauses" />
 
-    <x-form.skills-select name="skills[]" fgroup-class="col-sm-6"
+    <x-form.skills-select name="skills[]" fgroup-class="col-sm-6" :multiple="true"
         :selectedValues="$selectedSkills" />
 </div>
 

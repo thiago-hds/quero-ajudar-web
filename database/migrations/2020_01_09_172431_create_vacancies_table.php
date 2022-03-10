@@ -22,7 +22,7 @@ class CreateVacanciesTable extends Migration
 
             $table->string('name');
             $table->text('description');
-            $table->tinyInteger('type');
+            $table->string('type');
             $table->string('tasks')->nullable()->default(null);
             $table->string('image')->nullable()->default(null);
             $table->boolean('status')->default(\App\Enums\StatusType::ACTIVE);
